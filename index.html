@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f79e1c">
+  <meta name="description" content="Quellenbasierte Analyse des HORNBACH Geschäftsmodells: sieben Bausteine, interaktiver digitaler Reifegrad und priorisierte Maßnahmen.">
+  <title>HORNBACH · Geschäftsmodell-Analyse</title>
+  <link rel="icon" href="assets/hornbach-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script type="module" src="assets/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-action="skip">Zum Inhalt</a>
+  <aside class="sidebar">
+    <a class="brand" href="#steckbrief" aria-label="HORNBACH Analyse Startseite"><img src="assets/hornbach-logo.svg" alt="HORNBACH – Es gibt immer was zu tun." width="283" height="72"></a>
+    <nav id="navigation" aria-label="Analysebausteine" role="tablist" aria-orientation="vertical"></nav>
+    <div class="sidebar-bottom"><button class="sidebar-source" data-action="sources"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M14 3H5v18h14V8Zm0 0v5h5M8 13h8m-8 4h8"/></svg> Berichte & Quellen</button><small>Studienprojekt · DHBW Karlsruhe</small></div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar"><h1 id="tab-title">Steckbrief</h1><div class="topbar-actions"><button class="button secondary edit-toggle" data-action="edit" aria-pressed="false">Bearbeiten</button><button class="button secondary" data-action="export" aria-label="Gesamte Analyse als JSON exportieren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg> Export</button><button class="icon-button" data-action="more" aria-label="Weitere Aktionen" aria-expanded="false">•••</button><div id="more-menu" class="more-menu" hidden><div id="save-state" class="save-state" role="status"><span class="status-dot"></span> Lokal gespeichert</div><button data-action="import">Analyse importieren (JSON)</button><button data-action="print">Aktuellen Tab drucken / PDF</button><button data-action="reset" class="danger-text">Gesamte Analyse zurücksetzen</button></div></div></header>
+    <main id="main" tabindex="-1"></main>
+    <footer class="footer">Studienprojekt · Keine offizielle Veröffentlichung von HORNBACH</footer>
+  </div>
+  <dialog id="source-dialog" aria-labelledby="sources-title"><div class="dialog-head"><div><h2 id="sources-title">Berichte & Quellen</h2></div><button class="icon-button" data-action="close-dialog" aria-label="Quellen schließen">×</button></div><div id="source-content"></div></dialog>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title"><div class="dialog-head"><h2 id="confirm-title">Analyse zurücksetzen?</h2></div><p>Alle lokalen Änderungen werden durch die recherchierte Ausgangsanalyse ersetzt. Exportieren Sie Ihre Analyse vorher, wenn Sie sie behalten möchten.</p><div class="dialog-actions"><button class="button secondary" data-action="cancel-reset">Abbrechen</button><button class="button" data-action="confirm-reset">Zurücksetzen</button></div></dialog>
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <div id="toast" role="status" class="toast" hidden></div>
+  <noscript>Für die sieben Analyse-Tabs und das bearbeitbare Netzdiagramm aktivieren Sie bitte JavaScript. Die Geschäftsberichte finden Sie im Verzeichnis docs/.</noscript>
+</body>
+</html>
