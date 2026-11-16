@@ -76,7 +76,7 @@ export const DEFAULT_STATE = {
 Object.assign(DEFAULT_STATE, structuredClone(SUPPLEMENT));
 DEFAULT_STATE.ideas=enrichIdeas(DEFAULT_STATE.ideas);
 Object.assign(SOURCES,{methods:{title:"Methoden und Reifegrad",organization:"DHBW Karlsruhe · Jonas Staib",file:"docs/2026-11-03 Methoden_und_Reifegrad.pdf.pdf"},patterns:{title:"Muster und Ideen",organization:"DHBW Karlsruhe · Jonas Staib",file:"docs/2026-11-03 Muster_und_Ideen.pdf.pdf"}});
-TABS.find(t=>t.id==="reifegrad").subtitle="Kriterienbasierte Außensicht nach Appelfeller/Feldmann. Ist, Soll, Belege und offene Fragen machen die größten Entwicklungslücken sichtbar.";
+TABS.find(t=>t.id==="reifegrad").subtitle="";
 TABS.find(t=>t.id==="muster").subtitle="Geschäftsmodellmuster anwenden, KI-Ideen vergleichen und die zwei bestbewerteten Vorschläge als Geschäftsmodell und Experiment ausarbeiten.";
 
 DEFAULT_STATE.actions.forEach(a=>a.originId='');
