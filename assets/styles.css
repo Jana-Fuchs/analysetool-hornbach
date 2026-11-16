@@ -529,6 +529,7 @@ noscript { display: block; padding: 30px; }
 
 /* Extended analysis uses the same cards, orange buttons and magenta headings as the profile. */
 .analysis-section { margin: 26px 0; background: #fff; border: 1px solid var(--line); }
+#panel-reifegrad > .analysis-section:first-child { margin-top: 0; }
 .analysis-section > summary strong { width: auto; flex: 1; }
 .analysis-section > .dimension-detail { padding: 22px 26px 26px; }
 .analysis-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
@@ -560,6 +561,8 @@ noscript { display: block; padding: 30px; }
 .model-chart .radar-target { fill: #c8098609; stroke: var(--magenta); stroke-width: 2; stroke-dasharray: 5 4; }
 .model-chart circle.radar-target { fill: var(--magenta); stroke-dasharray: none; }
 .canvas-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; margin: 20px 0; }
+#panel-steckbrief .dimension-detail > .canvas-board { margin-top: 0; }
+#panel-steckbrief .canvas-board h4 { color: var(--ink); }
 .canvas-grid > article { border-top: 4px solid var(--orange); }
 .canvas-grid .canvas-changed { border-top-color: var(--magenta); background: #fffafd; }
 .canvas-grid .button { white-space: normal; width: 100%; }

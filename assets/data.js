@@ -7,7 +7,7 @@ export const SOURCES = {
 };
 export const TABS = [
  {id:'steckbrief',short:'Steckbrief',subtitle:'',icon:'overview'},
- {id:'reifegrad',short:'Reifegrad',subtitle:'Geschätzter Ist-Stand und Zielbild im Vergleich. Punkte ändern die Werte; mit den Griffen lassen sich Dimensionen verschieben.',icon:'radar'},
+ {id:'reifegrad',short:'Reifegrad',subtitle:'',icon:'radar'},
  {id:'muster',short:'Muster & Ideen',subtitle:'Drei Ideen zur Weiterentwicklung des Geschäftsmodells. Bewertungen und Gewichte bestimmen die Rangfolge.',icon:'bulb'},
  {id:'kunden',short:'Kunde & Open Innovation',subtitle:'Die Customer Journey verbindet fünf Projektphasen mit vermuteten Hürden und Lösungsansätzen. Ergebnisse aus Kunden- und Partnergesprächen lassen sich über „Bearbeiten“ ergänzen.',icon:'users'},
  {id:'plattform',short:'Plattform & Ökosystem',subtitle:'Zielbild für das Zusammenspiel von Kunden, Lieferanten und Servicepartnern. Bestehende Fähigkeiten und Erweiterungen sind gegenübergestellt; die Plattformrolle lässt sich über „Bearbeiten“ anpassen.',icon:'network'},
