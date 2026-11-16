@@ -24,8 +24,12 @@ Es wurde noch nichts veröffentlicht: Das lokale Git-Repository ist auf dem Bran
 - Navigation: sieben Tabs, Direktlinks über `#steckbrief`, `#reifegrad`, `#muster`, `#kunden`, `#plattform`, `#erloese`, `#massnahmen`.
 - Die Einführungen erläutern Inhalt und Bedienung. Der Steckbrief beginnt direkt mit den Kennzahlen. Alle Inhaltsbereiche starten aufgeklappt und lassen sich bei Bedarf einzeln schließen.
 - Die gemeinsame Kopfzeile zeigt den Tab-Titel sowie **Bearbeiten**, **Export** und das **•••**-Menü. **Bearbeiten** öffnet die Textfelder des aktuellen Bausteins. Zusätzlich gibt es eigene Arbeitsnotizen je Tab.
-- **Reifegrad:** Runde Punkte verändern Ist-Werte, Quadrate Zielwerte. Dimensionen an den sichtbaren Griffen per Ziehen umordnen. Diagramm, Platzhalter und Reihenfolge zeigen die Einfügeposition bereits während des Ziehens; gespeichert wird beim Loslassen. Ein Abbruch übernimmt die Vorschau nicht. Fokussierte Griffe lassen sich auch mit den Pfeiltasten bedienen. Alternativ unter **Dimensionen bearbeiten** Schieberegler und Pfeile verwenden. Namen ändern, Dimensionen hinzufügen oder entfernen (3–10 Dimensionen).
-- **Bewertungen:** Wirkung, Aufwand und Risiko auf einer Skala von 1–5. Höhere Wirkung sowie geringerer Aufwand und geringeres Risiko erhöhen den Score. Gewichte werden auf ihre Summe normiert und gemeinsam für Ideen, KI und Maßnahmen verwendet.
+- **Reifegrad nach Appelfeller/Feldmann:** 22 Kriterien in Produkt (5), Kundenanbindung (12) und Geschäftsmodell (5), Stufen 1–4. Unbekannte Werte bleiben offen. Vier Netzdiagramme, Ist-Soll-Lücken, drei Wettbewerber, Quellen und sieben Leitfragen. Zusätzliche KI-Reife und Daten-/Resilienzperspektiven nutzen eine eigene Skala 1–5.
+- **Freie Zusatzperspektive:** Runde Punkte verändern Ist-Werte, Quadrate Zielwerte. Dimensionen an den sichtbaren Griffen per Ziehen umordnen. Diagramm, Platzhalter und Reihenfolge zeigen die Einfügeposition bereits während des Ziehens; gespeichert wird beim Loslassen. Ein Abbruch übernimmt die Vorschau nicht. Fokussierte Griffe lassen sich auch mit den Pfeiltasten bedienen. Alternativ unter **Dimensionen bearbeiten** Schieberegler und Pfeile verwenden. Namen ändern, Dimensionen hinzufügen oder entfernen (3–10 Dimensionen).
+- **Bewertungen:** Wirkung, Aufwand und Risiko auf einer Skala von 1–5. Höhere Wirkung sowie geringerer Aufwand und geringeres Risiko erhöhen den Score. Gewichte werden auf ihre Summe normiert. KI und Maßnahmen teilen drei Kriterien; das Ideen-Board hat eigene Gewichte für Nutzen, Machbarkeit, Kosten und Risiko.
+- **Muster & Ideen:** Sechs vorbefüllte KI-Ideen; bis zu acht Ideen bearbeiten, ergänzen oder entfernen. Musterquelle, HORNBACH-Beleg, KI-Anwendung und Ähnlichkeits-/Konfrontationsprinzip dokumentieren. Vier Kriterien und separate Gewichte steuern Ranking, Opportunity Map und Top 2. Für jede Idee sind Risiko-Checks und Experimente bearbeitbar. Die Top 2 zeigen vier Dimensionen vorher/nachher, alle neun Canvas-Felder mit markierten Veränderungen und einen Empfehlungsentwurf. Entwürfe per Button als Maßnahmenkandidaten übernehmen oder aktualisieren.
+- **Steckbrief:** Ergänzend Wer, Was, Wie, Wert und ein bearbeitbares Business Model Canvas.
+- **Maßnahmen:** Auch aus Reifegradlücken ableiten; Herleitung, wissenschaftliche Quelle, erwartete Wirkung und Risiken dokumentieren. Maßnahmenkandidaten sind bearbeitbar und entfernbar; Zeiträume lassen sich im Bearbeitungsmodus ändern. Wirkung-Aufwand-Diagramm mit Risikomarkierung, Quick Wins zuerst innerhalb der Roadmap-Phasen.
 - **Erlösszenario:** Netto-Warenumsatz, Serviceumsatz und Beitrag nach Pilotkosten werden getrennt berechnet. Alle Annahmen sind bearbeitbar. Das Szenario ist keine Unternehmensprognose.
 - **Export:** komplette Analyse als JSON sichern. **••• → Analyse importieren** lädt eine Sicherung; ungültige Dateien werden abgewiesen.
 - **••• → Aktuellen Tab drucken / PDF** nutzt die Druckansicht.
@@ -53,7 +57,15 @@ Das vom Nutzer bereitgestellte Logo aus `logo.de-DE.v1.svg` liegt unverändert i
 
 - `index.html`: statische Einstiegseite und Dialoge
 - `assets/data.js`: recherchierte Ausgangsanalyse und Quellen
+- `assets/analysis-data.js`: Kriterien und Kurzbeschreibungen, Methodik, Muster, Ideenentwürfe und Quellen für die ergänzende Analyse
+- `assets/analysis-ui.js`: Kriterienbewertung, Diagramme, Ideen-Board, Top-2-Ausarbeitung und Übernahme von Maßnahmen
 - `assets/core.js`: Berechnung und validierter Import
 - `assets/app.js`: Navigation, Diagramm, Bearbeitung, lokale Speicherung, Export und Import
 - `assets/styles.css`: Desktop-, Mobil- und Drucklayout
 - `docs/`: Aufgabenstellung und heruntergeladene Originalberichte
+
+## Erweiterte Methodik und bestehende Daten
+
+Neue Installationen enthalten sechs Ideen. Bestehende schemaVersion-1-Analysen werden additiv ergänzt: Texte und bisherige Bewertungen bleiben erhalten, fehlende neue Felder erhalten Vorgaben; drei neue Vorschläge werden einmalig ergänzt (höchstens acht Ideen). Auch Exporte älterer Versionen bleiben importierbar. Die interne `analysisRevision` verhindert wiederholtes Ergänzen bewusst entfernter Ideen.
+
+Stufenbeschreibungen sind sinngemäße Kurzfassungen der Vorlesungsmatrix. Öffentliche Angaben erlauben nicht bei allen Kriterien eine Einstufung. Insbesondere das Produktobjekt und interne KI-Fähigkeiten müssen fachlich konkretisiert und belegt werden; fehlende Belege werden nicht als niedrige Stufe oder als 0 interpretiert. Der Wettbewerbsvergleich verwendet drei gemeinsame Kriterien und kennzeichnet alle Einstufungen als vorläufige Außensicht. Das Tool enthält Prüfaufträge zu Datenschutz, KI-Regulierung, Datenzugang und Resilienz, keine pauschalen Rechtsfristen.

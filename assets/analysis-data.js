@@ -1,0 +1,108 @@
+// Fachliche Arbeitsgrundlage. Stufen sind sinngemäße Kurzfassungen der Vorlesungsmatrix.
+export const MODEL_SOURCE='Appelfeller & Feldmann (2018), Die digitale Transformation des Unternehmens, Springer. Kriterien und Stufen: Vorlesung Methoden und Reifegrad, Folien 75–81.';
+export const PATTERN_SOURCE='Gassmann, Frankenberger & Csik (2013), Geschäftsmodelle entwickeln: 55 innovative Konzepte mit dem St. Galler Business Model Navigator, Hanser.';
+export const CANVAS_SOURCE='Osterwalder & Pigneur (2011), Business Model Generation, Campus.';
+const product=[
+ ['monitor','Überwachung','Zustand, Umwelt und Nutzung des Produkts erfassen.',['Keine digitale Überwachung.','Einzelner Zustand oder Nutzungsparameter wird digital erfasst.','Mehrere Parameter unterstützen Diagnose und Überwachung.','Umfassende Überwachung von Zustand, Umwelt und Nutzung.']],
+ ['control','Steuerung & Personalisierung','Produktfunktionen softwaregestützt steuern.',['Keine Softwaresteuerung.','Eine Funktion wird softwaregestützt gesteuert.','Mehrere Funktionen und begrenzte Personalisierung.','Umfangreiche Steuerung und Personalisierung.']],
+ ['optimization','Optimierung','Betrieb anhand von Überwachungs- und Steuerungsdaten verbessern.',['Keine datenbasierte Optimierung.','Einzelne Leistungsparameter werden optimiert.','Mehrere Leistungsparameter werden umfassend optimiert.','Optimierung einschließlich Fehlerprognose und Entwicklungsimpulsen.']],
+ ['autonomy','Autonomie','Eigenständige Reaktion des Produkts auf Daten.',['Keine selbstständige Anpassung.','Punktuelle selbstständige Reaktionen.','Selbstständige Reaktionen auf umfassend ausgewertete Daten.','Hohe Autonomie mit Selbstdiagnose und Koordination anderer Systeme.']],
+ ['connection','Vernetzung','Datenaustausch mit Produkten, Menschen und Systemen.',['Keine digitale Vernetzung.','Einfache technische Ein- und Ausgabesignale.','Umfangreiche technische Vernetzungsmöglichkeiten.','Internetvernetzung oder digitaler Zwilling mit eindeutiger Identifikation.']]
+];
+const customer=[
+ ['development','Produktentwicklung mit Kunden','Entwicklung',['Kunden liefern Ideen, etwa über Online- oder Offlinebefragungen.','Digitale Spuren werden ausgewertet; Kunden wirken an Ideen und Produkttests mit.','Nutzungs- und Befragungsdaten werden integriert ausgewertet und Hypothesen digital mit Kunden getestet.','Kundenressourcen sind digital eingebunden, etwa als Co-Designer und Tester.']],
+ ['referral','Kunden werben Kunden','Vorverkauf',['Keine Integration bestehender Kunden in die Neukundengewinnung.','Kunden bewerten Produkte oder Dienstleistungen digital.','Digitale Bewertungen mit ausdrücklichen Empfehlungen an ausgewählte Kunden.','Bestandskunden beraten neue Kunden über unternehmenseigene digitale Communities.']],
+ ['demand','Nachfrageprognose','Vorverkauf',['Keine Integration der Kunden in die Nachfrageprognose.','POS-Daten von Kunden werden analysiert, etwa Einkaufswerte und Laufwege.','POS-Daten und Prognosen der Kunden werden gemeinsam ausgewertet.','Gemeinsame Planung und Prognose mit Kunden auf Basis von POS-Daten.']],
+ ['information','Informationskanäle','Kauf',['Wenige Kanäle mit Medienbrüchen.','Mehrere, überwiegend getrennte Kanäle.','Abgestimmte Kanäle mit integrierten Informationen.','Durchgängige kanalübergreifende Information und Verhaltensanalyse.']],
+ ['order','Auftragseingang','Kauf',['Aufträge auf einzelne Kanäle begrenzt.','Mehrere Bestellkanäle mit begrenzter IT-Integration.','Kanalübergreifender Auftragseingang mit umfangreicher IT-Integration.','Kanalübergreifender Auftragseingang mit direkter Kunden-IT-Anbindung.']],
+ ['payment','Bezahlsysteme','Kauf',['Konventionelle Zahlungen, etwa Bargeld oder Rechnung.','Kartenbasierte Zahlung.','Payment-Service-Provider eingebunden.','Mobile Zahlung oder Zahlung per QR-Code.']],
+ ['selfservice','Customer Self Service','Kauf',['Kein digitaler Self Service.','Self Service auf Internetplattformen.','Self Service online und an stationären Terminals.','Breiter mobiler und stationärer Self Service mit erweiterten digitalen Hilfen.']],
+ ['community','Kunden beraten Kunden','Kauf',['Klassische Erfahrungsberichte.','Onlineforen werden aufgebaut und gefördert.','Kundenberatung online und im stationären Umfeld.','Peer-to-Peer-Plattformen unterstützen die Beratung.']],
+ ['aftersales','After Sales','Nach dem Kauf',['Keine digitale Integration.','Digitale Serviceinformation und Auftragsstatus.','Nutzungsdaten ermöglichen vorbeugende und individuelle Services.','Vernetzte Partner und integrierte datenbasierte After-Sales-Services.']],
+ ['journey','Customer Journey','Übergreifend',['Isolierte analoge Kontaktpunkte.','Isolierte digitale Kontaktpunkte mit manuellen Übergaben.','Teilweise integrierte digitale Kundenreisen.','Durchgängige digitale Kundenreise mit automatisierter Steuerung.']],
+ ['behavior','Verhaltensanalyse','Übergreifend',['Keine Datenanalyse.','Isolierte Analyse transaktionaler Daten.','Integrierte Analyse strukturierter Daten verschiedener Quellen.','Echtzeitanalyse strukturierter und unstrukturierter Daten zur Individualisierung.']],
+ ['integration','IT-Integration beim Kunden','Übergreifend',['Keine Integration.','Einseitiger Datenaustausch.','Regelmäßiger Datenaustausch in beide Richtungen.','Direkte Integration mit Kundensystemen und weiteren digitalen Diensten.']]
+];
+const business=[
+ ['concept','Geschäftsidee',['Digitalisierung spielt keine Rolle.','Digitalisierung unterstützt Prozesse, prägt aber nicht die Idee.','Digitalisierung erweitert das bestehende Geschäftsmodell.','Die Geschäftsidee beruht auf Digitalisierung.']],
+ ['delivery','Leistungserstellung',['Keine Bedeutung der Digitalisierung.','Digitalisierung steigert die Effizienz.','Digitalisierung erweitert das Leistungsspektrum um hybride Angebote.','Der Kern der Leistungserstellung wird digital ermöglicht.']],
+ ['interaction','Kundeninteraktion',['Analoge Interaktion.','Analoge und digitale Interaktion.','Überwiegend digitale Interaktion.','Fast ausschließlich digitale Interaktion.']],
+ ['offering','Produkte & Dienstleistungen',['Analoge Produkte und Dienstleistungen.','Analoge Angebote mit digitalisierten Prozessen.','Teilweise digitale Angebote und ergänzende Dienstleistungen.','Analoge Produkte über digitale Touchpoints oder digitale Produkte und Dienstleistungen.']],
+ ['goals','Ziele der Digitalisierung',['Einfache Prozessvereinfachung.','Effizienz ausgewählter Prozesse steigern.','Zusätzlichen Kundennutzen und Wettbewerbsfähigkeit schaffen.','Ein langfristig skalierbares digitales Geschäftsmodell etablieren.']]
+];
+const evidence={
+ information:['3','Onlineshop, App und Märkte sind im ICR-Ansatz verbunden.','37, 72'],order:['3','Online- und stationäre Transaktionen sind im ICR-Ansatz verbunden. Direkter Kunden-IT-Zugriff ist nicht belegt.','37, 48, 72'],
+ selfservice:['2','Onlineshops und App belegen digitalen Kundenzugang; die vollständige Breite stationärer Self Services bleibt offen.','37, 72'],
+ journey:['3','ICR verbindet Online- und stationäre Kanäle. Eine vollständig automatisierte End-to-End-Kundenreise ist nicht belegt.','37, 72'],
+ concept:['3','ICR und Online-Marktplatz erweitern das Handelsmodell. Der Warenhandel bleibt zentral.','37, 72'],delivery:['3','Materialverkauf wird um Handwerks- und Projektservices ergänzt.','37'],interaction:['2','Märkte, Beratung, Onlineshops und App bestehen nebeneinander und verbunden.','37, 72'],offering:['3','Waren, digitale Kanäle und projektbezogene Services bilden ein hybrides Angebot.','37, 72'],goals:['3','ICR und Serviceentwicklung zielen auf Kundennutzen und Wettbewerbsfähigkeit.','71–73']
+};
+function criterion(id,name,phase,levels){const e=evidence[id];return {id,name,phase,levels,current:e?Number(e[0]):null,target:3,evidence:e?e[1]:'Keine ausreichende öffentliche Evidenz für eine belastbare Einstufung. Im Fachgespräch prüfen.',source:e?'gb26':'',pages:e?e[2]:'',reference:'',assumption:true};}
+export const MATURITY_GROUPS=[
+ {id:'product',name:'Produkt',scope:'Bewertungsobjekt: ausgewählte vernetzte Eigenmarkenprodukte samt digitalem Service. Der Handelskonzern selbst ist kein vernetztes Produkt; ohne konkrete Produktbelege bleibt die Einstufung offen.',criteria:product.map(([id,n,q,l])=>criterion(id,n,q,l))},
+ {id:'customer',name:'Kundenanbindung',scope:'Bewertungsobjekt: die Kundenanbindung im Baumarktgeschäft über Märkte, Onlineshops, App und Services. Stufenbeschreibungen sind sinngemäß gekürzt; maßgeblich ist die Vorlesungsmatrix.',criteria:customer.map(([id,n,p,l])=>criterion(id,n,p,l))},
+ {id:'business',name:'Geschäftsmodell',scope:'Bewertungsobjekt: das Handels- und Servicegeschäft des Teilkonzerns Baumarkt. Bewertungen sind vorläufige Interpretation öffentlicher Berichte.',criteria:business.map(([id,n,l])=>criterion(id,n,'Geschäftsmodell',l))}
+];
+export const LEITFRAGEN=[
+ ['Effizienzpotenziale','Welche Prozesse profitieren am stärksten von weiterer Digitalisierung?','Beratungssuche, Mengenplanung und Bedarfsprognose als Piloten gegen eine Baseline prüfen.'],
+ ['Digitale Zusatzdienste','Welche Zusatzdienste ergänzen ausgewählte Produkte?','Materiallisten, kompatibilitätsgeprüfte Planung und digitaler Projektstatus.'],
+ ['Product-as-a-Service','Welche Produkte könnten als Dienstleistung angeboten werden?','Werkzeugnutzung mit Wartung statt Kauf untersuchen; Auslastung und Zahlungsbereitschaft zuerst testen.'],
+ ['Konfiguration','Welchen Zusatznutzen schafft eine konfigurierbare Kundenschnittstelle?','Passende Mengen und Varianten vor dem Kauf prüfen; Fehlkäufe und Retouren messen.'],
+ ['Individualisierung','Ist Mass Customization wirtschaftlich und vom Kunden gewünscht?','Konfigurierbare Projektpakete testen. Kein Nachweis für kundenspezifische Fertigung in Losgröße eins.'],
+ ['Plattformrisiko','Droht eine Verdrängung an der Kundenschnittstelle?','Externe Such- und KI-Plattformen könnten den Erstkontakt übernehmen. Eigene Projektbeziehung und Wechselmöglichkeiten stärken.'],
+ ['Datenverwertung','Welche Daten entstehen und lassen sie sich kommerzialisieren?','Opt-in-Projektdaten für bessere Services nutzen; ein separates Datenprodukt erst nach Rechte- und Nachfrageprüfung.']
+].map(([name,question,answer])=>({name,question,answer}));
+export const CANVAS=[
+ ['partners','Schlüsselpartner','Hersteller, Lieferanten, Logistik, IT und regionale Handwerksbetriebe.'],
+ ['activities','Schlüsselaktivitäten','Beschaffen, Sortimente steuern, beraten, verkaufen und Waren liefern.'],
+ ['resources','Schlüsselressourcen','Märkte, Logistik, Mitarbeitende, Marke, digitale Kanäle und Produktdaten.'],
+ ['value','Wertangebote','Projektgerechtes Sortiment, Dauertiefpreise, Verfügbarkeit, Beratung und Services.'],
+ ['relationships','Kundenbeziehungen','Persönliche Beratung, digitale Selbstbedienung und projektbezogene Unterstützung.'],
+ ['channels','Kanäle','Märkte, Onlineshop, App und Handwerker-Service.'],
+ ['segments','Kundensegmente','DIY-, Profi- und DIFM-Kunden.'],
+ ['costs','Kostenstruktur','Wareneinsatz, Personal, Immobilien, Logistik, IT und Serviceabwicklung.'],
+ ['revenue','Erlösquellen','Warenverkauf und ergänzende projektbezogene Dienstleistungen.']
+].map(([id,name,text])=>({id,name,text}));
+export const FOUR=[{id:'who',name:'Wer',text:'DIY-, Profi- und DIFM-Kunden mit Bau- und Renovierungsprojekten.'},{id:'what',name:'Was',text:'Sortiment, Dauertiefpreise, Verfügbarkeit, Beratung und Projektservices.'},{id:'how',name:'Wie',text:'ICR verbindet Märkte, Onlineshop, App, Beschaffung, Logistik und regionale Servicepartner.'},{id:'value',name:'Wert',text:'Warenmarge und Serviceerlöse tragen Einkauf, Personal, Standorte, Logistik und IT.'}];
+export const PATTERNS=[
+ {id:'ecommerce',name:'E-Commerce',status:'Bestehend',evidence:'Onlineshops und App sind Bestandteil des ICR-Modells.',source:'gb26',pages:'37, 72',reference:PATTERN_SOURCE},
+ {id:'longtail',name:'Long Tail',status:'Annahme',evidence:'Der kuratierte Marktplatz erweitert das Sortiment. Ob Nischenartikel im Sinne des Musters wirtschaftlich relevant sind, ist öffentlich nicht nachgewiesen.',source:'gb26',pages:'72',reference:PATTERN_SOURCE},
+ {id:'solution',name:'Solution Provider',status:'Ausbauidee',evidence:'Von Material und einzelnen Services zur durchgängigen Projektlösung. Vollständige Problemlösung ist ein Zielvorschlag.',source:'gb26',pages:'37, 72',reference:PATTERN_SOURCE},
+ {id:'subscription',name:'Subscription',status:'Ausbauidee',evidence:'Wiederkehrendes Profi-Paket ist eine neue Hypothese; Zahlungsbereitschaft ist offen.',source:'gb26',pages:'37',reference:PATTERN_SOURCE},
+ {id:'orchestrator',name:'Orchestrator',status:'Ausbauidee',evidence:'Partner übernehmen die Ausführung, HORNBACH koordiniert das Serviceversprechen. Der zusätzliche Integrationsumfang ist zu testen.',source:'gb26',pages:'37',reference:PATTERN_SOURCE},
+ {id:'rent',name:'Rent Instead of Buy',status:'Ausbauidee',evidence:'Nutzungsabhängiges Werkzeugangebot mit KI-gestützter Verfügbarkeitsplanung als Experiment untersuchen.',source:'',pages:'',reference:PATTERN_SOURCE},
+ {id:'addon',name:'Add-on',status:'Ausbauidee',evidence:'Optionale Planungs- und Prüfdienste ergänzen den Materialkauf; Nutzen und Aufpreis sind unvalidiert.',source:'',pages:'',reference:PATTERN_SOURCE}
+];
+export function ideaTemplate(id='new',name='Neue Idee') {return {
+ id,name,pattern:'Solution Provider',description:'Eigene Idee – Nutzen, Zielgruppe und Angebot konkretisieren.',impact:3,effort:3,risk:3,feasibility:3,cost:3,source:'',pages:'',kpi:'Messbares Pilotziel festlegen.',aiId:'planner',method:'Ähnlichkeitsprinzip',origin:'Projektorientierte Dienstleistungsunternehmen',transfer:'Ein bekanntes Muster auf die digitale Projektbegleitung übertragen.',patternSource:PATTERN_SOURCE,
+ after:FOUR.map(d=>({id:d.id,name:d.name,text:'Veränderung für diese Idee beschreiben.'})),
+ canvasChanges:[{id:'value',text:'Den zusätzlichen Kundennutzen konkretisieren.'},{id:'revenue',text:'Erlös- und Kostenannahmen validieren.'}],
+ recommendation:{situation:'Noch nicht validierte Geschäftsmodellhypothese.',measure:'Digital Commerce und CX prüfen in 0–3 Monaten einen klickbaren Prototyp.',rationale:'Passung zur Projektorientierung überprüfen.',reference:PATTERN_SOURCE,effect:'Kundennutzen und inkrementellen Deckungsbeitrag messen.',risks:'Datenzugang, Integrationskosten und Zahlungsbereitschaft sind offen.'},
+ experiment:{assumption:'Die Zielgruppe erkennt einen hinreichenden zusätzlichen Nutzen.',test:'Prototyp mit zehn Zielkunden besprechen.',success:'Vorab: mindestens drei verbindliche Pilotzusagen von zehn Befragten.',result:'Noch nicht durchgeführt.',decision:'Offen'},
+ checks:[['Daten & Rechte','DSGVO bei Personenbezug und Data Act bei vernetzten Produkten fallbezogen prüfen: Datenbedarf, Zweck, Zugriffsrechte und Datenminimierung.'],['KI & Regulierung','Anwendungsfall und Rollen nach AI Act fallbezogen einordnen; menschliche Kontrolle, Kompetenzen und Verantwortung klären.'],['Machbarkeit','Systemzugang, Datenqualität, Kompetenzen und Betrieb im Pilot belegen.'],['Anbieter & Resilienz','NIS2-Betroffenheit fachlich prüfen; unabhängig davon Ausstiegsoptionen, Notfallbetrieb und Wiederherstellung testen.'],['Markt & Kannibalisierung','Zahlungsbereitschaft, Wettbewerbsreaktion und verdrängte Warenmarge testen.']].map(([name,note])=>({name,note,status:'Offen'}))
+ };}
+export function enrichIdeas(ideas){
+ const added=[
+ {id:'advisor',name:'KI-Beratung als Projektservice',pattern:'Add-on',description:'Quellengebundene Produktauskunft mit optionalem fachlich geprüftem Planungstermin verbinden.',impact:4,effort:2,risk:2,feasibility:4,cost:2,aiId:'knowledge',origin:'Beratungsangebote im Fachhandel',kpi:'Suchzeit −20 % und mindestens 95 % korrekte Testantworten.'},
+ {id:'availability',name:'Verlässliche Projektverfügbarkeit',pattern:'Solution Provider',description:'KI-Bedarfsprognosen und Projektlisten zu einem geprüften Material- und Lieferterminvorschlag verbinden.',impact:4,effort:4,risk:3,feasibility:3,cost:4,aiId:'forecast',origin:'Lieferkettensteuerung im Handel',kpi:'Fehlbestände −10 % ohne zusätzlichen Lagerbestand.'},
+ {id:'tools',name:'Werkzeugnutzung statt Kauf',pattern:'Rent Instead of Buy',description:'KI prognostiziert Werkzeugbedarf und Verfügbarkeit; ein regionaler Pilot testet nutzungsabhängige Abrechnung mit Wartung.',impact:3,effort:4,risk:4,feasibility:2,cost:4,aiId:'forecast',method:'Konfrontationsprinzip',origin:'Sharing- und Vermietungsmodelle',kpi:'Auslastung und Deckungsbeitrag nach Wartung sowie verdrängter Warenmarge.'}
+ ];
+ return [...ideas,...added].map((d,i)=>{const t=ideaTemplate(d.id,d.name);Object.assign(t,d);t.feasibility=d.feasibility??[4,3,3][i];t.cost=d.cost??d.effort;
+ t.aiId=d.aiId??(i===1?'knowledge':'planner');t.method=d.method??(i===2?'Konfrontationsprinzip':'Ähnlichkeitsprinzip');t.origin=d.origin??['Projektservice im Fachhandel','Dienstleistungsnetzwerke','Software-Abonnements'][i];
+ t.transfer=`${t.pattern} aus „${t.origin}“ auf ${t.name.toLowerCase()} übertragen. ${t.description}`;
+ t.after=FOUR.map(f=>({...f,text:f.id==='who'?(i===2?'Gewerbliche Projektkunden und Handwerksbetriebe.':f.text):f.id==='what'?t.description:f.id==='how'?`Bestehende ICR-Kanäle und Partner um ${t.aiId==='forecast'?'datenbasierte Bedarfsplanung':t.aiId==='knowledge'?'quellengebundene Wissensassistenz':'assistierte Projektplanung'} ergänzen.`:`${t.pattern==='Subscription'?'Monatliche Paketgebühr':t.pattern==='Rent Instead of Buy'?'Nutzungsgebühr':t.pattern==='Add-on'?'Optionale Servicegebühr':'Warenmarge und optionale Serviceerlöse'}; zusätzliche Betriebs- und Partnerkosten einbeziehen.`}));
+ t.canvasChanges=[{id:'value',text:t.description},{id:'activities',text:t.after[2].text},{id:'resources',text:'Qualitätsgesicherte Produktdaten, freigegebene KI-Werkzeuge und fachliche Kontrolle ergänzen.'},{id:'costs',text:'Pilot, Integration, Personal, KI-Betrieb und Partnerabwicklung berücksichtigen.'},{id:'revenue',text:t.after[3].text}];
+ t.recommendation={situation:`${t.name} ist eine unvalidierte Ausbauidee auf Basis vorhandener Handels- und Servicefähigkeiten.`,measure:`Digital Commerce / CX: ${t.name} in 0–3 Monaten mit zehn Zielkunden als Prototyp testen; Controlling ermittelt Kosten und Vergleichsbasis.`,rationale:`Das Muster ${t.pattern} knüpft an die Projektorientierung an. ${t.transfer}`,reference:PATTERN_SOURCE,effect:t.kpi,risks:'Zahlungsbereitschaft, verlässliche Daten und Integration sind offen. Bestehende Erlöse, Servicekosten und Partnerabhängigkeit berücksichtigen.'};return t;});
+}
+export const SUPPLEMENT={
+ model:MATURITY_GROUPS,modelQuestions:LEITFRAGEN,four:FOUR,canvas:CANVAS,patterns:PATTERNS,ideaWeights:{impact:35,feasibility:25,cost:25,risk:15},
+ benchmark:[
+ {id:'obi',name:'OBI',scope:'DIY-Handel in Deutschland; Vergleich der Kundenanbindung, keine Konzernrangliste.',sourceUrl:'https://www.obi.de/info/heyobi',evidence:'heyOBI bietet digitale Fachberatung, Einkaufsliste und Markt-Navigation. Interpretation: abgestimmte Informationskanäle (3), eine digitale, jedoch nicht durchgängig belegte Kundenreise (2) und Online-Self-Service (2). Stationäre Terminals oder vollständige End-to-End-Automation sind mit dieser Quelle nicht belegt.',retrieved:'2026-11-16',ratings:[{id:'information',value:3},{id:'journey',value:2},{id:'selfservice',value:2}],assumption:true},
+ {id:'bauhaus',name:'BAUHAUS',scope:'DIY-Handel in Deutschland; nur die drei genannten Kundenkriterien sind vergleichbar.',sourceUrl:'https://www.bauhaus.info/s/service/vorteile/bauhaus-app',evidence:'Die App bietet Verfügbarkeitsprüfung, Produktfinder, Einkaufslisten sowie Reservieren und Abholen. Interpretation: Informationskanäle und Teilkundenreise sind verbunden (3); mobiler Self Service ist belegt, stationäre Terminals nicht (2). Kein Nachweis vollständiger End-to-End-Automation.',retrieved:'2026-11-16',ratings:[{id:'information',value:3},{id:'journey',value:3},{id:'selfservice',value:2}],assumption:true},
+ {id:'toom',name:'toom',scope:'DIY-Handel in Deutschland; nur die drei genannten Kundenkriterien sind vergleichbar.',sourceUrl:'https://toom.de/wissen-service/toom-app/',evidence:'Die App verbindet Marktverfügbarkeit, Bestellung, Reservierung und digitale Vorteilskarte; Videoberatung wird angeboten. Interpretation: abgestimmte Kanäle und eine integrierte Teilkundenreise (3); Online-Self-Service ist belegt, stationäre Terminals nicht (2). Interne Entscheidungsautomation ist unbekannt.',retrieved:'2026-11-16',ratings:[{id:'information',value:3},{id:'journey',value:3},{id:'selfservice',value:2}],assumption:true}
+ ],
+ benchmarkConclusion:'Digitale Beratung und kanalübergreifende Kundenbegleitung sind auch im Wettbewerb sichtbar. Eine belastbare Überlegenheit von HORNBACH lässt sich mit dieser begrenzten Außensicht nicht belegen. Die vorläufige Lücke liegt bei durchgängiger Projektbegleitung und messbarem Servicenutzen; weitere Peer-Belege sind erforderlich.',
+ readiness:[
+ ...['Strategie','Daten','Kompetenzen','Technologie & Betrieb','Governance & Risiko'].map(name=>({name,kind:'KI-Reife',current:null,target:4,evidence:'Öffentliche Angaben reichen für diese interne Fähigkeit nicht aus. Verantwortliche und Belege im Fachgespräch ergänzen.'})),
+ ...['Datenbestand & Qualität','Datenzugang & Rechte','Datennutzung & Verantwortung','Digitale Souveränität','Cybersicherheit & Resilienz'].map(name=>({name,kind:'Ergänzende Perspektive',current:null,target:4,evidence:'Prüfen: Datenverantwortliche, Qualitätsmetriken, Zugriffsregeln, Wechselmöglichkeiten, getestete Backups und Wiederanlaufpläne. Keine rechtliche Betroffenheit unterstellt.'}))
+ ]
+};

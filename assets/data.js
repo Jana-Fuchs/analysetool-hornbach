@@ -1,3 +1,4 @@
+import {SUPPLEMENT,enrichIdeas} from './analysis-data.js';
 export const SOURCES = {
   gb26: { title: 'Geschäftsbericht 2025/26', organization: 'HORNBACH Holding AG & Co. KGaA', file: 'docs/HORNBACH_Holding_Geschaeftsbericht_2025-26.pdf', url: 'https://www.hornbach-holding.de/media/document/53a06c3f-6dfe-485b-b39a-a3ca941e7ea7/assets/20260519_HH_GB_DE.pdf', description: 'Grundlage für Geschäftsmodell, Konzernkennzahlen, ICR, Marktplatz und Digitalisierungsstrategie.' },
   gb25: { title: 'Geschäftsbericht 2024/25', organization: 'HORNBACH Holding AG & Co. KGaA', file: 'docs/HORNBACH_Holding_Geschaeftsbericht_2024-25.pdf', url: 'https://www.hornbach-holding.de/media/document/8d05df5c-4533-48a5-8270-f0b90a156f56/assets/20250521_HH_GB_DE_Links.pdf', description: 'Vergleichsbasis für Umsatz, Onlinegeschäft und bereits bestehende Plattformaktivitäten.' },
@@ -71,3 +72,15 @@ export const DEFAULT_STATE = {
  recommendation:'Zuerst die Datengrundlage und einen internen Beratungsassistenten freigeben. Den Projektbegleiter parallel mit Kunden validieren. Größere Plattform- und Abo-Investitionen erst nach einem positiven Pilotnachweis entscheiden.',
  notes:{steckbrief:'',reifegrad:'',muster:'',kunden:'',plattform:'',erloese:'',massnahmen:''}
 };
+
+Object.assign(DEFAULT_STATE, structuredClone(SUPPLEMENT));
+DEFAULT_STATE.ideas=enrichIdeas(DEFAULT_STATE.ideas);
+Object.assign(SOURCES,{methods:{title:"Methoden und Reifegrad",organization:"DHBW Karlsruhe · Jonas Staib",file:"docs/2026-11-03 Methoden_und_Reifegrad.pdf.pdf"},patterns:{title:"Muster und Ideen",organization:"DHBW Karlsruhe · Jonas Staib",file:"docs/2026-11-03 Muster_und_Ideen.pdf.pdf"}});
+TABS.find(t=>t.id==="reifegrad").subtitle="Kriterienbasierte Außensicht nach Appelfeller/Feldmann. Ist, Soll, Belege und offene Fragen machen die größten Entwicklungslücken sichtbar.";
+TABS.find(t=>t.id==="muster").subtitle="Geschäftsmodellmuster anwenden, KI-Ideen vergleichen und die zwei bestbewerteten Vorschläge als Geschäftsmodell und Experiment ausarbeiten.";
+
+DEFAULT_STATE.actions.forEach(a=>a.originId='');
+
+DEFAULT_STATE.analysisRevision=1;
+
+for(const action of DEFAULT_STATE.actions)Object.assign(action,{situation:'Pilotvorschlag aus der öffentlichen Außensicht auf ICR, Daten und Services.',rationale:'Mit begrenztem Pilotumfang den Nutzen für Beratung, Projektbegleitung oder Warenversorgung nachweisen.',reference:'Appelfeller & Feldmann (2018), Die digitale Transformation des Unternehmens; Geschäftsbericht 2025/26, S. 71–73.',effect:action.gate,risks:'Datenqualität, Integration, Fachkapazität und zusätzliche Betriebs- oder Partnerkosten vor Freigabe prüfen.'});

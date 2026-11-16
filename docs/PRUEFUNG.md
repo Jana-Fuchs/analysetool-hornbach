@@ -86,3 +86,15 @@ Die Dateien `preview/steckbrief-chrome.jpg` und `preview/reifegrad-chrome.jpg` z
 - Exportdatei ohne Datum im Namen; kein automatisch erzeugter Zeitstempel im Analyseexport.
 - Alle sieben Tabs sowie das Quellenfenster in Chrome auf sichtbare Kalenderdaten und datierte Tooltips geprüft: keine Treffer.
 - Reifegradwert geändert und zurückgestellt; keine Warnungen oder Fehler in der Browserkonsole. Neun automatisierte Tests erfolgreich.
+
+## Erweiterung nach Methoden/Reifegrad sowie Muster/Ideen
+
+16.11.2026:
+
+- `npm run check`: 15 Tests. Zusätzlich zu den vorhandenen Radar- und Rechenprüfungen: getrennte Ideengewichte, invertierte Kosten/Risiken, wechselnde Rangfolge, unbekannte Kriterien, Lückenranking, variable Ideen-/Maßnahmenlisten, Empfehlungs- und Experimentdaten, Migration älterer Sicherungen und erweiterte Importvalidierung.
+- DOM-Integration aller sieben Tabs mit temporär installiertem jsdom außerhalb des Repositorys: Kriterien geändert, Lückenmaßnahme zweimal übernommen (keine Duplikate), Ideengewichte und Bewertung geändert, Idee angelegt/benannt, Risiko und Experimententscheidung verändert, Top-Idee zweimal übernommen (Aktualisierung desselben Kandidaten), Roadmap-Phase geändert und sechs PDF-Downloads in der Quellenbibliothek geprüft. Anschließender Roundtrip des gesamten bearbeiteten Zustands erfolgreich; keine DOM-Laufzeitfehler. Keine neue Laufzeit- oder Projektabhängigkeit.
+- Reale Chrome-Prüfung über native Bedienung: Reifegrad-Kennzahlen, Ist/Soll-Netzdiagramm, offene Produktkriterien, Lückenkarten sowie Musterkarten und neue Ideen sichtbar geprüft. Die bestehende Drei-Ideen-Analyse wurde beim Neuladen ergänzend auf sechs Ideen migriert.
+- Chrome-Geräteansicht 390 × 844 Pixel: Kopfzeile, horizontale Tabnavigation, Kennzahlkarten und Beginn des Musterbereichs visuell geprüft. Keine vollständige erneute Mobilprüfung sämtlicher Detailbereiche; breite Matrizen besitzen interne Scrollcontainer. Geräteansicht und DevTools anschließend geschlossen.
+- Alte freie Radaransicht samt Drag-Verhalten und Exportformat bleiben verfügbar. Neue Modellkriterien nutzen eine getrennte Skala 1–4. Unbekannte Werte werden beim Mittelwert und Lückenranking ausgelassen und als offen gekennzeichnet.
+- Quellenbibliothek um beide vom Nutzer bereitgestellten PDFs ergänzt. Wettbewerber-Funktionsbelege stammen aus offiziellen Webseiten; Scores bleiben als eigene Außensicht gekennzeichnet. Stufenbeschreibungen sind sinngemäß gekürzt.
+- Keine Veröffentlichung und kein Git-Commit durchgeführt. Die bereits vom Nutzer gestagten PDFs bleiben unangetastet.

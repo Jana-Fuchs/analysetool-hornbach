@@ -47,3 +47,19 @@ Die vom Nutzer bereitgestellte Datei `2026-10-28 Einstieg_und_Setup.pdf` bleibt 
 ## Logo und Gestaltung
 
 Das Logo wurde vom Nutzer aus dem Downloads-Ordner bereitgestellt (`logo.de-DE.v1.svg`) und unverändert nach `assets/hornbach-logo.svg` übernommen. Die Werte `#f79e1c`, `#c80986` und `#041116` wurden direkt aus dem SVG gelesen. Die vom Nutzer bereitgestellte Bildschirmaufnahme der Hornbach-Website dient als Referenz für Buttons und UI-Komponenten.
+
+## Ergänzende Lehrunterlagen und Wettbewerbsvergleich
+
+- `2026-11-03 Methoden_und_Reifegrad.pdf.pdf`: vom Nutzer bereitgestellt. Appelfeller/Feldmann-Matrix (Folien 75–81), Belegregeln und Kriterienansichten (85–88), Benchmarking, Leitfragen und Tool-Anforderungen (89–94). Aufgedruckte Foliennummern liegen hier um eine Seite über dem PDF-Index.
+- `2026-11-03 Muster_und_Ideen.pdf.pdf`: vom Nutzer bereitgestellt. Ähnlichkeits- und Konfrontationsprinzip, Opportunity Map, Risiko-Check und Experimente; Anforderungen und Empfehlungen auf Folien 54–57. Aufgedruckte Nummern liegen dort um vier Seiten über dem PDF-Index.
+- Appelfeller & Feldmann (2018), *Die digitale Transformation des Unternehmens*, Springer. Kriterien und Stufen im Tool sind sinngemäße Kurzfassungen der bereitgestellten Vorlesungsmatrix.
+- Gassmann, Frankenberger & Csik (2013), *Geschäftsmodelle entwickeln: 55 innovative Konzepte mit dem St. Galler Business Model Navigator*, Hanser. Ausgewählte Muster werden untersucht; das Tool reproduziert keinen vollständigen Musterkatalog.
+- Osterwalder & Pigneur (2011), *Business Model Generation*, Campus. Neun Canvas-Felder und analytische Zuordnung.
+
+Öffentliche Wettbewerberseiten, recherchiert am 16.11.2026:
+
+- [OBI: heyOBI](https://www.obi.de/info/heyobi): digitale Fachberatung, Einkaufsliste und Markt-Navigation.
+- [BAUHAUS App](https://www.bauhaus.info/s/service/vorteile/bauhaus-app): Verfügbarkeitsprüfung, Produktfinder, Einkaufslisten und Reservieren & Abholen.
+- [toom App](https://toom.de/wissen-service/toom-app/): Marktverfügbarkeit, Bestellung, Reservierung, digitale Vorteilskarte und Videoberatung.
+
+Verglichen werden dieselben drei Kriterien Informationskanäle, Customer Journey und Customer Self Service. Scores sind eigene, vorläufige Interpretation der öffentlich beschriebenen Funktionen. Sie sind keine Aussagen der Anbieter über ihren internen Reifegrad; aus fehlenden Informationen wird keine fehlende Fähigkeit abgeleitet. Links, Quellenstand, Begründung, Bewertung und Unsicherheit sind im Tool hinterlegt und bearbeitbar.
