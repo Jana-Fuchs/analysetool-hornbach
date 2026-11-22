@@ -319,17 +319,18 @@ function patternStatus(record){
  const targetEvidence=record?.targetEvidence||(record?.status==='Ausbauidee'?record.evidence:'');
  return {current,targetEvidence,target:Boolean(targetEvidence.trim())};
 }
-function patternCard(number,id,name,record,cite,popoverId){
+function patternCard(number,id,name,description,record,cite,popoverId){
  const {current,target,targetEvidence}=patternStatus(record);
  const source=record?.targetReference||'';
  return `<div class="pattern-choice${current?' pattern-current':''}${target?' pattern-target':''}" data-pattern-id="${e(id)}">
-  <button type="button" class="pattern-tile" popovertarget="${popoverId}">
+  <button type="button" class="pattern-tile" popovertarget="${popoverId}" aria-describedby="${popoverId}-description">
    ${number?`<small>${number}</small>`:''}<strong>${e(name)}</strong>
    ${current?tag('Derzeit genutzt','orange'):''}${target?tag('Ausbaufähig','pink'):''}
   </button>
   <div class="pattern-preview" id="${popoverId}" popover role="region" aria-label="${e(name)}">
    <button type="button" class="icon-button pattern-close" popovertarget="${popoverId}" popovertargetaction="hide" aria-label="Musterinfo schließen">×</button>
    <h3>${e(name)}</h3>
+   <p class="pattern-description" id="${popoverId}-description">${e(description)}</p>
    ${current?`<h4 class="pattern-preview-current">Derzeit genutzt</h4><p>${e(record.evidence)}</p>${record.source?cite(record.source,record.pages):link(record.evidenceUrl)}`:''}
    ${record?.status==='Annahme'&&record.evidence?`<h4>Offene Einordnung</h4><p>${e(record.evidence)}</p>${record.source?cite(record.source,record.pages):link(record.evidenceUrl)}`:''}
    ${number?`<a class="source-ref" href="https://www.businessmodelnavigator.com/pattern?id=${number}" target="_blank" rel="noopener">Muster im Navigator ↗</a>`:''}
@@ -349,8 +350,8 @@ function patternOverview(state,cite){
   const {current,target}=patternStatus(record);
   return !activePatternFilters.size||(current&&activePatternFilters.has('current'))||(target&&activePatternFilters.has('target'));
  };
- const catalog=PATTERN_CATALOG.map(([number,id,name])=>({
-  number,id,name,record:records.get(id)??PATTERNS.find(p=>p.id===id)
+ const catalog=PATTERN_CATALOG.map(([number,id,name,description])=>({
+  number,id,name,description,record:records.get(id)??PATTERNS.find(p=>p.id===id)
  })).filter(({record})=>matches(record));
  const extra=state.patterns.filter(p=>!catalogIds.has(p.id)&&matches(p));
  return `<div class="pattern-filter" role="group" aria-label="Muster filtern">
@@ -359,8 +360,8 @@ function patternOverview(state,cite){
    return `<button type="button" id="pattern-filter-${value}" data-pattern-filter="${value}" aria-pressed="${pressed}">${pressed&&value!=='all'?'<span aria-hidden="true">✓</span> ':''}${label}</button>`;
   }).join('')}
  </div>
- ${catalog.length?`<div class="pattern-catalog">${catalog.map(({number,id,name,record})=>patternCard(number,id,name,record,cite,'pattern-preview-'+number)).join('')}</div>`:''}
- ${extra.length?`<h3 class="spaced">Eigene Muster</h3><div class="pattern-catalog">${extra.map((p,i)=>patternCard(null,p.id,p.name,p,cite,'pattern-preview-extra-'+i)).join('')}</div>`:''}
+ ${catalog.length?`<div class="pattern-catalog">${catalog.map(({number,id,name,description,record})=>patternCard(number,id,name,description,record,cite,'pattern-preview-'+number)).join('')}</div>`:''}
+ ${extra.length?`<h3 class="spaced">Eigene Muster</h3><div class="pattern-catalog">${extra.map((p,i)=>patternCard(null,p.id,p.name,p.evidence||p.targetEvidence||'Für dieses eigene Muster ist noch keine Beschreibung hinterlegt.',p,cite,'pattern-preview-extra-'+i)).join('')}</div>`:''}
  ${!catalog.length&&!extra.length?'<p>Für diese Auswahl gibt es keine Muster.</p>':''}`;
 }
 let newIdeaId=null;
@@ -374,6 +375,13 @@ function boardIdeas(state){
 }
 function scoredIdeas(state){
  return rankedIdeas(state).filter(idea=>idea.name.trim()&&idea.id!==newIdeaId&&ideaScore(idea,state.ideaWeights)>0);
+}
+export function developmentIdeas(state){
+ return scoredIdeas(state).slice(0,2);
+}
+export function openIdeaProposal(id){
+ activeIdeaTab='proposals';
+ collapsedIdeaDetails.delete(id);
 }
 function notifyIdeaRanking(state,before,idea,toast){
  const after=scoredIdeas(state);
@@ -438,12 +446,12 @@ function ideaRanking(state,ranked,editing){
   ${state.ideaManualOrder&&!hasDraft?'<button class="button small secondary" data-x-action="sort-ideas">Nach Score sortieren</button>':''}
  </section>`;
 }
-function ideaProposals(state,ranked,editing){
- return `<div class="idea-proposals">${ranked.slice(0,2).map((idea,rank)=>{
+function ideaProposals(state,editing){
+ return `<div class="idea-proposals">${developmentIdeas(state).map((idea,rank)=>{
   const index=state.ideas.indexOf(idea);
   const expanded=!collapsedIdeaDetails.has(idea.id),detailId='idea-proposal-'+index;
   return `<section class="idea-proposal">
-   <h3 class="idea-proposal-heading"><button type="button" data-idea-details="${e(idea.id)}" aria-expanded="${expanded}" aria-controls="${detailId}">
+   <h3 class="idea-proposal-heading"><button type="button" id="idea-proposal-heading-${e(idea.id)}" data-idea-details="${e(idea.id)}" aria-expanded="${expanded}" aria-controls="${detailId}">
     <span class="row-index">${rank+1}</span><span>${e(idea.name)}</span>${tag(idea.pattern,'pink')}<span class="idea-detail-chevron" aria-hidden="true"></span>
    </button></h3>
    <div class="idea-detail-body" id="${detailId}" ${expanded?'':'hidden'}>${topIdea(state,idea,index,editing)}</div>
@@ -457,7 +465,7 @@ export function ideasAnalysis(state,{editing,cite}){
   patterns:()=>patternOverview(state,cite),
   board:()=>ideaRanking(state,ranked,editing),
   map:()=>opportunityMap(ranked,d=>ideaScore(d,weights),'Opportunity Map',true),
-  proposals:()=>ideaProposals(state,ranked,editing)
+  proposals:()=>ideaProposals(state,editing)
  };
  return `<section class="maturity-folder ideas-folder">
   <div class="folder-tabs" role="tablist" aria-label="Muster und Ideen">${ideaTabs.map(([id,label])=>`<button type="button" role="tab" id="idea-tab-${id}" data-idea-tab="${id}" aria-selected="${activeIdeaTab===id}" tabindex="${activeIdeaTab===id?0:-1}" aria-controls="idea-folder-content">${label}</button>`).join('')}</div>
@@ -759,7 +767,6 @@ export function handleAnalysisEvent(event,state,{save,render,toast,startEditing=
   const tile=el.closest('.pattern-tile');
   if(!tile||tile.contains(event.relatedTarget))return;
   const card=tile.parentElement;
-  if(!card.matches('.pattern-current, .pattern-target'))return;
   const rect=card.getBoundingClientRect();
   const viewportWidth=document.documentElement.clientWidth;
   const width=Math.min(320,viewportWidth-24);

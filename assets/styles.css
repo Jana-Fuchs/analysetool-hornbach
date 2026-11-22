@@ -1058,9 +1058,9 @@ noscript { display: block; padding: 30px; }
   border-top: 2px solid var(--ink); border-left: 2px solid var(--ink); transform: rotate(45deg);
 }
 @media (hover: hover) {
-  .pattern-choice:is(.pattern-current, .pattern-target):hover > .pattern-preview:not(:popover-open) { display: block; }
+  .pattern-choice:hover > .pattern-preview:not(:popover-open) { display: block; }
 }
-.pattern-choice:is(.pattern-current, .pattern-target):has(.pattern-tile:focus-visible) > .pattern-preview:not(:popover-open) { display: block; }
+.pattern-choice:has(.pattern-tile:focus-visible) > .pattern-preview:not(:popover-open) { display: block; }
 .pattern-preview:not(:popover-open) .source-ref { display: none; }
 .pattern-preview:not(:popover-open) p:last-child { margin-bottom: 0; }
 

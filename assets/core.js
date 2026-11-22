@@ -59,7 +59,7 @@ export function validateState(value){
      target[key]=expected.map((d,i)=>{if(typeof d==='string'){if(typeof got[i]!=='string'||got[i].length>10000)throw new Error(at+': ungültiger Text.');return got[i];}const next=clone(d);merge(next,got[i],at);return next;});
     }
    }else if(expected===null){
-    if(got!==null&&(typeof got!=='number'||!Number.isInteger(got)||got<(path.includes('customerAnalysis.involvement')?0:1)||got> (path.includes('customerAnalysis.involvement')?3:path.includes('readiness')?5:4)))throw new Error(at+': ungültige Stufe.');
+    if(got!==null&&(typeof got!=='number'||!Number.isInteger(got)||got<(path.includes('customerAnalysis.involvement')?0:1)||got> (path.includes('customerAnalysis.involvement')?3:(path.includes('readiness')||key==='severity')?5:4)))throw new Error(at+': ungültige Stufe.');
     target[key]=got;
    }else if(typeof expected==='object')merge(expected,got,at);
    else if(typeof expected==='string'){

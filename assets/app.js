@@ -1,7 +1,7 @@
 import {PATTERN_SOURCE} from './analysis-data.js';
 import {applyDescriptionTypography} from './description-typography.js';
 import {renderCustomerAnalysis,innovationView,handleCustomerAnalysisEvent,animateJourneyBoard} from './customer-analysis.js';
-import {maturityAnalysis,ideasAnalysis,completedIdeas,triangleView,showTrianglePart,canvasView,actionAnalysis,readiness,handleAnalysisEvent} from './analysis-ui.js';
+import {maturityAnalysis,ideasAnalysis,completedIdeas,developmentIdeas,openIdeaProposal,triangleView,showTrianglePart,canvasView,actionAnalysis,readiness,handleAnalysisEvent} from './analysis-ui.js';
 import {SOURCES,TABS,DEFAULT_STATE} from './data.js';
 import {clone,clamp,priorityScore,ranked,maturityMean,economics,validateState,previewRadarDrag,reorderDimension} from './core.js';
 const $=(s,root=document)=>root.querySelector(s);
@@ -153,7 +153,7 @@ function refreshPriorities(){
   rows.sort((a,b)=>score(b)-score(a)).forEach((row,i)=>{body.append(row);const index=row.querySelector('.row-index');if(index)index.textContent=String(i+1).padStart(2,'0');});
  });
 }
-function customerView(view='journey'){return renderCustomerAnalysis(state,{editing,cite},view);}
+function customerView(view='journey'){return renderCustomerAnalysis(state,{editing,cite,developmentProposals:developmentIdeas(state)},view);}
 function platformConcept(){return `<section class="panel ecosystem-panel">${sectionHead('ZIELKONZEPT','Plattformkonzept')}<div class="ecosystem-map"><div class="eco-node eco-top">${icon('users')}<strong>Projektkunden</strong><span>DIY · Profi · DIFM</span></div><div class="eco-node eco-left">${icon('overview')}<strong>Hersteller & Händler</strong><span>Sortiment · Produktdaten</span></div><div class="eco-center"><span>HORNBACH</span><strong>Projektplattform</strong><small>Markt · App · Onlineshop</small></div><div class="eco-node eco-right">${icon('network')}<strong>Handwerksbetriebe</strong><span>Ausführung · Expertise</span></div><div class="eco-node eco-bottom">${icon('roadmap')}<strong>Logistik & Service</strong><span>Lieferung · Terminstatus</span></div></div><div class="flow-legend"><span>↔ Waren, Leistungen & Zahlungen</span><span>↔ Bedarf, Status & Feedback</span></div></section>`;}
 function platformComparison(){return `<section class="ecosystem-layout">${panel('Was heute schon besteht',`<ul class="simple-list"><li>Deutscher Online-Marktplatz für ausgewählte Drittanbieter</li><li>Regionale Vertragsbetriebe im Handwerker-Service</li><li>ICR als Verbindung zwischen Markt und Onlinekanälen</li></ul>${cite('gb26','37, 72')}`)}${panel('Was wir ergänzen würden',`<ul class="simple-list"><li>Gemeinsame Projektübersicht und Statusdaten</li><li>Standardisierte Partnerprofile und Serviceprozesse</li><li>Feedback zum abgeschlossenen Projekt</li></ul>`)}</section>`;}
 function platformRules(){return `<details class="additional-details" open><summary>Rolle, Nutzen & Spielregeln ${icon('chevron')}</summary>${editable('platformNote',state.platformNote,{label:'Plattformrolle bearbeiten'})}<div class="three-col">${panel('Nutzen & Netzwerkeffekt',`<p>Mehr qualifizierte Partner können Auswahl und Verfügbarkeit verbessern. Mehr abgeschlossene Kundenprojekte machen die Plattform für Partner attraktiver. Dieser Netzwerkeffekt muss im Pilot belegt werden.</p>`)}${panel('Governance & Vertrauen',`<p>Partnerprüfung, klare Verkäufer- und Vertragspartnerrollen, Produktqualität und einheitliche Reklamationswege. Datenfreigaben und Zugriffsrechte gehören vor dem Pilot in ein verbindliches Regelwerk.</p>`)}${panel('Pilotumfang',`<p>Eine Region, eine Projektkategorie und vorhandene Partner. Verfügbarkeit und Servicequalität zuerst stabilisieren; Sortiment und regionale Abdeckung danach ausweiten.</p>`)}</div><p class="method-caption">Nutzenlogik, Governance und Pilotumfang: konzeptionelle Empfehlungen. Grundlage: ${cite('gb26','37–38, 72')}</p></details>`;}
@@ -239,7 +239,20 @@ function render(){
  if(active==='kunden')animateJourneyBoard($('#panel-kunden'));
 }
 
-function navigate(){const id=location.hash.slice(1);active=TABS.some(t=>t.id===id)?id:'steckbrief';editing=false;render();window.scrollTo(0,0);}
+function navigate(){
+ const hash=location.hash.slice(1);
+ const [,proposalId]=hash.match(/^muster\/entwicklungsvorschlaege\/([\w-]+)$/)??[];
+ const id=proposalId?'muster':hash;
+ active=TABS.some(tab=>tab.id===id)?id:'steckbrief';
+ editing=false;
+ if(proposalId)openIdeaProposal(proposalId);
+ render();
+ const heading=proposalId&&document.getElementById('idea-proposal-heading-'+proposalId);
+ if(heading){
+  heading.focus({preventScroll:true});
+  heading.scrollIntoView({block:'start'});
+ }else window.scrollTo(0,0);
+}
 function toast(message,{ranking=false}={}){
  const notice=$('#toast');
  notice.textContent=message;
