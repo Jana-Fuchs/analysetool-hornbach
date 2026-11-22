@@ -1,7 +1,9 @@
-import {maturityAnalysis,ideasAnalysis,businessAnalysis,actionAnalysis,readiness,handleAnalysisEvent} from './analysis-ui.js';
+import {PATTERN_SOURCE} from './analysis-data.js';
+import {applyDescriptionTypography} from './description-typography.js';
+import {renderCustomerAnalysis,innovationView,handleCustomerAnalysisEvent} from './customer-analysis.js';
+import {maturityAnalysis,ideasAnalysis,completedIdeas,triangleView,showTrianglePart,canvasView,actionAnalysis,readiness,handleAnalysisEvent} from './analysis-ui.js';
 import {SOURCES,TABS,DEFAULT_STATE} from './data.js';
 import {clone,clamp,priorityScore,ranked,maturityMean,economics,validateState,previewRadarDrag,reorderDimension} from './core.js';
-const STORAGE_KEY='hornbach-analysis-v1';
 const $=(s,root=document)=>root.querySelector(s);
 const $$=(s,root=document)=>[...root.querySelectorAll(s)];
 const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -9,8 +11,7 @@ const number=(n,digits=1)=>new Intl.NumberFormat('de-DE',{minimumFractionDigits:
 const euro=n=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
 const pathGet=(obj,path)=>path.split('.').reduce((v,k)=>v?.[k],obj);
 function pathSet(obj,path,value){const keys=path.split('.');const last=keys.pop();keys.reduce((v,k)=>v[k],obj)[last]=value;}
-let state=clone(DEFAULT_STATE), active='steckbrief', editing=false, storageAvailable=true, drag=null;
-try{const stored=localStorage.getItem(STORAGE_KEY);if(stored)state=validateState(JSON.parse(stored));}catch{storageAvailable=false;}
+let state=clone(DEFAULT_STATE), active='steckbrief', editing=false, drag=null;
 const icons={download:'<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',edit:'<path d="m15 4 5 5M4 20l5-1L21 7l-4-4L5 15Z"/>',check:'<path d="m4 12 5 5L20 6"/>',chevron:'<path d="m8 4 8 8-8 8"/>',file:'<path d="M14 3H5v18h14V8Zm0 0v5h5M8 13h8m-8 4h8"/>',overview:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',radar:'<path d="m12 2 9 7-3 11H6L3 9Z"/><path d="m12 7 5 4-2 6H9l-2-6Z"/><path d="M12 2v10m9-3-9 3m6 8-6-8m-6 8 6-8M3 9l9 3"/>',bulb:'<path d="M8 16a7 7 0 1 1 8 0v3H8Z"/><path d="M9 22h6m-3-10v7"/>',users:'<circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m2 5a5 5 0 0 1 3 5v1"/>',network:'<rect x="8" y="8" width="8" height="8" rx="2"/><circle cx="4" cy="4" r="2"/><circle cx="20" cy="4" r="2"/><circle cx="4" cy="20" r="2"/><circle cx="20" cy="20" r="2"/><path d="m6 6 2 2m8 0 2-2M6 18l2-2m8 0 2 2"/>',spark:'<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5ZM20 2v4m-2-2h4"/>',roadmap:'<path d="M6 3v18m0-17h12l-3 4 3 4H6m4 5h8m-5 4h5"/>'};
 function icon(name){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]||icons.overview}</svg>`;}
 function cite(id,pages=''){
@@ -27,22 +28,86 @@ function editable(path,value,{multiline=true,label='Text bearbeiten'}={}){
  }
  const changed=baseline!==value;
  if(editing)return `<label class="edit-field"><span>${escape(label)}</span>${multiline?`<textarea aria-label="${escape(label)}" data-field="${path}" rows="4" maxlength="10000">${escape(value)}</textarea>`:`<input aria-label="${escape(label)}" data-field="${path}" value="${escape(value)}" maxlength="1000">`}</label>`;
- return `<p class="editable-text">${escape(value)}</p>${changed?'<small class="edited-label">Eigene Bearbeitung · lokal</small>':''}`;
+ return `<p class="editable-text">${escape(value)}</p>${changed?'<small class="edited-label">Eigene Bearbeitung · diese Sitzung</small>':''}`;
 }
 function sectionHead(kicker,title,extra=''){return `<div class="section-heading"><h2>${title}</h2>${extra}</div>`;}
 function callout(title,body){return `<section class="callout"><h3>${title}</h3><div>${body}</div></section>`;}
 function panel(title,body,cls=''){return `<section class="panel ${cls}"><h3>${title}</h3>${body}</section>`;}
 function metric(label,value,delta,info,source,pages,negative=false){return `<div class="metric"><div class="metric-label">${label}</div><div class="metric-value">${value}</div><div class="metric-detail"><span class="delta ${negative?'muted':''}">${delta}</span><span>${info}</span></div>${cite(source,pages)}</div>`;}
+const profileTabs=[
+ ['dimensions','Fünf Dimensionen'],
+ ['triangle','Magisches Dreieck'],
+ ['canvas','Business Model Canvas']
+];
+let activeProfileTab='dimensions';
+let selectedTrianglePart='what';
+function profileTriangle(){
+ return `${triangleView(state.four,{
+  id:'profile-triangle-text',selected:selectedTrianglePart,
+  content:(part,i)=>editable('four.'+i+'.text',part.text,{label:part.name+' – Analyse bearbeiten'})
+ })}
+ <p class="method-caption source-note">${escape(PATTERN_SOURCE)} · Ist-Beschreibung: <a href="${escape(SOURCES.gb26.file)}#page=37" target="_blank" rel="noopener">Geschäftsbericht 2025/26, S. 37–38, 72–73</a> · analytische Zuordnung.</p>`;
+}
 function profileView(){
+ const panels={
+  dimensions:`<div class="dimension-list">${state.profile.map((d,i)=>`<details class="profile-dimension" open><summary><span class="dimension-icon">${icon(['users','bulb','overview','network','roadmap'][i])}</span><strong>${escape(d.title)}</strong>${icon('chevron')}</summary><div class="dimension-detail">${editable('profile.'+i+'.text',d.text,{label:d.title+' – Analyse bearbeiten'})}${cite(d.source,d.pages)}</div></details>`).join('')}</div>`,
+  triangle:profileTriangle(),
+  canvas:canvasView(state,editing)
+ };
  return `<div class="metrics">
  ${metric('Konzernumsatz','6,434 <small>Mrd. €</small>','+3,8 %','zum Vorjahr','gb26','48')}
  ${metric('Bereinigtes EBIT','264,7 <small>Mio. €</small>','−1,8 %','zum Vorjahr','gb26','50',true)}
  ${metric('Onlineanteil Baumarkt','12,7 <small>%</small>','+0,4 PP','inkl. Click & Collect','gb26','48')}
- </div><p class="scope-note">Geschäftsjahr 2025/26 · Onlineanteil: Teilkonzern Baumarkt · PP = Prozentpunkte</p>
- ${sectionHead('','Die fünf Dimensionen')}
- <div class="dimension-list">${state.profile.map((d,i)=>`<details class="profile-dimension" open><summary><span class="dimension-icon">${icon(['users','bulb','overview','network','roadmap'][i])}</span><strong>${escape(d.title)}</strong>${icon('chevron')}</summary><div class="dimension-detail">${editable('profile.'+i+'.text',d.text,{label:d.title+' – Analyse bearbeiten'})}${cite(d.source,d.pages)}</div></details>`).join('')}</div>
-`;
+ </div>
+ <div class="maturity-folder profile-folder">
+  <div class="folder-tabs" role="tablist" aria-label="Steckbrief-Ansichten">
+   ${profileTabs.map(([id,label])=>`<button type="button" role="tab" id="profile-tab-${id}" data-profile-tab="${id}" aria-controls="profile-panel-${id}" aria-selected="${id===activeProfileTab}" tabindex="${id===activeProfileTab?0:-1}">${label}</button>`).join('')}
+  </div>
+  ${profileTabs.map(([id])=>`<div class="folder-content profile-tab-panel" id="profile-panel-${id}" role="tabpanel" aria-labelledby="profile-tab-${id}" ${id===activeProfileTab?'':'hidden'}>${panels[id]}</div>`).join('')}
+ </div>`;
 }
+function selectProfileTab(tab){
+ activeProfileTab=tab.dataset.profileTab;
+ for(const button of $$('[data-profile-tab]')){
+  const selected=button===tab;
+  button.setAttribute('aria-selected',String(selected));
+  button.tabIndex=selected?0:-1;
+  document.getElementById(button.getAttribute('aria-controls')).hidden=!selected;
+ }
+ tab.focus({preventScroll:true});
+}
+$('#main').addEventListener('click',event=>{
+ const tab=event.target.closest('[data-profile-tab]');
+ if(tab)selectProfileTab(tab);
+ const part=event.target.closest('[data-triangle-part]');
+ if(part){
+  const id=part.dataset.trianglePart;
+  const diagram=part.closest('.profile-triangle');
+  const selected=diagram.dataset.selectedTrianglePart===id?'':id;
+  diagram.dataset.selectedTrianglePart=selected;
+  if(diagram.closest('.profile-folder'))selectedTrianglePart=selected;
+  showTrianglePart(diagram,selected);
+ }
+});
+for(const eventType of ['pointerover','focusin','pointerout','focusout']){
+ $('#main').addEventListener(eventType,event=>{
+  const part=event.target.closest('[data-triangle-part]');
+  if(!part||part.contains(event.relatedTarget))return;
+  const diagram=part.closest('.profile-triangle');
+  const entering=eventType==='pointerover'||eventType==='focusin';
+  showTrianglePart(diagram,entering?part.dataset.trianglePart:diagram.dataset.selectedTrianglePart);
+ });
+}
+$('#main').addEventListener('keydown',event=>{
+ const tab=event.target.closest('[data-profile-tab]');
+ if(!tab)return;
+ const tabs=$$('[data-profile-tab]');
+ const index=[...tabs].indexOf(tab);
+ const next={ArrowLeft:(index+tabs.length-1)%tabs.length,ArrowRight:(index+1)%tabs.length,Home:0,End:tabs.length-1}[event.key];
+ if(next===undefined)return;
+ event.preventDefault();
+ selectProfileTab(tabs[next]);
+});
 function radarGeometry(){const n=state.maturity.length;const items=drag?.kind==='axis'?drag.preview.items:state.maturity;return items.map((d,i)=>({...d,angle:-Math.PI/2+i*2*Math.PI/n}));}
 const point=(angle,r)=>[330+Math.cos(angle)*r,245+Math.sin(angle)*r];
 function points(field,ratio=1){return radarGeometry().map(d=>point(d.angle,160*(field?d[field]/5:ratio)).join(',')).join(' ');}
@@ -83,30 +148,80 @@ function refreshPriorities(){
  const sum=Object.values(state.weights).reduce((a,b)=>a+b,0);
  $$('.formula').forEach(el=>el.textContent=`Score = [Wirkung × ${state.weights.impact} + (6 − Aufwand) × ${state.weights.effort} + (6 − Risiko) × ${state.weights.risk}] / ${sum}. ${sum!==100?'Gewichte werden auf ihre Summe normiert.':'Gewichte summieren sich zu 100 %.'} Gilt für KI-Anwendungen und Maßnahmen.`);
  $$('[data-score-group]').forEach(el=>{const item=state[el.dataset.scoreGroup][el.dataset.scoreIndex],score=priorityScore(item,state.weights);el.innerHTML=number(score)+' <small>/ 5</small>';el.classList.toggle('high',score>=4);});
- $$('.matrix tbody').forEach(body=>{
+ $$('.ai-matrix tbody, .actions-matrix tbody').forEach(body=>{
   const rows=[...body.rows],score=row=>{const [group,i]=row.querySelector('[data-rating]').dataset.rating.split('.');return priorityScore(state[group][i],state.weights);};
   rows.sort((a,b)=>score(b)-score(a)).forEach((row,i)=>{body.append(row);const index=row.querySelector('.row-index');if(index)index.textContent=String(i+1).padStart(2,'0');});
  });
 }
-function customerView(){return `<div class="journey-list"><div class="journey-labels"><span>Phase</span><span>Vermutete Hürde</span><span>Ansatz</span></div>${state.journey.map((d,i)=>`<article class="journey-row"><div class="journey-phase"><span>${i+1}</span><h3>${escape(d.name)}</h3><small>${escape(d.touchpoint)}</small></div><div>${editable('journey.'+i+'.pain',d.pain,{label:'Kundenhürde '+d.name+' bearbeiten'})}</div><div>${editable('journey.'+i+'.opportunity',d.opportunity,{label:'Ansatz '+d.name+' bearbeiten'})}</div><details class="journey-evidence" open><summary>Kontaktpunkt & Messgröße</summary><p>${escape(d.observation)}</p><p>Messgröße: ${escape(d.metric)}</p>${cite(d.source,d.pages)}</details></article>`).join('')}</div>
- <details class="additional-details" open><summary>Kunden & Partner einbeziehen ${icon('chevron')}</summary>${editable('customerNote',state.customerNote,{label:'Einordnung Kundenhypothesen bearbeiten'})}<div class="three-col">${panel('Kundeninterviews',`<p>15 Interviews: je fünf DIY-, Profi- und DIFM-Kunden. Projektabbrüche und Kanalwechsel erfassen.</p>`)}${panel('Partner-Werkstatt',`<p>Fünf Handwerksbetriebe und drei Lieferanten entwickeln Serviceumfang und Datenbedarf am Prototyp mit.</p>`)}${panel('Pilot mit Vergleichsgruppe',`<p>Eine Projektkategorie in zwei Märkten testen. Einwilligung und Datenminimierung berücksichtigen.</p>`)}</div></details>`;}
-function platformView(){return `<div class="ecosystem-layout"><section class="panel ecosystem-panel">${sectionHead('ZIELKONZEPT','Plattformkonzept')}<div class="ecosystem-map"><div class="eco-node eco-top">${icon('users')}<strong>Projektkunden</strong><span>DIY · Profi · DIFM</span></div><div class="eco-node eco-left">${icon('overview')}<strong>Hersteller & Händler</strong><span>Sortiment · Produktdaten</span></div><div class="eco-center"><span>HORNBACH</span><strong>Projektplattform</strong><small>Markt · App · Onlineshop</small></div><div class="eco-node eco-right">${icon('network')}<strong>Handwerksbetriebe</strong><span>Ausführung · Expertise</span></div><div class="eco-node eco-bottom">${icon('roadmap')}<strong>Logistik & Service</strong><span>Lieferung · Terminstatus</span></div></div><div class="flow-legend"><span>↔ Waren, Leistungen & Zahlungen</span><span>↔ Bedarf, Status & Feedback</span></div></section><aside class="ecosystem-facts"><details open><summary>Bestehend & vorgeschlagen ${icon('chevron')}</summary>${panel('Was heute schon besteht',`<ul class="simple-list"><li>Deutscher Online-Marktplatz für ausgewählte Drittanbieter</li><li>Regionale Vertragsbetriebe im Handwerker-Service</li><li>ICR als Verbindung zwischen Markt und Onlinekanälen</li></ul>${cite('gb26','37, 72')}`)}${panel('Was wir ergänzen würden',`<ul class="simple-list"><li>Gemeinsame Projektübersicht und Statusdaten</li><li>Standardisierte Partnerprofile und Serviceprozesse</li><li>Feedback zum abgeschlossenen Projekt</li></ul>`)}</details></aside></div>
-<details class="additional-details" open><summary>Rolle, Nutzen & Spielregeln ${icon('chevron')}</summary>${editable('platformNote',state.platformNote,{label:'Plattformrolle bearbeiten'})}<div class="three-col">${panel('Nutzen & Netzwerkeffekt',`<p>Mehr qualifizierte Partner können Auswahl und Verfügbarkeit verbessern. Mehr abgeschlossene Kundenprojekte machen die Plattform für Partner attraktiver. Dieser Netzwerkeffekt muss im Pilot belegt werden.</p>`)}${panel('Governance & Vertrauen',`<p>Partnerprüfung, klare Verkäufer- und Vertragspartnerrollen, Produktqualität und einheitliche Reklamationswege. Datenfreigaben und Zugriffsrechte gehören vor dem Pilot in ein verbindliches Regelwerk.</p>`)}${panel('Pilotumfang',`<p>Eine Region, eine Projektkategorie und vorhandene Partner. Verfügbarkeit und Servicequalität zuerst stabilisieren; Sortiment und regionale Abdeckung danach ausweiten.</p>`)}</div><p class="method-caption">Nutzenlogik, Governance und Pilotumfang: konzeptionelle Empfehlungen. Grundlage: ${cite('gb26','37–38, 72')}</p></details>`;}
-function revenueView(){const a=state.revenueAssumptions,e=economics(a);return ` <section class="panel economics-panel">${sectionHead('SZENARIO · KEINE PROGNOSE','Erlösszenario')}<p class="section-description">Zusätzliche Abschlüsse gegenüber einer Vergleichsgruppe; alle Beträge netto.</p><div class="economics-inputs">${[['projects','Zusätzliche Projektkontakte','',1e7],['conversion','Abschlussquote','%',100],['basket','Warenkorb netto','€',1e7],['margin','Waren-Rohertragsmarge','%',100],['fee','Servicegebühr netto','€',1e7],['cost','Zusätzliche Pilotkosten / Monat','€',1e8]].map(([key,label,unit,max])=>`<label>${label}<div><input type="number" min="0" max="${max}" step="1" value="${a[key]}" data-economics="${key}" aria-label="${label}"><span>${unit}</span></div></label>`).join('')}</div><div class="economics-results"><div><span>Zusätzliche Abschlüsse</span><strong id="eco-orders">${number(e.orders,0)}</strong></div><div><span>Zusätzlicher Warenumsatz</span><strong id="eco-revenue">${euro(e.revenue)}</strong></div><div><span>Serviceumsatz</span><strong id="eco-services">${euro(e.serviceRevenue)}</strong></div><div class="eco-contribution"><span>Beitrag nach Pilotkosten</span><strong id="eco-contribution">${euro(e.contribution)}</strong></div></div><p class="method-caption">Beitrag = Abschlüsse × (Warenkorb × Rohertragsmarge + Servicegebühr) − Pilotkosten. Pilotkosten müssen variable Abwicklung, Personal, Betrieb und Marketing enthalten. Einmalkosten separat bewerten; das Ergebnis ist kein Konzerngewinn.</p></section>
-<details class="additional-details" open><summary>Erlösbausteine ${icon('chevron')}</summary><div class="three-col revenue-cards">${panel('Warenmarge',`<p>Materialverkauf über Markt und digitale Kanäle. Die Handelsspanne und die operative Kostenbasis bestimmen die Ergebniswirkung.</p>${cite('gb26','48–54')}`)}${panel('Projekt- & Servicegebühren',`<p>Eine transparente Gebühr für zusätzliche, konkret erbrachte Planung oder Koordination. Keine Gebühr für bereits kostenfreie Standardleistungen ohne zusätzlichen Nutzen.</p>`)}${panel('Optionales Profi-Paket',`<p>Wiederkehrende Erlöse nur bei wiederkehrendem Nutzen: etwa erweiterte Projektverwaltung und abgestimmte Serviceleistungen für Profis.</p>`)}</div>
-</details> ${sectionHead('KI-PORTFOLIO','KI-Anwendungen')}<p class="section-description">Der Bericht beschreibt geplante KI-Nutzung in Beratung und Prozessen; die folgenden konkreten Piloten und Zielwerte sind unsere Vorschläge. ${cite('gb26','72–73')}</p>${weightsPanel()}<div class="table-wrap"><table class="matrix ai-matrix"><thead><tr><th>Use Case / Erfolgskriterium</th><th>Wirkung</th><th>Aufwand</th><th>Risiko</th><th>Priorität</th></tr></thead><tbody>${ranked(state.ai,state.weights).map(d=>{const i=state.ai.indexOf(d);return `<tr><td><h3>${escape(d.name)}</h3>${editable('ai.'+i+'.description',d.description,{label:'KI-Anwendung bearbeiten'})}<div class="ai-kpi"><b>Pilotziel:</b> ${escape(d.kpi)}</div><small><b>Kontrolle:</b> ${escape(d.guardrail)}</small></td>${['impact','effort','risk'].map(k=>`<td>${ratingInput('ai',i,k,d[k])}</td>`).join('')}<td>${scoreBadge(d)}</td></tr>`;}).join('')}</tbody></table></div>`;}
-function actionsView(){return `${callout('Entscheidungsvorschlag an die Geschäftsführung',editable('recommendation',state.recommendation,{label:'Entscheidungsvorschlag bearbeiten'}))}
+function customerView(view='journey'){return renderCustomerAnalysis(state,{editing,cite},view);}
+function platformConcept(){return `<section class="panel ecosystem-panel">${sectionHead('ZIELKONZEPT','Plattformkonzept')}<div class="ecosystem-map"><div class="eco-node eco-top">${icon('users')}<strong>Projektkunden</strong><span>DIY · Profi · DIFM</span></div><div class="eco-node eco-left">${icon('overview')}<strong>Hersteller & Händler</strong><span>Sortiment · Produktdaten</span></div><div class="eco-center"><span>HORNBACH</span><strong>Projektplattform</strong><small>Markt · App · Onlineshop</small></div><div class="eco-node eco-right">${icon('network')}<strong>Handwerksbetriebe</strong><span>Ausführung · Expertise</span></div><div class="eco-node eco-bottom">${icon('roadmap')}<strong>Logistik & Service</strong><span>Lieferung · Terminstatus</span></div></div><div class="flow-legend"><span>↔ Waren, Leistungen & Zahlungen</span><span>↔ Bedarf, Status & Feedback</span></div></section>`;}
+function platformComparison(){return `<section class="ecosystem-layout">${panel('Was heute schon besteht',`<ul class="simple-list"><li>Deutscher Online-Marktplatz für ausgewählte Drittanbieter</li><li>Regionale Vertragsbetriebe im Handwerker-Service</li><li>ICR als Verbindung zwischen Markt und Onlinekanälen</li></ul>${cite('gb26','37, 72')}`)}${panel('Was wir ergänzen würden',`<ul class="simple-list"><li>Gemeinsame Projektübersicht und Statusdaten</li><li>Standardisierte Partnerprofile und Serviceprozesse</li><li>Feedback zum abgeschlossenen Projekt</li></ul>`)}</section>`;}
+function platformRules(){return `<details class="additional-details" open><summary>Rolle, Nutzen & Spielregeln ${icon('chevron')}</summary>${editable('platformNote',state.platformNote,{label:'Plattformrolle bearbeiten'})}<div class="three-col">${panel('Nutzen & Netzwerkeffekt',`<p>Mehr qualifizierte Partner können Auswahl und Verfügbarkeit verbessern. Mehr abgeschlossene Kundenprojekte machen die Plattform für Partner attraktiver. Dieser Netzwerkeffekt muss im Pilot belegt werden.</p>`)}${panel('Governance & Vertrauen',`<p>Partnerprüfung, klare Verkäufer- und Vertragspartnerrollen, Produktqualität und einheitliche Reklamationswege. Datenfreigaben und Zugriffsrechte gehören vor dem Pilot in ein verbindliches Regelwerk.</p>`)}${panel('Pilotumfang',`<p>Eine Region, eine Projektkategorie und vorhandene Partner. Verfügbarkeit und Servicequalität zuerst stabilisieren; Sortiment und regionale Abdeckung danach ausweiten.</p>`)}</div><p class="method-caption">Nutzenlogik, Governance und Pilotumfang: konzeptionelle Empfehlungen. Grundlage: ${cite('gb26','37–38, 72')}</p></details>`;}
+function revenueScenario(){const a=state.revenueAssumptions,e=economics(a);return ` <section class="panel economics-panel">${sectionHead('SZENARIO · KEINE PROGNOSE','Erlösszenario')}<p class="section-description">Zusätzliche Abschlüsse gegenüber einer Vergleichsgruppe; alle Beträge netto.</p><div class="economics-inputs">${[['projects','Zusätzliche Projektkontakte','',1e7],['conversion','Abschlussquote','%',100],['basket','Warenkorb netto','€',1e7],['margin','Waren-Rohertragsmarge','%',100],['fee','Servicegebühr netto','€',1e7],['cost','Zusätzliche Pilotkosten / Monat','€',1e8]].map(([key,label,unit,max])=>`<label>${label}<div><input type="number" min="0" max="${max}" step="1" value="${a[key]}" data-economics="${key}" aria-label="${label}"><span>${unit}</span></div></label>`).join('')}</div><div class="economics-results"><div><span>Zusätzliche Abschlüsse</span><strong id="eco-orders">${number(e.orders,0)}</strong></div><div><span>Zusätzlicher Warenumsatz</span><strong id="eco-revenue">${euro(e.revenue)}</strong></div><div><span>Serviceumsatz</span><strong id="eco-services">${euro(e.serviceRevenue)}</strong></div><div class="eco-contribution"><span>Beitrag nach Pilotkosten</span><strong id="eco-contribution">${euro(e.contribution)}</strong></div></div><p class="method-caption">Beitrag = Abschlüsse × (Warenkorb × Rohertragsmarge + Servicegebühr) − Pilotkosten. Pilotkosten müssen variable Abwicklung, Personal, Betrieb und Marketing enthalten. Einmalkosten separat bewerten; das Ergebnis ist kein Konzerngewinn.</p></section>`;}
+function revenueStreams(){return `<details class="additional-details" open><summary>Erlösbausteine ${icon('chevron')}</summary><div class="three-col revenue-cards">${panel('Warenmarge',`<p>Materialverkauf über Markt und digitale Kanäle. Die Handelsspanne und die operative Kostenbasis bestimmen die Ergebniswirkung.</p>${cite('gb26','48–54')}`)}${panel('Projekt- & Servicegebühren',`<p>Eine transparente Gebühr für zusätzliche, konkret erbrachte Planung oder Koordination. Keine Gebühr für bereits kostenfreie Standardleistungen ohne zusätzlichen Nutzen.</p>`)}${panel('Optionales Profi-Paket',`<p>Wiederkehrende Erlöse nur bei wiederkehrendem Nutzen: etwa erweiterte Projektverwaltung und abgestimmte Serviceleistungen für Profis.</p>`)}</div>
+</details>`;}
+function aiPortfolio(){return `${sectionHead('KI-PORTFOLIO','KI-Anwendungen')}<p class="section-description">Der Bericht beschreibt geplante KI-Nutzung in Beratung und Prozessen; die folgenden konkreten Piloten und Zielwerte sind unsere Vorschläge. ${cite('gb26','72–73')}</p>${weightsPanel()}<div class="table-wrap"><table class="matrix ai-matrix"><thead><tr><th>Use Case / Erfolgskriterium</th><th>Wirkung</th><th>Aufwand</th><th>Risiko</th><th>Priorität</th></tr></thead><tbody>${ranked(state.ai,state.weights).map(d=>{const i=state.ai.indexOf(d);return `<tr><td><h3>${escape(d.name)}</h3>${editable('ai.'+i+'.description',d.description,{label:'KI-Anwendung bearbeiten'})}<div class="ai-kpi"><b>Pilotziel:</b> ${escape(d.kpi)}</div><small><b>Kontrolle:</b> ${escape(d.guardrail)}</small></td>${['impact','effort','risk'].map(k=>`<td>${ratingInput('ai',i,k,d[k])}</td>`).join('')}<td>${scoreBadge(d)}</td></tr>`;}).join('')}</tbody></table></div>`;}
+function targetModel(){return `${callout('Entscheidungsvorschlag an die Geschäftsführung',editable('recommendation',state.recommendation,{label:'Entscheidungsvorschlag bearbeiten'}))}
 <details class="additional-details" open><summary>Zielgeschäftsmodell ${icon('chevron')}</summary><div class="target-grid">${state.target.map((d,i)=>`<article class="target-card"><span class="row-index">0${i+1}</span><h3>${escape(d.title)}</h3>${editable('target.'+i+'.text',d.text,{label:'Zielmodell '+d.title+' bearbeiten'})}</article>`).join('')}</div>
- </details>${sectionHead('PRIORISIERUNG','Priorisierte Maßnahmen')}${weightsPanel()}<div class="table-wrap"><table class="matrix actions-matrix"><thead><tr><th>Maßnahme / Verantwortung</th><th>Wirkung</th><th>Aufwand</th><th>Risiko</th><th>Priorität</th><th>Status</th></tr></thead><tbody>${ranked(state.actions,state.weights).map((d,rank)=>{const i=state.actions.indexOf(d);return `<tr><td><div class="table-item"><span class="row-index">${String(rank+1).padStart(2,'0')}</span><div><h3>${escape(d.name)}</h3>${editable('actions.'+i+'.owner',d.owner,{multiline:false,label:'Verantwortung bearbeiten'})}<span class="item-meta">${escape(d.phase)}</span></div></div></td>${['impact','effort','risk'].map(k=>`<td>${ratingInput('actions',i,k,d[k])}</td>`).join('')}<td>${scoreBadge(d)}</td><td><select class="status-select" data-status="${i}" aria-label="Status ${escape(d.name)}">${['Geplant','In Arbeit','Abgeschlossen'].map(s=>`<option ${s===d.status?'selected':''}>${s}</option>`).join('')}</select></td></tr>`;}).join('')}</tbody></table></div>
- ${sectionHead('ROADMAP','Roadmap',``)}<div class="roadmap-grid">${['0–3 Monate','3–6 Monate','6–12 Monate'].map((phase,p)=>`<section class="roadmap-column"><div class="roadmap-heading"><span>0${p+1}</span><h3>${phase}</h3><small>${['Datengrundlage & Beratungspilot','Projekt- und Servicepilot','Nachweis & Skalierung'][p]}</small></div>${state.actions.filter(d=>d.phase===phase).sort((a,b)=>Number(b.impact>=4&&b.effort<=2)-Number(a.impact>=4&&a.effort<=2)).map(d=>{const i=state.actions.indexOf(d);return `<article class="roadmap-card"><div class="roadmap-card-heading"><span class="status-tag ${d.status==='Abgeschlossen'?'done':d.status==='In Arbeit'?'working':''}">${escape(d.status)}</span>${scoreBadge(d)}</div><h4>${escape(d.name)}</h4>${editing?editable('actions.'+i+'.name',d.name,{multiline:false,label:'Maßnahme'}):''}${editing?`<label class="analysis-select"><span>Zeitraum</span><select data-x-value="actions.${i}.phase">${['0–3 Monate','3–6 Monate','6–12 Monate'].map(p=>`<option ${p===d.phase?'selected':''}>${p}</option>`).join('')}</select></label>`:''}${editable('actions.'+i+'.deliverable',d.deliverable,{label:'Ergebnis der Maßnahme bearbeiten'})}<div class="gate"><span class="mini-label">Entscheidungskriterium</span>${editable('actions.'+i+'.gate',d.gate,{label:'Entscheidungskriterium bearbeiten'})}</div>${editable('actions.'+i+'.depends',d.depends,{multiline:false,label:'Abhängigkeit'})}<details class="action-reasoning" open><summary>Herleitung, Wirkung & Risiken</summary>${[['situation','Ausgangslage'],['rationale','Herleitung'],['reference','Wissenschaftliche Quelle'],['effect','Erwartete Wirkung'],['risks','Aufwand & Risiken']].map(([key,label])=>`<span class="mini-label">${label}</span>${editable('actions.'+i+'.'+key,d[key],{label})}`).join('')}</details>${d.originId?`<span class="status-tag pink">Abgeleiteter Maßnahmenkandidat</span>${editing?`<button class="button small secondary" data-x-action="remove-candidate" data-id="${escape(d.id)}">Kandidat entfernen</button>`:''}`:''}</article>`;}).join('')}</section>`).join('')}</div><p class="method-caption">Zeiträume, Verantwortlichkeiten, Bewertungen und Pilotziele sind Vorschläge des Beraterteams, keine beschlossene Unternehmensplanung. Strategische Grundlage: ${cite('gb26','71–73')}</p>`;}
+ </details>`;}
+function actionPriorities(){return `${sectionHead('PRIORISIERUNG','Priorisierte Maßnahmen')}${weightsPanel()}<div class="table-wrap"><table class="matrix actions-matrix"><thead><tr><th>Maßnahme / Verantwortung</th><th>Wirkung</th><th>Aufwand</th><th>Risiko</th><th>Priorität</th><th>Status</th></tr></thead><tbody>${ranked(state.actions,state.weights).map((d,rank)=>{const i=state.actions.indexOf(d);return `<tr><td><div class="table-item"><span class="row-index">${String(rank+1).padStart(2,'0')}</span><div><h3>${escape(d.name)}</h3>${editable('actions.'+i+'.owner',d.owner,{multiline:false,label:'Verantwortung bearbeiten'})}<span class="item-meta">${escape(d.phase)}</span></div></div></td>${['impact','effort','risk'].map(k=>`<td>${ratingInput('actions',i,k,d[k])}</td>`).join('')}<td>${scoreBadge(d)}</td><td><select class="status-select" data-status="${i}" aria-label="Status ${escape(d.name)}">${['Geplant','In Arbeit','Abgeschlossen'].map(s=>`<option ${s===d.status?'selected':''}>${s}</option>`).join('')}</select></td></tr>`;}).join('')}</tbody></table></div>
+ `;}
+function actionRoadmap(){return `${sectionHead('ROADMAP','Roadmap',``)}<div class="roadmap-grid">${['0–3 Monate','3–6 Monate','6–12 Monate'].map((phase,p)=>`<section class="roadmap-column"><div class="roadmap-heading"><span>0${p+1}</span><h3>${phase}</h3><small>${['Datengrundlage & Beratungspilot','Projekt- und Servicepilot','Nachweis & Skalierung'][p]}</small></div>${state.actions.filter(d=>d.phase===phase).sort((a,b)=>Number(b.impact>=4&&b.effort<=2)-Number(a.impact>=4&&a.effort<=2)).map(d=>{const i=state.actions.indexOf(d);return `<article class="roadmap-card"><div class="roadmap-card-heading"><span class="status-tag ${d.status==='Abgeschlossen'?'done':d.status==='In Arbeit'?'working':''}">${escape(d.status)}</span>${scoreBadge(d)}</div><h4>${escape(d.name)}</h4>${editing?editable('actions.'+i+'.name',d.name,{multiline:false,label:'Maßnahme'}):''}${editing?`<label class="analysis-select"><span>Zeitraum</span><select data-x-value="actions.${i}.phase">${['0–3 Monate','3–6 Monate','6–12 Monate'].map(p=>`<option ${p===d.phase?'selected':''}>${p}</option>`).join('')}</select></label>`:''}${editable('actions.'+i+'.deliverable',d.deliverable,{label:'Ergebnis der Maßnahme bearbeiten'})}<div class="gate"><span class="mini-label">Entscheidungskriterium</span>${editable('actions.'+i+'.gate',d.gate,{label:'Entscheidungskriterium bearbeiten'})}</div>${editable('actions.'+i+'.depends',d.depends,{multiline:false,label:'Abhängigkeit'})}<details class="action-reasoning" open><summary>Herleitung, Wirkung & Risiken</summary>${[['situation','Ausgangslage'],['rationale','Herleitung'],['reference','Wissenschaftliche Quelle'],['effect','Erwartete Wirkung'],['risks','Aufwand & Risiken']].map(([key,label])=>`<span class="mini-label">${label}</span>${editable('actions.'+i+'.'+key,d[key],{label})}`).join('')}</details>${d.originId?`<span class="status-tag pink">Abgeleiteter Maßnahmenkandidat</span>${editing?`<button class="button small secondary" data-x-action="remove-candidate" data-id="${escape(d.id)}">Kandidat entfernen</button>`:''}`:''}</article>`;}).join('')}</section>`).join('')}</div><p class="method-caption">Zeiträume, Verantwortlichkeiten, Bewertungen und Pilotziele sind Vorschläge des Projektteams, keine beschlossene Unternehmensplanung. Strategische Grundlage: ${cite('gb26','71–73')}</p>`;}
 const context=()=>({editing,icon,cite});
-const views={
- steckbrief:()=>profileView()+sectionHead('','Geschäftsmodell: Navigator & Canvas')+businessAnalysis(state,context())+callout('Unsere Einordnung',editable('profileConclusion',state.profileConclusion,{label:'Strategische Einordnung bearbeiten'})),
- reifegrad:()=>maturityAnalysis(state,context())+`<details class="profile-dimension analysis-section" open><summary><span class="dimension-icon">${icon('radar')}</span><strong>Freie Zusatzperspektive</strong>${icon('chevron')}</summary><div class="dimension-detail"><p class="scope-note">Die bisherige frei anpassbare Bewertung auf einer eigenen Skala von 1–5 bleibt erhalten. Sie fließt nicht in die Modellbewertung ein.</p>${maturityView()}</div></details>`,
- muster:()=>ideasAnalysis(state,context()),kunden:customerView,plattform:platformView,
- erloese:()=>revenueView()+readiness(state,context()),
- massnahmen:()=>actionsView()+actionAnalysis(state,context())
+const sectionTabs={
+ innovation:[
+  ['overview','Einordnung & Beispiele'],['involvement','Kundeneinbindung'],
+  ['proposal','Entwicklungsvorschlag'],['campaign','Crowdsourcing'],['scenario','Reifegrad-Wirkung']
+ ].map(([id,label])=>[id,label,()=>innovationView(state,context(),id)]),
+ plattform:[
+  ['concept','Plattformkonzept',platformConcept],['comparison','Ist & Zielbild',platformComparison],
+  ['rules','Rolle & Spielregeln',platformRules]
+ ],
+ erloese:[
+  ['scenario','Erlösszenario',revenueScenario],['streams','Erlösbausteine',revenueStreams],
+  ['portfolio','KI-Anwendungen',aiPortfolio],['readiness','KI-Reife',()=>readiness(state,context())]
+ ],
+ massnahmen:[
+  ['target','Zielmodell',targetModel],['priorities','Priorisierung',actionPriorities],
+  ['roadmap','Roadmap',actionRoadmap],['effect','Wirkung & Risiken',()=>actionAnalysis(state,context())]
+ ]
 };
+const selectedSections={};
+function sectionFolder(page,title,subtitle){
+ const tabs=sectionTabs[page];
+ const [selected,,content]=tabs.find(([id])=>id===selectedSections[page])??tabs[0];
+ const panelId=page+'-folder-content';
+ return `<section class="maturity-folder section-folder">
+  <div class="folder-tabs" role="tablist" aria-label="${escape(title)}">${tabs.map(([id,label])=>`<button type="button" role="tab" id="${page}-tab-${id}" data-section-tab="${id}" aria-selected="${id===selected}" aria-controls="${panelId}" tabindex="${id===selected?0:-1}">${label}</button>`).join('')}</div>
+  <div class="folder-content" id="${panelId}" role="tabpanel" aria-labelledby="${page}-tab-${selected}" tabindex="0">${selected===tabs[0][0]&&subtitle?`<p class="tab-intro">${subtitle}</p>`:''}${content()}</div>
+ </section>`;
+}
+const views={
+ steckbrief:profileView,
+ reifegrad:()=>maturityAnalysis(state,context()),
+ muster:()=>ideasAnalysis(state,context()),
+ kunden:()=>customerView('journey')
+};
+for(const type of ['click','keydown'])$('#main').addEventListener(type,event=>{
+ const button=event.target.closest('[data-section-tab]');
+ if(!button)return;
+ const tabs=sectionTabs[active];
+ let index=tabs.findIndex(([id])=>id===button.dataset.sectionTab);
+ if(type==='keydown'){
+  switch(event.key){
+   case 'ArrowLeft': index=(index+tabs.length-1)%tabs.length; break;
+   case 'ArrowRight': index=(index+1)%tabs.length; break;
+   case 'Home': index=0; break;
+   case 'End': index=tabs.length-1; break;
+   default: return;
+  }
+  event.preventDefault();
+ }
+ const [id]=tabs[index];
+ selectedSections[active]=id;
+ render();
+ document.getElementById(active+'-tab-'+id)?.focus({preventScroll:true});
+});
 function render(){
  const disclosures=new Map((document.querySelector('#panel-'+active)?$$('#main details'):[]).map(d=>[d.querySelector(':scope > summary')?.textContent.trim(),d.open]));
  const tab=TABS.find(t=>t.id===active),i=TABS.indexOf(tab);
@@ -116,18 +231,26 @@ function render(){
  editButton.innerHTML=icon(editing?'check':'edit')+(editing?'Fertig':'Bearbeiten');
  editButton.setAttribute('aria-pressed',String(editing));
  editButton.classList.toggle('editing',editing);
- $('#main').innerHTML=`<section id="panel-${active}" role="tabpanel" aria-labelledby="tab-${active}">${tab.subtitle?`<p class="tab-intro">${tab.subtitle}</p>`:''}${editing?'<div class="edit-banner">Änderungen werden lokal gespeichert. Bearbeitete Inhalte sind eigene Angaben.</div>':''}${views[active]()}<details class="notes-panel" open><summary>Arbeitsnotizen ${icon('chevron')}</summary><label for="tab-notes">Eigene Erkenntnisse für diesen Baustein</label><textarea id="tab-notes" data-field="notes.${active}" rows="3" maxlength="10000" placeholder="Erkenntnisse oder offene Fragen …">${escape(state.notes[active])}</textarea></details></section>`;
+ $('#main').innerHTML=`<section id="panel-${active}" role="tabpanel" aria-labelledby="tab-${active}">${tab.subtitle&&!sectionTabs[active]?`<p class="tab-intro">${tab.subtitle}</p>`:''}${editing?'<div class="edit-banner">Änderungen gelten bis zum Neuladen. Zum dauerhaften Sichern bitte exportieren. Bearbeitete Inhalte sind eigene Angaben.</div>':''}${sectionTabs[active]?sectionFolder(active,tab.short,tab.subtitle):views[active]()}</section>`;
  $$('#main details').forEach(d=>{const key=d.querySelector(':scope > summary')?.textContent.trim();if(disclosures.has(key))d.open=disclosures.get(key);});
+ applyDescriptionTypography($('#panel-'+active),active);
  document.title=`${tab.short} · HORNBACH Analyse`;
  if(active==='reifegrad')bindRadar();
 }
 
 function navigate(){const id=location.hash.slice(1);active=TABS.some(t=>t.id===id)?id:'steckbrief';editing=false;render();window.scrollTo(0,0);}
-function toast(message){$('#toast').textContent=message;$('#toast').hidden=false;clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').hidden=true,4500);}
-function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));storageAvailable=true;$('#save-state').innerHTML='<span class="status-dot"></span> Lokal gespeichert';}catch{storageAvailable=false;$('#save-state').textContent='Speichern nicht verfügbar';toast('Lokales Speichern ist nicht verfügbar. Bitte exportieren Sie Ihre Analyse.');}}
-function exportAnalysis(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='hornbach-analyse.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Analyse als JSON exportiert.');}
+function toast(message,{ranking=false}={}){
+ const notice=$('#toast');
+ notice.textContent=message;
+ notice.classList.toggle('toast-ranking',ranking);
+ notice.hidden=false;
+ clearTimeout(toast.timer);
+ toast.timer=setTimeout(()=>notice.hidden=true,ranking?6500:4500);
+}
+function save(){ $('#save-state').textContent='Nur für diese Sitzung · Sicherung per Export'; }
+function exportAnalysis(){const blob=new Blob([JSON.stringify({...state,ideas:completedIdeas(state)},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='hornbach-analyse.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Analyse als JSON exportiert.');}
 function showSources(){
- $('#source-content').innerHTML=`<p class="dialog-intro">Unternehmensberichte und Vorlesungsunterlagen als PDF zum Öffnen und Herunterladen.</p><div class="source-list">${Object.entries(SOURCES).map(([id,source])=>`<article><div><h3>${source.title}</h3><div class="source-actions"><a class="button" href="${source.file}" download>${icon('download')} PDF herunterladen</a><a class="text-link" href="${source.file}" target="_blank" rel="noopener">PDF öffnen</a>${source.url?`<a class="text-link" href="${source.url}" target="_blank" rel="noopener">Originalquelle</a>`:''}</div></div></article>`).join('')}</div><details class="additional-details" open><summary>Methodik & lokale Speicherung ${icon('chevron')}</summary><p>Fakten verweisen auf die Originalberichte. Bewertungen und Zukunftsvorschläge sind Annahmen des Beraterteams, keine interne Messung oder Unternehmensprognose.</p><p>Reifegrad nach Appelfeller/Feldmann: Kriterien auf Stufen 1–4, Mittelwerte nur über bekannte Werte. Freie Zusatzperspektive und KI-Reife: 1–5. Ideen: Nutzen, Machbarkeit, Kosten und Risiko mit eigenen Gewichten. KI-Anwendungen und Maßnahmen: Wirkung, Aufwand und Risiko. Gewichte werden auf ihre Summe normiert.</p><p>Änderungen bleiben in diesem Browser. Mit Export und Import können Sie Ihre Bearbeitung sichern und teilen. Ein Freigabe-Link zeigt die Ausgangsanalyse.</p></details>`;
+ $('#source-content').innerHTML=`<p class="dialog-intro">Studienanalyse von HORNBACH zur fachlichen Beurteilung in der Vorlesung. Im Mittelpunkt stehen die Anwendung der Vorlesungsmodelle, die Herleitung aus Quellen und die kritische Einordnung der Ergebnisse.</p><p>Ist-Werte sind quellenbasierte Einschätzungen des Projektteams. Soll-Werte, Maßnahmen und Experimente sind eigene analytische Entwicklungsvorschläge; sie stellen keine beschlossene Unternehmensplanung dar. Fehlende öffentliche Belege bleiben als Unsicherheit kenntlich.</p><p>Unternehmensberichte und Vorlesungsunterlagen zum Öffnen und Herunterladen.</p><div class="source-list">${Object.entries(SOURCES).map(([id,source])=>`<article><div><h3>${source.title}</h3><div class="source-actions"><a class="button" href="${source.file}" download>${icon('download')} PDF herunterladen</a><a class="text-link" href="${source.file}" target="_blank" rel="noopener">PDF öffnen</a>${source.url?`<a class="text-link" href="${source.url}" target="_blank" rel="noopener">Originalquelle</a>`:''}</div></div></article>`).join('')}</div><details class="additional-details" open><summary>Methodik & Export ${icon('chevron')}</summary><p>Fakten verweisen auf die Originalberichte. Bewertungen und Zukunftsvorschläge sind Annahmen des Projektteams, keine interne Messung oder Unternehmensprognose.</p><p>Reifegrad nach Appelfeller/Feldmann: Kriterien auf Stufen 1–4, Mittelwerte nur über bekannte Werte. KI-Reife: 1–5. Ideen: Nutzen, Machbarkeit, Kosten und Risiko mit eigenen Gewichten. KI-Anwendungen und Maßnahmen: Wirkung, Aufwand und Risiko. Gewichte werden auf ihre Summe normiert.</p><p>Änderungen gelten nur bis zum Neuladen. Ein Neuladen stellt die vollständige Ausgangsanalyse wieder her. Dauerhaft sichern und teilen können Sie Ihre Bearbeitung per Export; eine exportierte Datei lässt sich wieder importieren.</p></details>`;
  $('#source-dialog').showModal();
 }
 function updateRadar(){
@@ -238,6 +361,7 @@ $('#import-file').addEventListener('change',async event=>{const file=event.targe
  catch(error){toast('Import fehlgeschlagen: '+error.message);}event.target.value='';
 });
 for(const dialog of [$('#source-dialog'),$('#confirm-dialog')])dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
-for(const type of ['input','change','click'])document.addEventListener(type,event=>handleAnalysisEvent(event,state,{save,render,toast,startEditing:()=>{editing=true;}}));
+for(const type of ['input','change','click','keydown','submit'])document.addEventListener(type,event=>handleCustomerAnalysisEvent(event,state,{save,render,toast}));
+for(const type of ['input','change','click','keydown','submit','pointerover','focusin','pointerdown','pointermove','pointerup','pointercancel'])document.addEventListener(type,event=>handleAnalysisEvent(event,state,{save,render,toast,startEditing:()=>{editing=true;}}));
 window.addEventListener('hashchange',navigate);navigate();
-if(!storageAvailable){$('#save-state').textContent='Lokale Daten nicht verfügbar';toast('Gespeicherte Daten konnten nicht geladen werden. Die Ausgangsanalyse wird angezeigt.');}else save();
+save();

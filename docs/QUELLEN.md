@@ -63,3 +63,16 @@ Das Logo wurde vom Nutzer aus dem Downloads-Ordner bereitgestellt (`logo.de-DE.v
 - [toom App](https://toom.de/wissen-service/toom-app/): Marktverfügbarkeit, Bestellung, Reservierung, digitale Vorteilskarte und Videoberatung.
 
 Verglichen werden dieselben drei Kriterien Informationskanäle, Customer Journey und Customer Self Service. Scores sind eigene, vorläufige Interpretation der öffentlich beschriebenen Funktionen. Sie sind keine Aussagen der Anbieter über ihren internen Reifegrad; aus fehlenden Informationen wird keine fehlende Fähigkeit abgeleitet. Links, Quellenstand, Begründung, Bewertung und Unsicherheit sind im Tool hinterlegt und bearbeitbar.
+
+
+## Termin 4 und 5 · Ergänzung vom 18.11.2026
+
+- `2026-11-18 Kunde_und_Journey.pdf` (85 PDF-Seiten): Termin 4, Kundeninteraktion und Customer Journey. Anforderungen auf PDF-Seiten 81–83, aufgedruckte Folien 84–86; außerdem Mobile-Check (PDF 35/Folie 37), klassische und KI-gestützte Journey (PDF 41/Folie 43), Kennzahlen und Methoden (PDF 65–79). Die aufgedruckten Nummern haben wechselnde Abstände zu den PDF-Seiten; Links im neuen Baustein verwenden die tatsächlichen PDF-Seiten.
+- `2026-11-18 Open_Innovation.pdf` (51 PDF-Seiten): Termin 5, Kundenintegration und Open Innovation. Methoden (15, 19), Outside-in (21–23), Inside-out (38), Coupled (41), Crowdsourcing-Kampagne (30), Kennzahlen (45), Aufgaben und Tool-Anforderungen (47–49). Hier stimmen PDF-Seite und aufgedruckte Folie überein.
+- HORNBACH Holding, Meldung vom 27.11.2023 zur Übernahme von Seniovo: https://www.hornbach-holding.de/nachrichten/innovatives-start-up-wird-teil-der-hornbach-gruppe-hornbach-baumarkt-ag-erwirbt-seniovo-den-marktfuehrer-fuer/5178e839-a284-4fc0-bdcb-eb9526b17f81 (geprüft 18.11.2026). Einordnung als Outside-in ist eine eigene methodische Interpretation.
+- HORNBACH-App, offizielle Anbieterbeschreibung: https://play.google.com/store/apps/details?id=de.hornbach (Bestellung, Reservieren und Abholen; geprüft 18.11.2026).
+- Geschäftsbericht 2025/26, S. 37, 72–73, 190, 195–196: Kanäle, Services und systematische Verarbeitung von Kundenfeedback. Nicht als Beleg einer umfassenden Co-Creation-Praxis interpretiert.
+
+Tab 4 trennt belegte Vorgänge von Vorschlägen. Fiktive Persona, Emotionen, Zufriedenheit, Pain-Point-Priorität und die Arbeitsskala der Kundeneinbindung sind eigene Annahmen; offene Angaben bleiben offen. Das Anteilsdiagramm zählt nur die zwei belegten Beispiele, nicht die vorgeschlagenen Inside-out-/Coupled-Formate. Es beschreibt keine repräsentative Verteilung des Innovationsportfolios. Das Reifegradszenario verändert keine Ausgangswerte in Tab 2. Maßnahmen werden nur auf Anforderung als Vorschläge nach Tab 7 übernommen.
+
+Wissenschaftlicher Bezugsrahmen: Lemon & Verhoef (2016), *Understanding Customer Experience Throughout the Customer Journey* (wie in Termin 4 vorgeschlagen); Chesbrough (2003), *Open Innovation* (wie in Termin 5 vorgeschlagen). Die Lehrunterlagen dienen der Methodik, die Unternehmensberichte den Unternehmensbelegen. Die Bücher/Artikel wurden nicht als separat vollständig gelesene Primärquellen dargestellt.

@@ -1,3 +1,4 @@
+import {CUSTOMER_ANALYSIS} from './customer-analysis.js';
 import {SUPPLEMENT,enrichIdeas} from './analysis-data.js';
 export const SOURCES = {
   gb26: { title: 'Geschäftsbericht 2025/26', organization: 'HORNBACH Holding AG & Co. KGaA', file: 'docs/HORNBACH_Holding_Geschaeftsbericht_2025-26.pdf', url: 'https://www.hornbach-holding.de/media/document/53a06c3f-6dfe-485b-b39a-a3ca941e7ea7/assets/20260519_HH_GB_DE.pdf', description: 'Grundlage für Geschäftsmodell, Konzernkennzahlen, ICR, Marktplatz und Digitalisierungsstrategie.' },
@@ -7,9 +8,10 @@ export const SOURCES = {
 };
 export const TABS = [
  {id:'steckbrief',short:'Steckbrief',subtitle:'',icon:'overview'},
- {id:'reifegrad',short:'Reifegrad',subtitle:'',icon:'radar'},
- {id:'muster',short:'Muster & Ideen',subtitle:'Drei Ideen zur Weiterentwicklung des Geschäftsmodells. Bewertungen und Gewichte bestimmen die Rangfolge.',icon:'bulb'},
- {id:'kunden',short:'Kunde & Open Innovation',subtitle:'Die Customer Journey verbindet fünf Projektphasen mit vermuteten Hürden und Lösungsansätzen. Ergebnisse aus Kunden- und Partnergesprächen lassen sich über „Bearbeiten“ ergänzen.',icon:'users'},
+ {id:'reifegrad',short:'Digitaler Reifegrad',subtitle:'',icon:'radar'},
+ {id:'muster',short:'Muster & Ideen',subtitle:'',icon:'bulb'},
+ {id:'kunden',short:'Customer Journey',icon:'users'},
+ {id:'innovation',short:'Open Innovation',icon:'bulb'},
  {id:'plattform',short:'Plattform & Ökosystem',subtitle:'Zielbild für das Zusammenspiel von Kunden, Lieferanten und Servicepartnern. Bestehende Fähigkeiten und Erweiterungen sind gegenübergestellt; die Plattformrolle lässt sich über „Bearbeiten“ anpassen.',icon:'network'},
  {id:'erloese',short:'Erlösmodell & KI',subtitle:'Das Erlösszenario zeigt die Wirtschaftlichkeit eines Projektpiloten unter veränderbaren Annahmen. Die anschließende Matrix priorisiert drei KI-Anwendungen anhand ihrer Bewertungen und Gewichte.',icon:'spark'},
  {id:'massnahmen',short:'Zielmodell & Maßnahmen',subtitle:'Priorisierte Maßnahmen und Roadmap ab Projektfreigabe. Bewertungen und Status sind direkt änderbar; Zuständigkeiten, Ergebnisse und Entscheidungskriterien über „Bearbeiten“.',icon:'roadmap'}
@@ -32,7 +34,7 @@ export const DEFAULT_STATE = {
   {id:'ecosystem',name:'Partner & Plattform',current:3,target:4,evidence:'Kuratierter Marktplatz und regionale Handwerkskooperationen bestehen. Eine integrierte Projektplattform wird als nächster Schritt vorgeschlagen.',source:'gb26',pages:'37, 72'},
   {id:'revenue',name:'Erlösinnovation',current:2,target:4,evidence:'Warenhandel und Services tragen das Modell. Ein validiertes wiederkehrendes Projektservice-Abonnement ist in dieser Analyse eine neue Hypothese.',source:'gb26',pages:'37, 48–54'}
  ],
- maturityNote:'Außensicht auf Basis öffentlicher Berichte, keine interne Reifegradmessung. Fehlende öffentliche Belege bedeuten nicht, dass intern keine Fähigkeit vorhanden ist. Scores und Zielwerte sind Annahmen des Beraterteams.',
+ maturityNote:'Außensicht auf Basis öffentlicher Berichte, keine interne Reifegradmessung. Fehlende öffentliche Belege bedeuten nicht, dass intern keine Fähigkeit vorhanden ist. Scores und Zielwerte sind Annahmen des Projektteams.',
  weights:{impact:50,effort:30,risk:20},
  ideas:[
   {id:'project',name:'Digitaler Projektbegleiter',pattern:'Solution Provider',description:'Eine gemeinsame Projektliste verbindet Mengenplanung, Materialkauf und optionale Servicebuchung.',impact:5,effort:3,risk:2,source:'gb26',pages:'37, 72',kpi:'Projektabschlussquote und Deckungsbeitrag je Projekt'},
@@ -70,17 +72,18 @@ export const DEFAULT_STATE = {
   {id:'scale',name:'Skalierung & Erlösmodell validieren',owner:'Geschäftsführung & Controlling',phase:'6–12 Monate',status:'Geplant',impact:4,effort:4,risk:3,deliverable:'Erfolgreiche Piloten auf weitere Märkte ausweiten; Zahlungsbereitschaft für Services prüfen.',gate:'Nur nach bestandenem Pilot-Gate und positivem Business Case skalieren.',depends:'Projekt- und Servicepilot'}
  ],
  recommendation:'Zuerst die Datengrundlage und einen internen Beratungsassistenten freigeben. Den Projektbegleiter parallel mit Kunden validieren. Größere Plattform- und Abo-Investitionen erst nach einem positiven Pilotnachweis entscheiden.',
- notes:{steckbrief:'',reifegrad:'',muster:'',kunden:'',plattform:'',erloese:'',massnahmen:''}
+ notes:{steckbrief:'',reifegrad:'',muster:'',kunden:'',innovation:'',plattform:'',erloese:'',massnahmen:''}
 };
 
 Object.assign(DEFAULT_STATE, structuredClone(SUPPLEMENT));
 DEFAULT_STATE.ideas=enrichIdeas(DEFAULT_STATE.ideas);
 Object.assign(SOURCES,{methods:{title:"Methoden und Reifegrad",organization:"DHBW Karlsruhe · Jonas Staib",file:"docs/2026-11-03 Methoden_und_Reifegrad.pdf.pdf"},patterns:{title:"Muster und Ideen",organization:"DHBW Karlsruhe · Jonas Staib",file:"docs/2026-11-03 Muster_und_Ideen.pdf.pdf"}});
 TABS.find(t=>t.id==="reifegrad").subtitle="";
-TABS.find(t=>t.id==="muster").subtitle="Geschäftsmodellmuster anwenden, KI-Ideen vergleichen und die zwei bestbewerteten Vorschläge als Geschäftsmodell und Experiment ausarbeiten.";
 
 DEFAULT_STATE.actions.forEach(a=>a.originId='');
 
 DEFAULT_STATE.analysisRevision=1;
 
 for(const action of DEFAULT_STATE.actions)Object.assign(action,{situation:'Pilotvorschlag aus der öffentlichen Außensicht auf ICR, Daten und Services.',rationale:'Mit begrenztem Pilotumfang den Nutzen für Beratung, Projektbegleitung oder Warenversorgung nachweisen.',reference:'Appelfeller & Feldmann (2018), Die digitale Transformation des Unternehmens; Geschäftsbericht 2025/26, S. 71–73.',effect:action.gate,risks:'Datenqualität, Integration, Fachkapazität und zusätzliche Betriebs- oder Partnerkosten vor Freigabe prüfen.'});
+
+DEFAULT_STATE.customerAnalysis=structuredClone(CUSTOMER_ANALYSIS);

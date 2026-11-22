@@ -1,0 +1,90 @@
+/* All rules are scoped to tab 4; earlier modules keep their existing design. */
+:is(#panel-kunden,#panel-innovation) .ca-tabs, :is(#panel-kunden,#panel-innovation) .ca-view-switch { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+:is(#panel-kunden,#panel-innovation) .ca-tabs [aria-selected="true"], :is(#panel-kunden,#panel-innovation) .ca-view-switch [aria-pressed="true"] { background: var(--magenta); border-color: var(--magenta); color: white; }
+:is(#panel-kunden,#panel-innovation) .ca-section { margin: 0 0 36px; }
+:is(#panel-kunden,#panel-innovation) .ca-section > h2 { font-size: 22px; margin: 0 0 20px; }
+:is(#panel-kunden,#panel-innovation) .ca-field { display: block; margin: 16px 0; }
+:is(#panel-kunden,#panel-innovation) .ca-field h4, :is(#panel-kunden,#panel-innovation) .ca-field > span { display: block; margin: 0 0 7px; font-size: 14px; font-weight: 700; color: var(--ink); }
+:is(#panel-kunden,#panel-innovation) .ca-field p { margin: 0; font-size: 14px; line-height: 1.7; }
+:is(#panel-kunden,#panel-innovation) .ca-field textarea { width: 100%; font: inherit; font-size: 14px; padding: 10px; border: 1px solid var(--line); resize: vertical; background: white; }
+:is(#panel-kunden,#panel-innovation) .ca-map-scroll { overflow-x: auto; border: 1px solid var(--line); background: white; margin-bottom: 24px; }
+:is(#panel-kunden,#panel-innovation) .ca-journey-map { display: grid; grid-template-columns: repeat(5,minmax(230px,1fr)); min-width: 1150px; align-items: stretch; }
+:is(#panel-kunden,#panel-innovation) .ca-phase { padding: 18px; border-right: 1px solid var(--line); min-width: 0; }
+:is(#panel-kunden,#panel-innovation) .ca-phase:last-child { border-right: 0; }
+:is(#panel-kunden,#panel-innovation) .ca-phase header { border-top: 4px solid var(--orange); padding-top: 12px; min-height: 68px; }
+:is(#panel-kunden,#panel-innovation) .ca-phase header > span { font-size: 12px; color: #66727a; }
+:is(#panel-kunden,#panel-innovation) .ca-phase h3 { font-size: 18px; margin: 2px 0; }
+:is(#panel-kunden,#panel-innovation) .ca-evidence { display: grid; gap: 5px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+:is(#panel-kunden,#panel-innovation) .ca-evidence > span, :is(#panel-kunden,#panel-innovation) .ca-date { font-size: 12px; color: #59636a; }
+:is(#panel-kunden,#panel-innovation) .ca-score-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+:is(#panel-kunden,#panel-innovation) .ca-score { display: flex; flex-direction: column; gap: 7px; margin: 14px 0; font-size: 12px; min-width: 0; }
+:is(#panel-kunden,#panel-innovation) .ca-score select { width: 100%; padding: 9px; background: white; border: 1px solid var(--line); font: inherit; font-weight: 700; }
+:is(#panel-kunden,#panel-innovation) .ca-curves { margin: 0; padding: 24px; border: 1px solid var(--line); background: white; }
+:is(#panel-kunden,#panel-innovation) .ca-curves h3 { margin: 0 0 10px; font-size: 18px; }
+:is(#panel-kunden,#panel-innovation) .ca-curves figcaption p { font-size: 14px; }
+:is(#panel-kunden,#panel-innovation) .ca-curves svg { width: 100%; display: block; margin-top: 16px; }
+:is(#panel-kunden,#panel-innovation) svg text { font: 13px Arial,sans-serif; fill: var(--ink); }
+:is(#panel-kunden,#panel-innovation) .ca-grid { stroke: #d7dcdf; fill: none; }
+:is(#panel-kunden,#panel-innovation) .ca-current { stroke: var(--orange); stroke-width: 3; fill: #f79e1c20; }
+:is(#panel-kunden,#panel-innovation) .ca-target { stroke: var(--magenta); stroke-width: 3; stroke-dasharray: 6 5; fill: #ca00880a; }
+:is(#panel-kunden,#panel-innovation) circle.ca-current { fill: var(--orange); }
+:is(#panel-kunden,#panel-innovation) circle.ca-target { fill: white; stroke-dasharray: none; }
+:is(#panel-kunden,#panel-innovation) .ca-cards { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+:is(#panel-kunden,#panel-innovation) .ca-cards .panel h3, :is(#panel-kunden,#panel-innovation) .ca-involvement h3 { font-size: 18px; margin: 12px 0; }
+:is(#panel-kunden,#panel-innovation) .ca-cards p { font-size: 14px; line-height: 1.7; }
+:is(#panel-kunden,#panel-innovation) .ca-recommendation { border: 1px solid var(--line); padding: 24px; background: white; }
+:is(#panel-kunden,#panel-innovation) .ca-recommendation > h3 { font-size: 18px; margin: 18px 0; }
+:is(#panel-kunden,#panel-innovation) .ca-recommendation-fields { display: grid; grid-template-columns: 180px minmax(0,1fr); gap: 14px 20px; background: white; padding: 22px; border: 1px solid var(--line); }
+:is(#panel-kunden,#panel-innovation) .ca-recommendation-fields dt { font-size: 14px; font-weight: 700; }
+:is(#panel-kunden,#panel-innovation) .ca-recommendation-fields dd { margin: 0; font-size: 14px; line-height: 1.7; }
+:is(#panel-kunden,#panel-innovation) .ca-distribution { display: flex; align-items: center; gap: 28px; padding: 24px; margin: 24px 0; background: white; border: 1px solid var(--line); }
+:is(#panel-kunden,#panel-innovation) .ca-pie { width: 160px; height: 160px; border-radius: 50%; flex: none; }
+:is(#panel-kunden,#panel-innovation) .ca-distribution h3 { font-size: 18px; }
+:is(#panel-kunden,#panel-innovation) .ca-distribution p, :is(#panel-kunden,#panel-innovation) .ca-distribution li { font-size: 14px; }
+:is(#panel-kunden,#panel-innovation) .ca-involvement { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+:is(#panel-kunden,#panel-innovation) .ca-scenario-options { display: flex; flex-wrap: wrap; gap: 14px 22px; font-size: 14px; margin: 22px 0; }
+:is(#panel-kunden,#panel-innovation) .ca-scenario-options input { accent-color: var(--magenta); }
+:is(#panel-kunden,#panel-innovation) .ca-scenario-layout { display: grid; grid-template-columns: minmax(240px,1fr) minmax(0,1fr); align-items: center; gap: 24px; background: white; border: 1px solid var(--line); padding: 22px; }
+:is(#panel-kunden,#panel-innovation) .ca-scenario-layout svg { width: 100%; max-width: 400px; }
+:is(#panel-kunden,#panel-innovation) .ca-scenario-layout p, :is(#panel-kunden,#panel-innovation) .ca-scenario-layout li { font-size: 14px; }
+:is(#panel-kunden,#panel-innovation) .ca-section > p { font-size: 15px; line-height: 1.7; }
+@media(max-width:800px) { :is(#panel-kunden,#panel-innovation) .ca-cards, :is(#panel-kunden,#panel-innovation) .ca-involvement, :is(#panel-kunden,#panel-innovation) .ca-scenario-layout { grid-template-columns: 1fr; } :is(#panel-kunden,#panel-innovation) .ca-recommendation-fields { grid-template-columns: 1fr; gap: 7px; } :is(#panel-kunden,#panel-innovation) .ca-recommendation-fields dd { margin-bottom: 15px; } :is(#panel-kunden,#panel-innovation) .ca-distribution { flex-direction: column; align-items: start; } }
+@media print { :is(#panel-kunden,#panel-innovation) .ca-map-scroll { overflow: visible; } :is(#panel-kunden,#panel-innovation) .ca-journey-map { min-width: 0; grid-template-columns: 1fr; } :is(#panel-kunden,#panel-innovation) .ca-phase { break-inside: avoid; } }
+:is(#panel-kunden,#panel-innovation) .ca-curves svg, :is(#panel-kunden,#panel-innovation) .ca-scenario-layout svg { height: auto; }
+:is(#panel-kunden,#panel-innovation) .ca-section { overflow-wrap: anywhere; }
+:is(#panel-kunden,#panel-innovation) .ca-curves svg text { font-size: 16px; }
+@media(max-width:600px) { :is(#panel-kunden,#panel-innovation) .ca-curves { overflow-x: auto; } :is(#panel-kunden,#panel-innovation) .ca-curves svg { min-width: 500px; } }
+
+#panel-kunden .ca-persona { display: grid; grid-template-columns: minmax(0, 225px) minmax(0, 1fr); gap: clamp(16px, 3vw, 28px); }
+#panel-kunden .ca-persona-photo { position: relative; min-height: 180px; max-height: 250px; border-top: 4px solid var(--orange); }
+#panel-kunden .ca-persona img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 38%; }
+#panel-kunden .ca-persona-placeholder { display: grid; place-items: center; background: #e7e9eb; color: #a4acb2; }
+#panel-kunden .ca-persona-placeholder span { position: relative; width: 76px; height: 74px; }
+#panel-kunden .ca-persona-placeholder span::before,
+#panel-kunden .ca-persona-placeholder span::after { content: ''; position: absolute; background: currentColor; }
+#panel-kunden .ca-persona-placeholder span::before { width: 32px; height: 32px; border-radius: 50%; left: 22px; }
+#panel-kunden .ca-persona-placeholder span::after { width: 76px; height: 36px; border-radius: 36px 36px 8px 8px; bottom: 0; }
+#panel-kunden .ca-persona-profile { min-width: 0; font-size: 13px; overflow-wrap: anywhere; }
+#panel-kunden .ca-persona-fields { min-width: 0; border: 0; margin: 0; padding: 0; }
+#panel-kunden .ca-persona-fields legend { margin-bottom: 10px; font-weight: 700; }
+
+#panel-kunden .ca-persona-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+#panel-kunden .ca-persona-heading h2 { font-size: 24px; margin: 0; }
+#panel-kunden .ca-persona dl { display: grid; gap: 6px; margin: 10px 0 0; }
+#panel-kunden .ca-persona dl > div { border-top: 1px solid var(--line); padding-top: 5px; }
+#panel-kunden .ca-persona dt { font-weight: 700; }
+#panel-kunden .ca-persona dd { margin: 2px 0 0; line-height: 1.45; }
+#panel-kunden .ca-additional-persona { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 16px; }
+#panel-kunden .ca-persona-divider { border: 0; border-top: 1px solid var(--line); margin: 22px 0 16px; }
+#panel-kunden .ca-add-persona { white-space: normal; }
+#panel-kunden .ca-persona-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+#panel-kunden .ca-journey-filters [data-ca-mode="current"][aria-pressed="true"] { background: var(--orange-light); border-color: #a34e00; color: #a34e00; }
+#panel-kunden .ca-journey-filters [data-ca-mode="target"][aria-pressed="true"] { background: var(--magenta-light); border-color: var(--magenta); color: var(--magenta); }
+#panel-kunden .ca-layer { border-left: 3px solid; margin: 12px 0; padding: 10px; }
+#panel-kunden .ca-layer-current { border-color: var(--orange); background: #fff8eb; }
+#panel-kunden .ca-layer-target { border-color: var(--magenta); background: #fff2fa; }
+#panel-kunden .ca-layer > h4 { font-size: 15px; margin: 0; }
+@media (max-width: 650px) {
+  #panel-kunden .ca-persona { grid-template-columns: minmax(0, 1fr); }
+  #panel-kunden .ca-persona-photo { width: min(100%, 225px); aspect-ratio: 1; }
+}

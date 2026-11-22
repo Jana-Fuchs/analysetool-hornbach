@@ -98,3 +98,13 @@ Die Dateien `preview/steckbrief-chrome.jpg` und `preview/reifegrad-chrome.jpg` z
 - Alte freie Radaransicht samt Drag-Verhalten und Exportformat bleiben verfügbar. Neue Modellkriterien nutzen eine getrennte Skala 1–4. Unbekannte Werte werden beim Mittelwert und Lückenranking ausgelassen und als offen gekennzeichnet.
 - Quellenbibliothek um beide vom Nutzer bereitgestellten PDFs ergänzt. Wettbewerber-Funktionsbelege stammen aus offiziellen Webseiten; Scores bleiben als eigene Außensicht gekennzeichnet. Stufenbeschreibungen sind sinngemäß gekürzt.
 - Keine Veröffentlichung und kein Git-Commit durchgeführt. Die bereits vom Nutzer gestagten PDFs bleiben unangetastet.
+
+## Termin 4/5 · Prüfung am 18.11.2026
+
+- Beide neuen PDF-Unterlagen gelesen; Tool-Anforderungsseiten (Termin 4: PDF 82/Folie 85, Termin 5: PDF 48/Folie 48) zusätzlich visuell geprüft.
+- Tab 4 im Browser geprüft: Journey Ist/Soll/Vergleich; sichtbare Skalenfelder ändern sich entsprechend. Zufriedenheitswert geändert und wieder zurückgesetzt, beide Kurven sichtbar.
+- Open-Innovation-Typfilter geprüft. Das Kreisdiagramm zählt ausschließlich zwei belegte Outside-in-Beispiele; Vorschläge bleiben außerhalb der Verteilung.
+- Journey-Maßnahmenvorschlag übernommen und in Tab 7 als Tabellen- und Roadmap-Eintrag wiedergefunden. Wiederholtes Übernehmen aktualisiert denselben Eintrag (automatischer Test).
+- Mobile Ansicht bei 390 × 844 geprüft: Journey-Map scrollt innerhalb ihrer Region (354 px sichtbare Breite, 1150 px Inhalt); Textspalten bleiben lesbar. Diagramme haben eigenes Seitenverhältnis; kleine Bildschirme können Kurven horizontal scrollen. Temporäre Browsergröße anschließend zurückgesetzt.
+- Ausgangsdaten und Tab-Definitionen von Tab 1–3 mit vor der Änderung angelegtem Snapshot verglichen: unverändert. Reifegradszenario arbeitet nur auf einer Kopie; automatische Tests prüfen diese Trennung.
+- Neue Daten werden exportiert/importiert. Ungültige Skalenwerte werden abgewiesen; fehlende neue Felder in älteren Exporten erhalten Ausgangswerte. Keine automatische Persistenz ergänzt.
