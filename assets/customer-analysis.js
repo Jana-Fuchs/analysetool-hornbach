@@ -84,81 +84,96 @@ let subview='journey',exampleFilter='Alle';
 const lecture=(which,pdf,printed)=>`<a class="source-ref" href="docs/${which==='journey'?'2026-11-18 Kunde_und_Journey.pdf':'2026-11-18 Open_Innovation.pdf'}#page=${pdf}" target="_blank" rel="noopener">Termin ${which==='journey'?4:5} · Folie ${printed} · PDF-Seite ${pdf}</a>`;
 const sourceUrl=url=>/^https?:\/\//i.test(url)?`<a class="source-ref" href="${esc(url)}" target="_blank" rel="noopener">Originalquelle ↗</a>`:'';
 const section=(title,body)=>`<section class="ca-section">${title?`<h2>${title}</h2>`:''}${body}</section>`;
+let openJourneyPhase=null;
+
 function journeyBoard(phases){
  return `<figure class="ca-journey-board" aria-label="Die fünf Phasen der Customer Journey">
   <ol class="ca-board-phases">
-   ${phases.map(phase=>`<li><span class="ca-board-hole" aria-hidden="true"><span class="ca-board-nail"></span></span>${esc(phase.name)}</li>`).join('')}
+   ${phases.map((phase,i)=>`<li><button type="button" class="ca-board-phase" id="ca-board-phase-${i}" aria-expanded="false" aria-controls="ca-phase-${i}"><span class="ca-board-hole" aria-hidden="true"><span class="ca-board-nail"></span></span><span class="ca-board-label">${esc(phase.name)}</span></button></li>`).join('')}
   </ol>
   <div class="ca-hammer-travel" aria-hidden="true"><div class="ca-hammer-swing"><div class="ca-hammer">
    <span class="ca-hammer-handle"></span><span class="ca-hammer-head"></span><span class="ca-hammer-face"></span>
   </div></div></div>
-  <button type="button" class="ca-board-toggle" aria-label="Hammer-Animation pausieren" title="Hammer-Animation pausieren" hidden></button>
  </figure>`;
 }
 
-let journeyBoardPaused=false;
 export function animateJourneyBoard(panel){
  const board=panel.querySelector('.ca-journey-board');
  if(!board)return;
  const travel=board.querySelector('.ca-hammer-travel');
  const swing=board.querySelector('.ca-hammer-swing');
- const toggle=board.querySelector('.ca-board-toggle');
- const nails=[...board.querySelectorAll('.ca-board-nail')];
- const duration=10500, reset=9800;
- const timing={duration,iterations:Infinity};
- const frame=(time,properties)=>({offset:time/duration,...properties});
- const travelFrames=[frame(0,{transform:'translateX(6%)',opacity:0})];
- const swingFrames=[];
- const animations=[];
+ const buttons=[...board.querySelectorAll('.ca-board-phase')];
+ const bubbles=buttons.map(button=>panel.querySelector('#'+button.getAttribute('aria-controls')));
  const rest=-26, seated=-4;
- const pose=(time,y,angle,easing='ease-in-out')=>frame(time,{transform:`translateY(${y}px) rotate(${angle}deg)`,easing});
- const nailPosition=(time,y,opacity=1)=>frame(time,{transform:`translateY(${y}px)`,opacity});
- swingFrames.push(pose(0,rest-15,-13));
+ let animations=[];
 
- nails.forEach((nail,index)=>{
-  const hit=1050+index*1550;
-  const position=`translateX(${(index+.5)*100/nails.length}%)`;
-  travelFrames.push(
-   frame(hit-550,{transform:position,opacity:1}),
-   frame(hit+430,{transform:position,opacity:1,easing:'ease-in-out'})
+ function updateBoard(){
+  buttons.forEach((button,index)=>{
+   const expanded=openJourneyPhase===index;
+   button.setAttribute('aria-expanded',String(expanded));
+   button.classList.toggle('ca-nail-seated',expanded);
+   bubbles[index].hidden=!expanded;
+  });
+ }
+
+ function stopStrike(){
+  animations.forEach(animation=>animation.cancel());
+  animations=[];
+ }
+
+ function strike(button,index){
+  const position=(index+.5)*100/buttons.length;
+  const timing={duration:760};
+  const pose=(y,angle)=>`translateY(${y}px) rotate(${angle}deg)`;
+  animations.push(
+   travel.animate([
+    {transform:`translateX(${position-7}%)`,opacity:0},
+    {transform:`translateX(${position}%)`,opacity:1,offset:.24},
+    {transform:`translateX(${position}%)`,opacity:1,offset:.78},
+    {transform:`translateX(${position+4}%)`,opacity:0}
+   ],timing),
+   swing.animate([
+    {transform:pose(rest-15,-13)},
+    {transform:pose(rest-18,-20),offset:.36,easing:'ease-in'},
+    {transform:pose(rest,0),offset:.59,easing:'ease-out'},
+    {transform:pose(seated,0),offset:.72,easing:'ease-out'},
+    {transform:pose(rest-20,-13)}
+   ],timing),
+   button.querySelector('.ca-board-nail').animate([
+    {transform:`translateY(${rest}px)`},
+    {transform:`translateY(${rest}px)`,offset:.59,easing:'ease-out'},
+    {transform:`translateY(${seated}px)`,offset:.72},
+    {transform:`translateY(${seated}px)`}
+   ],timing)
   );
-  // The hammer face and the top of the nail share the same coordinates during contact.
-  swingFrames.push(
-   pose(hit-550,rest-15,-13),
-   pose(hit-240,rest-25,-24,'ease-in'),
-   pose(hit,rest,0,'ease-out'),
-   pose(hit+100,seated,0,'ease-out'),
-   pose(hit+310,rest-16,-11)
-  );
-  animations.push(nail.animate([
-   nailPosition(0,rest),{...nailPosition(hit,rest),easing:'ease-out'},nailPosition(hit+100,seated),
-   nailPosition(reset,seated),nailPosition(reset+180,seated,0),
-   nailPosition(reset+190,rest,0),nailPosition(duration,rest)
-  ],timing));
- });
+ }
 
- travelFrames.push(frame(8150,{transform:'translateX(96%)',opacity:0}),frame(duration,{transform:'translateX(96%)',opacity:0}));
- swingFrames.push(pose(8150,rest-26,-19),pose(duration,rest-26,-19));
- animations.push(travel.animate(travelFrames,timing),swing.animate(swingFrames,timing));
- const start=document.timeline.currentTime;
- for(const animation of animations)animation.startTime=start;
-
- const updatePlayback=()=>{
-  const label=journeyBoardPaused?'Hammer-Animation fortsetzen':'Hammer-Animation pausieren';
-  toggle.setAttribute('aria-label',label);
-  toggle.title=label;
-  board.classList.toggle('ca-board-paused',journeyBoardPaused);
-  for(const animation of animations){
-   if(journeyBoardPaused)animation.pause();
-   else animation.play();
+ function selectPhase(index){
+  const previous=buttons[openJourneyPhase]?.querySelector('.ca-board-nail');
+  const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const previousPosition=previous&&!reduceMotion?getComputedStyle(previous).transform:null;
+  stopStrike();
+  openJourneyPhase=index;
+  updateBoard();
+  if(reduceMotion)return;
+  if(previousPosition){
+   animations.push(previous.animate([
+    {transform:previousPosition},
+    {transform:`translateY(${rest}px)`}
+   ],{duration:180,easing:'ease-out'}));
   }
- };
- toggle.hidden=false;
- toggle.addEventListener('click',()=>{
-  journeyBoardPaused=!journeyBoardPaused;
-  updatePlayback();
- });
- updatePlayback();
+  if(index!==null)strike(buttons[index],index);
+ }
+
+ buttons.forEach((button,index)=>button.addEventListener('click',()=>{
+  selectPhase(openJourneyPhase===index?null:index);
+ }));
+ bubbles.forEach((bubble,index)=>bubble.addEventListener('keydown',event=>{
+  if(event.key!=='Escape')return;
+  selectPhase(null);
+  buttons[index].focus();
+ }));
+ updateBoard();
 }
 const text=(path,label,value,editing)=>editing?`<label class="ca-field"><span>${label}</span><textarea rows="3" data-ca-text="${path}" maxlength="10000">${esc(value)}</textarea></label>`:`<div class="ca-field"><h4>${label}</h4><p>${esc(value)}</p></div>`;
 const scale=(path,label,value,min,max)=>`<label class="ca-score"><span>${label}</span><select data-ca-score="${path}" data-min="${min}" data-max="${max}"><option value="" ${value===null?'selected':''}>Offen</option>${Array.from({length:max-min+1},(_,i)=>i+min).map(v=>`<option ${v===value?'selected':''}>${v}</option>`).join('')}</select></label>`;
@@ -230,16 +245,15 @@ function journeyView(state,{editing,cite},tab){
  const data=state.customerAnalysis,showCurrent=visibleJourneyLayers.has('current'),showTarget=visibleJourneyLayers.has('target');
  const views={
   persona:()=>personaView(data,editing),
-  map:()=>section('',`${journeyBoard(data.journey)}<label class="ca-segment-filter">Kundensegment
-   <select data-ca-segment aria-label="Customer Journey nach Kundensegment filtern">
+  map:()=>section('',`${journeyBoard(data.journey)}
+  ${data.journey.map((p,i)=>{const segment=journeySegments[activeJourneySegment]?.[i];const online=segment?.[0]??p.online,offline=segment?.[1]??p.offline,pain=segment?.[2]??p.pain,moment=segment?.[3]??p.moment,future=segment?.[4]??p.future;const canEdit=editing&&activeJourneySegment==='all';return `<article class="ca-phase" id="ca-phase-${i}" aria-labelledby="ca-phase-title-${i}" style="--bubble-pointer:${(i+.5)*100/data.journey.length}%" hidden><header><h3 id="ca-phase-title-${i}">${esc(p.name)}</h3><div class="pattern-filter ca-journey-filters" role="group" aria-label="Journey-Ansicht">
+   <select class="ca-segment-filter" id="ca-segment-${i}" data-ca-segment aria-label="Customer Journey nach Kundensegment filtern">
     <option value="all" ${activeJourneySegment==='all'?'selected':''}>Alle Segmente · Ausgangsjourney</option>
     ${Object.entries(personaSegments).map(([id,label])=>`<option value="${id}" ${activeJourneySegment===id?'selected':''}>${esc(label)}</option>`).join('')}
    </select>
-  </label>
-  <p class="scope-note">Segmentbezogene Touchpoints und Hürden sind Arbeitshypothesen des Projektteams, keine erhobenen Kundendaten. Die Bewertungsskalen bilden die ursprüngliche Journey-Annahme ab.</p>
-  <div class="pattern-filter ca-journey-filters" role="group" aria-label="Journey-Ansicht">
-   ${journeyLayers.map(([id,label])=>`<button type="button" id="ca-layer-${id}" data-ca-mode="${id}" aria-pressed="${visibleJourneyLayers.has(id)}">${visibleJourneyLayers.has(id)?'<span aria-hidden="true">✓</span> ':''}${label}</button>`).join('')}
-  </div>${showCurrent||showTarget?`<div class="ca-map-scroll" role="region" aria-label="Journey Map"><div class="ca-journey-map">${data.journey.map((p,i)=>{const segment=journeySegments[activeJourneySegment]?.[i];const online=segment?.[0]??p.online,offline=segment?.[1]??p.offline,pain=segment?.[2]??p.pain,moment=segment?.[3]??p.moment,future=segment?.[4]??p.future;const canEdit=editing&&activeJourneySegment==='all';return `<article class="ca-phase"><header><span>0${i+1}</span><h3>${esc(p.name)}</h3></header>${showCurrent?`<div class="ca-layer ca-layer-current"><h4>Ist</h4>${text(`journey.${i}.online`,'Online-Touchpoints',online,canEdit)}${text(`journey.${i}.offline`,'Offline-Touchpoints',offline,canEdit)}${text(`journey.${i}.action`,'Actions von HORNBACH',p.action,canEdit)}${text(`journey.${i}.moment`,'Moment of Truth',moment,canEdit)}${text(`journey.${i}.pain`,'Pain Point · Hypothese',pain,canEdit)}${text(`journey.${i}.emotion`,'Erfahrung / Emotion · Hypothese',p.emotion,canEdit)}${scale(`journey.${i}.severity`,'Schmerzpunkt · 1 gering bis 5 hoch',p.severity,1,5)}</div>`:''}${showTarget?`<div class="ca-layer ca-layer-target"><h4>Soll</h4>${text(`journey.${i}.future`,segment?'Segmentbezogene Chance / Soll-Erlebnis':'Soll-Erlebnis · Vorschlag',segment?future:p.future,canEdit)}${segment?'':text(`journey.${i}.opportunity`,'Chance / Maßnahme',p.opportunity,canEdit)}</div>`:''}${text(`journey.${i}.risk`,'Risiken und Grenzen',p.risk,canEdit)}${text(`journey.${i}.metric`,'Erfolgskriterium',p.metric,canEdit)}<div class="ca-score-grid">${showCurrent?scale(`journey.${i}.currentEmotion`,'Emotion Ist',p.currentEmotion,1,5)+scale(`journey.${i}.currentSatisfaction`,'Zufriedenheit Ist',p.currentSatisfaction,1,5):''}${showTarget?scale(`journey.${i}.targetEmotion`,'Emotion Soll',p.targetEmotion,1,5)+scale(`journey.${i}.targetSatisfaction`,'Zufriedenheit Soll',p.targetSatisfaction,1,5):''}</div></article>`;}).join('')}</div></div><section class="ca-map-sources" aria-label="Quellen zur Customer Journey"><h3>Quellen zur Customer Journey</h3><ul>${data.journey.map((p,i)=>`<li><span>${esc(p.name)}</span><span aria-hidden="true">→</span>${cite(p.source,p.pages)}${i===2?sourceUrl(app):''}</li>`).join('')}</ul></section>${curves(data)}`:'<p class="scope-note">Wähle Ist oder Soll, um die Journey anzuzeigen.</p>'}`),
+   ${journeyLayers.map(([id,label])=>`<button type="button" id="ca-layer-${i}-${id}" data-ca-mode="${id}" aria-pressed="${visibleJourneyLayers.has(id)}">${visibleJourneyLayers.has(id)?'<span aria-hidden="true">✓</span> ':''}${label}</button>`).join('')}
+  </div></header>${showCurrent||showTarget?`${showCurrent?`<div class="ca-layer ca-layer-current"><h4>Ist</h4>${text(`journey.${i}.online`,'Online-Touchpoints',online,canEdit)}${text(`journey.${i}.offline`,'Offline-Touchpoints',offline,canEdit)}${text(`journey.${i}.action`,'Actions von HORNBACH',p.action,canEdit)}${text(`journey.${i}.moment`,'Moment of Truth',moment,canEdit)}${text(`journey.${i}.pain`,'Pain Point · Hypothese',pain,canEdit)}${text(`journey.${i}.emotion`,'Erfahrung / Emotion · Hypothese',p.emotion,canEdit)}${scale(`journey.${i}.severity`,'Schmerzpunkt · 1 gering bis 5 hoch',p.severity,1,5)}</div>`:''}${showTarget?`<div class="ca-layer ca-layer-target"><h4>Soll</h4>${text(`journey.${i}.future`,segment?'Segmentbezogene Chance / Soll-Erlebnis':'Soll-Erlebnis · Vorschlag',segment?future:p.future,canEdit)}${segment?'':text(`journey.${i}.opportunity`,'Chance / Maßnahme',p.opportunity,canEdit)}</div>`:''}${text(`journey.${i}.risk`,'Risiken und Grenzen',p.risk,canEdit)}${text(`journey.${i}.metric`,'Erfolgskriterium',p.metric,canEdit)}<div class="ca-score-grid">${showCurrent?scale(`journey.${i}.currentEmotion`,'Emotion Ist',p.currentEmotion,1,5)+scale(`journey.${i}.currentSatisfaction`,'Zufriedenheit Ist',p.currentSatisfaction,1,5):''}${showTarget?scale(`journey.${i}.targetEmotion`,'Emotion Soll',p.targetEmotion,1,5)+scale(`journey.${i}.targetSatisfaction`,'Zufriedenheit Soll',p.targetSatisfaction,1,5):''}</div>`:'<p>Wähle Ist oder Soll, um die Phase anzuzeigen.</p>'}<footer class="ca-phase-sources"><h4>Quellen</h4>${cite(p.source,p.pages)}${i===2?sourceUrl(app):''}</footer></article>`;}).join('')}
+  ${showCurrent||showTarget?curves(data):''}`),
   proposal:()=>{
    const pain=strongestPain(data);
    return section('Größter Schmerzpunkt & Entwicklungsvorschlag',`<article class="ca-recommendation"><span class="status-tag orange">Eigene Priorisierung · ${pain.severity}/5</span><h3>${esc(pain.name)}: ${esc(pain.pain)}</h3>${recommendation('journey',pain)}<button class="button" data-ca-candidate="journey">${state.actions.some(a=>a.originId==='course-journey')?'Maßnahmenvorschlag aktualisieren':'Als Maßnahmenvorschlag übernehmen'}</button></article>`);
@@ -408,11 +422,12 @@ export async function handleCustomerAnalysisEvent(event,state,{save,render,toast
   return;
  }
  if(event.type==='click'){
-  const layer=el.closest('[data-ca-mode]')?.getAttribute('data-ca-mode');
+  const layerButton=el.closest('[data-ca-mode]');
+  const layer=layerButton?.getAttribute('data-ca-mode');
   if(layer){
    if(!visibleJourneyLayers.delete(layer))visibleJourneyLayers.add(layer);
    render();
-   globalThis.document?.getElementById('ca-layer-'+layer)?.focus({preventScroll:true});
+   globalThis.document?.getElementById(layerButton.id)?.focus({preventScroll:true});
    return;
   }
   for(const [attr,set] of [['data-ca-view',v=>subview=v],['data-ca-filter',v=>exampleFilter=v]]){const button=el.closest('['+attr+']');if(button){set(button.getAttribute(attr));render();return;}}
@@ -423,7 +438,12 @@ export async function handleCustomerAnalysisEvent(event,state,{save,render,toast
   if(el.dataset.caText.endsWith('.age')&&!validPersonaAge(el.value))return;
   set(el.dataset.caText,el.value);save();return;
  }
- if(event.type==='change'&&el.matches('[data-ca-segment]')){activeJourneySegment=el.value;render();return;}
+ if(event.type==='change'&&el.matches('[data-ca-segment]')){
+  activeJourneySegment=el.value;
+  render();
+  globalThis.document?.getElementById(el.id)?.focus({preventScroll:true});
+  return;
+ }
  if(event.type==='change'&&el.dataset.caScore){const value=el.value===''?null:Number(el.value),min=Number(el.dataset.min),max=Number(el.dataset.max);if(value!==null&&(!Number.isInteger(value)||value<min||value>max)){toast('Ungültiger Skalenwert.');render();return;}if(el.dataset.caScore.endsWith('.severity')&&value===null){toast('Die Schmerzpunktpriorisierung benötigt einen Wert von 1 bis 5.');render();return;}set(el.dataset.caScore,value);save();render();return;}
  if(event.type==='change'&&el.dataset.caScenario){state.customerAnalysis[el.dataset.caScenario]=el.checked;save();render();}
 }
