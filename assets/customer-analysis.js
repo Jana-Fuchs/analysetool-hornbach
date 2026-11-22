@@ -9,6 +9,29 @@ const personaSegments={
  professional:'Gewerbliche Profikunden',
  difm:'Do-it-for-me-Kunden (DIFM)'
 };
+const journeySegments={
+ diy:[
+  ['Suchmaschine, Projektanleitung, HORNBACH-App','Marktbesuch, Austausch im persönlichen Umfeld','Welche Arbeitsschritte und Materialien gehören zum Projekt?','Ein verständlicher Überblick über Umfang und Machbarkeit.','Geprüfte Schritt-für-Schritt-Übersicht mit klaren Materialanforderungen.'],
+  ['Onlineshop, Produktdaten, digitale Materialliste','Fachberatung im Markt, Handwerker-Service','Mengen, Varianten und Kompatibilität über mehrere Kontakte zusammenführen.','Eine passende Materialkombination und verlässliche Mengen.','Eine gemeinsame Projektliste, die App und Beratung mit Einwilligung nutzen.'],
+  ['Warenkorb, Reservierung und Click & Collect','Markt, Abholung, persönliche Beratung','Beratung, Liste und Bestellung können erneute Eingaben erfordern.','Verbindliche Bestellung mit klarer Verfügbarkeit.','Geprüfte Materialliste direkt in Warenkorb oder Reservierung übernehmen.'],
+  ['Projektanleitung, Statusinformation, Servicekontakt','Baustelle, Lieferung, regionale Vertragsbetriebe','Material, Liefertermin und Ausführung müssen zusammenpassen.','Vollständiges Material rechtzeitig vor dem Arbeitsschritt.','Status zu freigegebenen Materialien und Serviceübergaben teilen.'],
+  ['Kundenservice, Reklamation, Onlinebewertung','Markt, Rückgabe, Servicegespräch','Erfahrungen nach Abschluss werden nicht immer in die nächste Planung übernommen.','Eine verständliche Lösung offener Probleme.','Freiwilliges Projektfeedback einholen und sichtbar darauf reagieren.']
+ ],
+ professional:[
+  ['HORNBACH-Website, Sortimentssuche, Angebote','Baustelle, Kollegennetzwerk, Lieferantenkontakt','Produkte und Verfügbarkeit müssen zum konkreten Auftrag und Zeitplan passen.','Schnell einschätzen, ob HORNBACH den Auftrag versorgen kann.','Projektbezogene Sortimentseinstiege mit Verfügbarkeit und Profi-Service bündeln.'],
+  ['Onlineshop, App, Merklisten und Produktdaten','Profi-Service, Fachberatung, wiederkehrende Einkaufswege','Wiederkehrende Bedarfe, Mengen und Produktspezifikationen kosten Zeit.','Eine vollständige, schnell bestellbare Bedarfsliste.','Projektlisten mit Wiederbestellung, Mengenprüfung und fachlicher Rückfrage verbinden.'],
+  ['Onlinebestellung, Rechnungskauf soweit verfügbar, Reservierung','Markteinkauf, Abholung, Lieferung zur Baustelle','Zeitfenster, mehrere Lieferungen und Baustellenlogistik müssen abgestimmt werden.','Ware vollständig zum vereinbarten Termin erhalten.','Bestellung und Lieferstatus je Auftrag übersichtlich zusammenführen.'],
+  ['Digitale Auftrags- und Lieferinformationen','Baustelle, eigenes Team, Lieferanten und Servicepartner','Verspätungen oder fehlende Positionen können Folgearbeiten blockieren.','Materialverfügbarkeit passend zum Baufortschritt.','Abweichungen früh melden und klare Kontaktwege für die Klärung bieten.'],
+  ['Rechnung, Kundenservice, digitale Bestellhistorie','Rückgabe, Reklamation, persönliche Betreuung','Probleme und Nachbestellungen kosten Zeit, wenn der Auftragskontext fehlt.','Eine schnelle Klärung mit Bezug auf den Auftrag.','Auftragsbezogenes Feedback und Wiederbestellung vereinfachen.']
+ ],
+ difm:[
+  ['Projektideen, Serviceinformationen, Website','Empfehlungen aus dem Umfeld, Beratung im Markt','Unklarheit, welche Arbeiten selbst nötig sind und was ein Betrieb übernehmen kann.','Vertrauen in einen passenden, realisierbaren Projektweg.','Projektstart mit verständlicher Abgrenzung von Material und Handwerkerleistung.'],
+  ['Digitale Produktinformationen, Serviceanfrage','Beratung, Aufmaß und Abstimmung mit Fachbetrieb','Materialauswahl, Leistungsumfang und Zuständigkeiten müssen zusammenpassen.','Ein abgestimmter Plan mit transparenten Leistungen und Kosten.','Material- und Serviceplanung mit nachvollziehbarer Übergabe koordinieren.'],
+  ['Onlineauswahl, Termin- und Angebotskommunikation','Marktberatung, Auftrag mit ausführendem Betrieb','Bestellung, Angebot und Leistungsfreigabe können getrennte Schritte sein.','Klarheit, wer Material und Ausführung beauftragt.','Nächste Schritte, Preise und Zuständigkeiten vor Freigabe darstellen.'],
+  ['Statusmeldungen, Servicekontakt','Lieferung, Baustelle, regionaler Vertragsbetrieb','Terminänderungen oder Rückfragen zwischen Kunde, Markt und Betrieb abstimmen.','Verlässlicher Fortschritt und ein erreichbarer Ansprechpartner.','Freigegebene Statusinformationen und Kontaktperson je Projekt anbieten.'],
+  ['Kundenservice, Servicefeedback','Abnahme, Nachbesserung, persönliche Rückmeldung','Offene Punkte nach der Ausführung können schwer zuzuordnen sein.','Eine nachvollziehbare Lösung bei Mängeln oder Restarbeiten.','Projektbezogene Rückmeldung mit klarer Weiterleitung an die zuständige Stelle.']
+ ]
+};
 const personaFields=[
  ['project','Projekt'],
  ['goals','Ziele'],
@@ -48,18 +71,95 @@ export const CUSTOMER_ANALYSIS={
 };
 const journeyTabs=[
  ['persona','Persona'],
- ['map','Journey-Map'],
+ ['map','Journey Map'],
  ['proposal','Pain Points'],
  ['measurement','Messplan'],
  ['scenario','Reifegrad-Wirkung']
 ];
 let activeJourneyTab=journeyTabs[0][0];
+let activeJourneySegment='all';
 const journeyLayers=[['current','Ist'],['target','Soll']];
 const visibleJourneyLayers=new Set(journeyLayers.map(([id])=>id));
 let subview='journey',exampleFilter='Alle';
 const lecture=(which,pdf,printed)=>`<a class="source-ref" href="docs/${which==='journey'?'2026-11-18 Kunde_und_Journey.pdf':'2026-11-18 Open_Innovation.pdf'}#page=${pdf}" target="_blank" rel="noopener">Termin ${which==='journey'?4:5} · Folie ${printed} · PDF-Seite ${pdf}</a>`;
 const sourceUrl=url=>/^https?:\/\//i.test(url)?`<a class="source-ref" href="${esc(url)}" target="_blank" rel="noopener">Originalquelle ↗</a>`:'';
-const section=(title,body)=>`<section class="ca-section"><h2>${title}</h2>${body}</section>`;
+const section=(title,body)=>`<section class="ca-section">${title?`<h2>${title}</h2>`:''}${body}</section>`;
+function journeyBoard(phases){
+ return `<figure class="ca-journey-board" aria-label="Die fünf Phasen der Customer Journey">
+  <ol class="ca-board-phases">
+   ${phases.map(phase=>`<li><span class="ca-board-hole" aria-hidden="true"><span class="ca-board-nail"></span></span>${esc(phase.name)}</li>`).join('')}
+  </ol>
+  <div class="ca-hammer-travel" aria-hidden="true"><div class="ca-hammer-swing"><div class="ca-hammer">
+   <span class="ca-hammer-handle"></span><span class="ca-hammer-head"></span><span class="ca-hammer-face"></span>
+  </div></div></div>
+  <button type="button" class="ca-board-toggle" aria-label="Hammer-Animation pausieren" title="Hammer-Animation pausieren" hidden></button>
+ </figure>`;
+}
+
+let journeyBoardPaused=false;
+export function animateJourneyBoard(panel){
+ const board=panel.querySelector('.ca-journey-board');
+ if(!board)return;
+ const travel=board.querySelector('.ca-hammer-travel');
+ const swing=board.querySelector('.ca-hammer-swing');
+ const toggle=board.querySelector('.ca-board-toggle');
+ const nails=[...board.querySelectorAll('.ca-board-nail')];
+ const duration=10500, reset=9800;
+ const timing={duration,iterations:Infinity};
+ const frame=(time,properties)=>({offset:time/duration,...properties});
+ const travelFrames=[frame(0,{transform:'translateX(6%)',opacity:0})];
+ const swingFrames=[];
+ const animations=[];
+ const rest=-26, seated=-4;
+ const pose=(time,y,angle,easing='ease-in-out')=>frame(time,{transform:`translateY(${y}px) rotate(${angle}deg)`,easing});
+ const nailPosition=(time,y,opacity=1)=>frame(time,{transform:`translateY(${y}px)`,opacity});
+ swingFrames.push(pose(0,rest-15,-13));
+
+ nails.forEach((nail,index)=>{
+  const hit=1050+index*1550;
+  const position=`translateX(${(index+.5)*100/nails.length}%)`;
+  travelFrames.push(
+   frame(hit-550,{transform:position,opacity:1}),
+   frame(hit+430,{transform:position,opacity:1,easing:'ease-in-out'})
+  );
+  // The hammer face and the top of the nail share the same coordinates during contact.
+  swingFrames.push(
+   pose(hit-550,rest-15,-13),
+   pose(hit-240,rest-25,-24,'ease-in'),
+   pose(hit,rest,0,'ease-out'),
+   pose(hit+100,seated,0,'ease-out'),
+   pose(hit+310,rest-16,-11)
+  );
+  animations.push(nail.animate([
+   nailPosition(0,rest),{...nailPosition(hit,rest),easing:'ease-out'},nailPosition(hit+100,seated),
+   nailPosition(reset,seated),nailPosition(reset+180,seated,0),
+   nailPosition(reset+190,rest,0),nailPosition(duration,rest)
+  ],timing));
+ });
+
+ travelFrames.push(frame(8150,{transform:'translateX(96%)',opacity:0}),frame(duration,{transform:'translateX(96%)',opacity:0}));
+ swingFrames.push(pose(8150,rest-26,-19),pose(duration,rest-26,-19));
+ animations.push(travel.animate(travelFrames,timing),swing.animate(swingFrames,timing));
+ const start=document.timeline.currentTime;
+ for(const animation of animations)animation.startTime=start;
+
+ const updatePlayback=()=>{
+  const label=journeyBoardPaused?'Hammer-Animation fortsetzen':'Hammer-Animation pausieren';
+  toggle.setAttribute('aria-label',label);
+  toggle.title=label;
+  board.classList.toggle('ca-board-paused',journeyBoardPaused);
+  for(const animation of animations){
+   if(journeyBoardPaused)animation.pause();
+   else animation.play();
+  }
+ };
+ toggle.hidden=false;
+ toggle.addEventListener('click',()=>{
+  journeyBoardPaused=!journeyBoardPaused;
+  updatePlayback();
+ });
+ updatePlayback();
+}
 const text=(path,label,value,editing)=>editing?`<label class="ca-field"><span>${label}</span><textarea rows="3" data-ca-text="${path}" maxlength="10000">${esc(value)}</textarea></label>`:`<div class="ca-field"><h4>${label}</h4><p>${esc(value)}</p></div>`;
 const scale=(path,label,value,min,max)=>`<label class="ca-score"><span>${label}</span><select data-ca-score="${path}" data-min="${min}" data-max="${max}"><option value="" ${value===null?'selected':''}>Offen</option>${Array.from({length:max-min+1},(_,i)=>i+min).map(v=>`<option ${v===value?'selected':''}>${v}</option>`).join('')}</select></label>`;
 const mean=(items,key)=>{const known=items.filter(c=>c[key]!==null);return known.length?known.reduce((a,c)=>a+c[key],0)/known.length:null;};
@@ -130,9 +230,16 @@ function journeyView(state,{editing,cite},tab){
  const data=state.customerAnalysis,showCurrent=visibleJourneyLayers.has('current'),showTarget=visibleJourneyLayers.has('target');
  const views={
   persona:()=>personaView(data,editing),
-  map:()=>section('Customer Journey',`<div class="pattern-filter ca-journey-filters" role="group" aria-label="Journey-Ansicht">
+  map:()=>section('',`${journeyBoard(data.journey)}<label class="ca-segment-filter">Kundensegment
+   <select data-ca-segment aria-label="Customer Journey nach Kundensegment filtern">
+    <option value="all" ${activeJourneySegment==='all'?'selected':''}>Alle Segmente · Ausgangsjourney</option>
+    ${Object.entries(personaSegments).map(([id,label])=>`<option value="${id}" ${activeJourneySegment===id?'selected':''}>${esc(label)}</option>`).join('')}
+   </select>
+  </label>
+  <p class="scope-note">Segmentbezogene Touchpoints und Hürden sind Arbeitshypothesen des Projektteams, keine erhobenen Kundendaten. Die Bewertungsskalen bilden die ursprüngliche Journey-Annahme ab.</p>
+  <div class="pattern-filter ca-journey-filters" role="group" aria-label="Journey-Ansicht">
    ${journeyLayers.map(([id,label])=>`<button type="button" id="ca-layer-${id}" data-ca-mode="${id}" aria-pressed="${visibleJourneyLayers.has(id)}">${visibleJourneyLayers.has(id)?'<span aria-hidden="true">✓</span> ':''}${label}</button>`).join('')}
-  </div>${showCurrent||showTarget?`<div class="ca-map-scroll" tabindex="0" role="region" aria-label="Journey-Map, horizontal scrollbar"><div class="ca-journey-map">${data.journey.map((p,i)=>`<article class="ca-phase"><header><span>0${i+1}</span><h3>${esc(p.name)}</h3></header>${showCurrent?`<div class="ca-layer ca-layer-current"><h4>Ist</h4>${text(`journey.${i}.online`,'Online-Touchpoints',p.online,editing)}${text(`journey.${i}.offline`,'Offline-Touchpoints',p.offline,editing)}${text(`journey.${i}.action`,'Actions von HORNBACH',p.action,editing)}<div class="ca-evidence">${cite(p.source,p.pages)}<span>Quelle geprüft: ${date}</span>${i===2?sourceUrl(app):''}</div>${text(`journey.${i}.moment`,'Moment of Truth',p.moment,editing)}${text(`journey.${i}.pain`,'Pain Point · Hypothese',p.pain,editing)}${text(`journey.${i}.emotion`,'Erfahrung / Emotion · Hypothese',p.emotion,editing)}${scale(`journey.${i}.severity`,'Schmerzpunkt · 1 gering bis 5 hoch',p.severity,1,5)}</div>`:''}${showTarget?`<div class="ca-layer ca-layer-target"><h4>Soll</h4>${text(`journey.${i}.future`,'Soll-Erlebnis · Vorschlag',p.future,editing)}${text(`journey.${i}.opportunity`,'Chance / Maßnahme',p.opportunity,editing)}</div>`:''}${text(`journey.${i}.risk`,'Risiken und Grenzen',p.risk,editing)}${text(`journey.${i}.metric`,'Erfolgskriterium',p.metric,editing)}<div class="ca-score-grid">${showCurrent?scale(`journey.${i}.currentEmotion`,'Emotion Ist',p.currentEmotion,1,5)+scale(`journey.${i}.currentSatisfaction`,'Zufriedenheit Ist',p.currentSatisfaction,1,5):''}${showTarget?scale(`journey.${i}.targetEmotion`,'Emotion Soll',p.targetEmotion,1,5)+scale(`journey.${i}.targetSatisfaction`,'Zufriedenheit Soll',p.targetSatisfaction,1,5):''}</div></article>`).join('')}</div></div>${curves(data)}`:'<p class="scope-note">Wähle Ist oder Soll, um die Journey anzuzeigen.</p>'}`),
+  </div>${showCurrent||showTarget?`<div class="ca-map-scroll" role="region" aria-label="Journey Map"><div class="ca-journey-map">${data.journey.map((p,i)=>{const segment=journeySegments[activeJourneySegment]?.[i];const online=segment?.[0]??p.online,offline=segment?.[1]??p.offline,pain=segment?.[2]??p.pain,moment=segment?.[3]??p.moment,future=segment?.[4]??p.future;const canEdit=editing&&activeJourneySegment==='all';return `<article class="ca-phase"><header><span>0${i+1}</span><h3>${esc(p.name)}</h3></header>${showCurrent?`<div class="ca-layer ca-layer-current"><h4>Ist</h4>${text(`journey.${i}.online`,'Online-Touchpoints',online,canEdit)}${text(`journey.${i}.offline`,'Offline-Touchpoints',offline,canEdit)}${text(`journey.${i}.action`,'Actions von HORNBACH',p.action,canEdit)}${text(`journey.${i}.moment`,'Moment of Truth',moment,canEdit)}${text(`journey.${i}.pain`,'Pain Point · Hypothese',pain,canEdit)}${text(`journey.${i}.emotion`,'Erfahrung / Emotion · Hypothese',p.emotion,canEdit)}${scale(`journey.${i}.severity`,'Schmerzpunkt · 1 gering bis 5 hoch',p.severity,1,5)}</div>`:''}${showTarget?`<div class="ca-layer ca-layer-target"><h4>Soll</h4>${text(`journey.${i}.future`,segment?'Segmentbezogene Chance / Soll-Erlebnis':'Soll-Erlebnis · Vorschlag',segment?future:p.future,canEdit)}${segment?'':text(`journey.${i}.opportunity`,'Chance / Maßnahme',p.opportunity,canEdit)}</div>`:''}${text(`journey.${i}.risk`,'Risiken und Grenzen',p.risk,canEdit)}${text(`journey.${i}.metric`,'Erfolgskriterium',p.metric,canEdit)}<div class="ca-score-grid">${showCurrent?scale(`journey.${i}.currentEmotion`,'Emotion Ist',p.currentEmotion,1,5)+scale(`journey.${i}.currentSatisfaction`,'Zufriedenheit Ist',p.currentSatisfaction,1,5):''}${showTarget?scale(`journey.${i}.targetEmotion`,'Emotion Soll',p.targetEmotion,1,5)+scale(`journey.${i}.targetSatisfaction`,'Zufriedenheit Soll',p.targetSatisfaction,1,5):''}</div></article>`;}).join('')}</div></div><section class="ca-map-sources" aria-label="Quellen zur Customer Journey"><h3>Quellen zur Customer Journey</h3><ul>${data.journey.map((p,i)=>`<li><span>${esc(p.name)}</span><span aria-hidden="true">→</span>${cite(p.source,p.pages)}${i===2?sourceUrl(app):''}</li>`).join('')}</ul></section>${curves(data)}`:'<p class="scope-note">Wähle Ist oder Soll, um die Journey anzuzeigen.</p>'}`),
   proposal:()=>{
    const pain=strongestPain(data);
    return section('Größter Schmerzpunkt & Entwicklungsvorschlag',`<article class="ca-recommendation"><span class="status-tag orange">Eigene Priorisierung · ${pain.severity}/5</span><h3>${esc(pain.name)}: ${esc(pain.pain)}</h3>${recommendation('journey',pain)}<button class="button" data-ca-candidate="journey">${state.actions.some(a=>a.originId==='course-journey')?'Maßnahmenvorschlag aktualisieren':'Als Maßnahmenvorschlag übernehmen'}</button></article>`);
@@ -316,6 +423,7 @@ export async function handleCustomerAnalysisEvent(event,state,{save,render,toast
   if(el.dataset.caText.endsWith('.age')&&!validPersonaAge(el.value))return;
   set(el.dataset.caText,el.value);save();return;
  }
+ if(event.type==='change'&&el.matches('[data-ca-segment]')){activeJourneySegment=el.value;render();return;}
  if(event.type==='change'&&el.dataset.caScore){const value=el.value===''?null:Number(el.value),min=Number(el.dataset.min),max=Number(el.dataset.max);if(value!==null&&(!Number.isInteger(value)||value<min||value>max)){toast('Ungültiger Skalenwert.');render();return;}if(el.dataset.caScore.endsWith('.severity')&&value===null){toast('Die Schmerzpunktpriorisierung benötigt einen Wert von 1 bis 5.');render();return;}set(el.dataset.caScore,value);save();render();return;}
  if(event.type==='change'&&el.dataset.caScenario){state.customerAnalysis[el.dataset.caScenario]=el.checked;save();render();}
 }

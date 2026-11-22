@@ -1,6 +1,6 @@
 import {PATTERN_SOURCE} from './analysis-data.js';
 import {applyDescriptionTypography} from './description-typography.js';
-import {renderCustomerAnalysis,innovationView,handleCustomerAnalysisEvent} from './customer-analysis.js';
+import {renderCustomerAnalysis,innovationView,handleCustomerAnalysisEvent,animateJourneyBoard} from './customer-analysis.js';
 import {maturityAnalysis,ideasAnalysis,completedIdeas,triangleView,showTrianglePart,canvasView,actionAnalysis,readiness,handleAnalysisEvent} from './analysis-ui.js';
 import {SOURCES,TABS,DEFAULT_STATE} from './data.js';
 import {clone,clamp,priorityScore,ranked,maturityMean,economics,validateState,previewRadarDrag,reorderDimension} from './core.js';
@@ -236,6 +236,7 @@ function render(){
  applyDescriptionTypography($('#panel-'+active),active);
  document.title=`${tab.short} · HORNBACH Analyse`;
  if(active==='reifegrad')bindRadar();
+ if(active==='kunden')animateJourneyBoard($('#panel-kunden'));
 }
 
 function navigate(){const id=location.hash.slice(1);active=TABS.some(t=>t.id===id)?id:'steckbrief';editing=false;render();window.scrollTo(0,0);}
