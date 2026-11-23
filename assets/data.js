@@ -1,6 +1,7 @@
 import {CUSTOMER_ANALYSIS} from './customer-analysis.js';
 import {SUPPLEMENT,enrichIdeas} from './analysis-data.js';
 export const SOURCES = {
+  platformLecture: { title: 'Digitale Plattformen und Ökosysteme', organization: 'DHBW Karlsruhe · Jonas Staib', file: 'docs/2026-11-19 Plattform_und_Oekosystem.pdf', description: 'Termin 6 vom 19.11.2026: Rollenkarte, Ecosystem Participation Navigator, Platform Value Canvas, Netzwerkeffekte und Markteintritt.' },
   gb26: { title: 'Geschäftsbericht 2025/26', organization: 'HORNBACH Holding AG & Co. KGaA', file: 'docs/HORNBACH_Holding_Geschaeftsbericht_2025-26.pdf', url: 'https://www.hornbach-holding.de/media/document/53a06c3f-6dfe-485b-b39a-a3ca941e7ea7/assets/20260519_HH_GB_DE.pdf', description: 'Grundlage für Geschäftsmodell, Konzernkennzahlen, ICR, Marktplatz und Digitalisierungsstrategie.' },
   gb25: { title: 'Geschäftsbericht 2024/25', organization: 'HORNBACH Holding AG & Co. KGaA', file: 'docs/HORNBACH_Holding_Geschaeftsbericht_2024-25.pdf', url: 'https://www.hornbach-holding.de/media/document/8d05df5c-4533-48a5-8270-f0b90a156f56/assets/20250521_HH_GB_DE_Links.pdf', description: 'Vergleichsbasis für Umsatz, Onlinegeschäft und bereits bestehende Plattformaktivitäten.' },
   h127: { title: 'Halbjahresfinanzbericht 2026/27', organization: 'HORNBACH Holding AG & Co. KGaA', file: 'docs/HORNBACH_Holding_Halbjahresfinanzbericht_2026-27.pdf', url: 'https://www.hornbach-holding.de/media/document/b063e59a-46a8-4b77-8441-052b6dff8ef0/assets/DE0006083405-Q2-2026-EQ-D-00.pdf', description: 'Aktualisierung: Halbjahresumsatz, Ergebnis und Onlineanteil. Halbjahreswerte werden nicht auf ein Gesamtjahr hochgerechnet.' },
@@ -12,7 +13,7 @@ export const TABS = [
  {id:'muster',short:'Muster & Ideen',subtitle:'',icon:'bulb'},
  {id:'kunden',short:'Customer Journey',icon:'users'},
  {id:'innovation',short:'Open Innovation',icon:'bulb'},
- {id:'plattform',short:'Plattform & Ökosystem',subtitle:'Zielbild für das Zusammenspiel von Kunden, Lieferanten und Servicepartnern. Bestehende Fähigkeiten und Erweiterungen sind gegenübergestellt; die Plattformrolle lässt sich über „Bearbeiten“ anpassen.',icon:'network'},
+ {id:'plattform',short:'Plattform & Ökosystem',icon:'network'},
  {id:'erloese',short:'Erlösmodell & KI',subtitle:'Das Erlösszenario zeigt die Wirtschaftlichkeit eines Projektpiloten unter veränderbaren Annahmen. Die anschließende Matrix priorisiert drei KI-Anwendungen anhand ihrer Bewertungen und Gewichte.',icon:'spark'},
  {id:'massnahmen',short:'Zielmodell & Maßnahmen',subtitle:'Priorisierte Maßnahmen und Roadmap ab Projektfreigabe. Bewertungen und Status sind direkt änderbar; Zuständigkeiten, Ergebnisse und Entscheidungskriterien über „Bearbeiten“.',icon:'roadmap'}
 ];

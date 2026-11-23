@@ -1,5 +1,6 @@
-import {PROJECT_PILOT,PATTERN_CATALOG,PATTERNS,CANVAS_SOURCE,MODEL_SOURCE,ideaTemplate,patternRecord} from './analysis-data.js';
-import {assessedIdeaRisk,ideaScore,rankedIdeas,modelMean,modelGaps,actionQuadrant,candidateFromIdea} from './core.js';
+import {PROJECT_PILOT,ADVISOR_PILOT,ADVISOR_PILOT_MEASURE,PATTERN_CATALOG,PATTERNS,CANVAS_SOURCE,ideaTemplate,patternRecord} from './analysis-data.js';
+import {assessedIdeaRisk,ideaScore,rankedIdeas,modelMean,modelGaps,actionQuadrant} from './core.js';
+import {scoredIdeas as rankCompletedIdeas} from './idea-ranking.js';
 const e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=v=>v===null?'Offen':new Intl.NumberFormat('de-DE',{maximumFractionDigits:1}).format(v);
 const field=(path,label,value,edit)=>edit?`<label class="edit-field"><span>${e(label)}</span><textarea data-x-text="${path}" rows="3" maxlength="10000">${e(value)}</textarea></label>`:`<div class="analysis-field"><h4>${e(label)}</h4><p class="editable-text">${e(value)}</p></div>`;
@@ -175,7 +176,6 @@ function benchmarkOverview(state){
    <thead><tr><th scope="col">Bereich</th><th scope="col">${benchmarkBrand('hornbach','HORNBACH')}</th>${state.benchmark.map(b=>`<th scope="col">${benchmarkBrand(b.id,b.name)}</th>`).join('')}</tr></thead>
    <tbody>${rows.map(({group,hornbach,peers})=>`<tr><th scope="row">${e(group.name)}</th><td>${n(hornbach)}</td>${peers.map(value=>`<td>${n(value)}</td>`).join('')}</tr>`).join('')}</tbody>
   </table></div>
-  <p class="benchmark-sources">Ist-Mittelwerte auf Stufen 1–4. Pro Bereich zählen nur gezeigte Kriterien mit Werten für alle Anbieter. Die Außensicht enthält Schätzungen.</p>
  </section>`;
 }
 function syncBenchmarkBasis(form){
@@ -193,7 +193,7 @@ function benchmarkCell(group,gap,rating,editing){
  const {provider,value,evidence,estimated,source,date,path,manualPath,reason}=rating;
  const dialogId=`benchmark-evidence-${group.id}-${gap.id}-${provider.id}`;
  const title=provider.name+' · '+gap.name;
- const label=n(value)+(value!==null&&estimated?' *':'');
+ const label=n(value);
  return `<td>
   <button type="button" class="benchmark-criterion" data-benchmark-dialog="${dialogId}" aria-haspopup="dialog" aria-label="${e(title+' · '+(value===null?'Offen':'Stufe '+n(value)))}">${label}</button>
   <dialog id="${dialogId}" aria-labelledby="${dialogId}-title">
@@ -232,7 +232,6 @@ function benchmarkComparison(group,gaps,state,editing){
    <thead><tr><th scope="col">Kriterium</th>${providers.map(b=>`<th scope="col">${benchmarkBrand(b.id,b.name)}</th>`).join('')}</tr></thead>
    <tbody>${gaps.map(gap=>`<tr><th scope="row">${e(gap.name)}</th>${benchmarkRatings(state,group,gap.id).map(rating=>benchmarkCell(group,gap,rating,editing)).join('')}</tr>`).join('')}</tbody>
   </table></div>`:'<p>Derzeit gibt es keine bewertete Entwicklungslücke für den Vergleich.</p>'}
-  ${gaps.length?`<button type="button" class="button small secondary" data-x-action="benchmark-measure" data-id="${e(group.id)}">Maßnahme ableiten</button>`:''}
   ${customer&&editing?`<div>${providers.map((b,i)=>`<article class="panel spaced"><h3>${e(b.name)}</h3>${field(`benchmark.${i}.scope`,'Vergleichbarkeit',b.scope,true)}${field(`benchmark.${i}.evidence`,'Beleg & Grenzen',b.evidence,true)}${field(`benchmark.${i}.sourceUrl`,'Quellen-URL',b.sourceUrl,true)}${field(`benchmark.${i}.retrieved`,'Quellenstand / Abruf',b.retrieved,true)}${status(`benchmark.${i}.assumption`,b.assumption)}</article>`).join('')}${field('benchmarkConclusion','Wettbewerbssituation & Konsequenz',state.benchmarkConclusion,true)}</div>`:''}
  </section>`;
 }
@@ -374,7 +373,7 @@ function boardIdeas(state){
  return state.ideaManualOrder?state.ideas:rankedIdeas(state);
 }
 function scoredIdeas(state){
- return rankedIdeas(state).filter(idea=>idea.name.trim()&&idea.id!==newIdeaId&&ideaScore(idea,state.ideaWeights)>0);
+ return rankCompletedIdeas(state,newIdeaId);
 }
 export function developmentIdeas(state){
  return scoredIdeas(state).slice(0,2);
@@ -454,7 +453,8 @@ function ideaProposals(state,editing){
    <h3 class="idea-proposal-heading"><button type="button" id="idea-proposal-heading-${e(idea.id)}" data-idea-details="${e(idea.id)}" aria-expanded="${expanded}" aria-controls="${detailId}">
     <span class="row-index">${rank+1}</span><span>${e(idea.name)}</span>${tag(idea.pattern,'pink')}<span class="idea-detail-chevron" aria-hidden="true"></span>
    </button></h3>
-   <div class="idea-detail-body" id="${detailId}" ${expanded?'':'hidden'}>${topIdea(state,idea,index,editing)}</div>
+   <div class="idea-detail-body" id="${detailId}" ${expanded?'':'hidden'}>${topIdea(state,idea,index,editing)}
+   </div>
   </section>`;
  }).join('')}</div>`;
 }
@@ -553,15 +553,18 @@ function proposalTriangle(state,idea,index,editing){
   </div>`})}
  </section>`;
 }
-function projectPilot(idea,index,editing){
+function proposalPilot(idea,index,editing){
+ const timeline=idea.id==='project'?PROJECT_PILOT:ADVISOR_PILOT;
  return `<section class="proposal-pilot">
   <h4>Entwicklungsvorschlag</h4>
-  <ol class="proposal-timeline">${PROJECT_PILOT.map(({id,period,title,owner})=>`<li>
+  <ol class="proposal-timeline">${timeline.map(({id,period,title,owner})=>`<li>
    <span class="proposal-period">${period}</span>
    <h5>${title}</h5>
    <p class="proposal-owner">${owner}</p>
    ${editing?field(`ideas.${index}.pilotTasks.${id}`,'Aufgabe',idea.pilotTasks[id],true):`<p>${e(idea.pilotTasks[id])}</p>`}
   </li>`).join('')}</ol>
+  ${idea.id==='advisor'&&idea.recommendation.measure!==ADVISOR_PILOT_MEASURE
+   ?field(`ideas.${index}.recommendation.measure`,'Bisheriger Pilotplan',idea.recommendation.measure,editing):''}
  </section>`;
 }
 function proposalScoreDetails(idea,weights){
@@ -574,7 +577,6 @@ function proposalScoreDetails(idea,weights){
  </div>`;
 }
 function topIdea(state,idea,index,editing){
- const isProject=idea.id==='project';
  const path=`ideas.${index}.recommendation`;
  const labels={effect:'Erwartete Wirkung',risks:'Aufwand & Risiken'};
  return `<article class="top-idea">
@@ -582,9 +584,8 @@ function topIdea(state,idea,index,editing){
    <div class="delta proposal-score"><strong>${n(ideaScore(idea,state.ideaWeights))}</strong><span>Score</span></div>
    ${proposalScoreDetails(idea,state.ideaWeights)}
   </div>
-  ${isProject?projectPilot(idea,index,editing):`${field(path+'.situation','Ausgangslage',idea.recommendation.situation,editing)}<div class="proposal-pilot">${field(path+'.measure','Entwicklungsvorschlag · Zuständigkeit · Zeithorizont',idea.recommendation.measure,editing)}</div>`}
+  ${idea.pilotTasks?proposalPilot(idea,index,editing):`${field(path+'.situation','Ausgangslage',idea.recommendation.situation,editing)}<div class="proposal-pilot">${field(path+'.measure','Entwicklungsvorschlag · Zuständigkeit · Zeithorizont',idea.recommendation.measure,editing)}</div>`}
   ${Object.entries(labels).map(([key,label])=>field(path+'.'+key,label,idea.recommendation[key],editing)).join('')}
-  <button class="button${isProject?' small':''}" data-x-action="candidate" data-id="${e(idea.id)}">${state.actions.some(a=>a.originId===idea.id)?'Maßnahmenkandidat aktualisieren':'Als Maßnahmenkandidat übernehmen'}</button>
   ${proposalTriangle(state,idea,index,editing)}
  </article>`;
 }
@@ -861,7 +862,9 @@ export function handleAnalysisEvent(event,state,{save,render,toast,startEditing=
   const criterion=state.model.find(g=>g.id===stage.dataset.stageGroup)?.criteria.find(c=>c.id===stage.dataset.stageId);
   if(!criterion||criterion[stage.dataset.stageKey]!==Number(stage.dataset.stageLevel))return;
   stageBubble={group:stage.dataset.stageGroup,id:stage.dataset.stageId,key:stage.dataset.stageKey,level:Number(stage.dataset.stageLevel)};
-  render();document.querySelector('.stage-bubble')?.scrollIntoView({behavior:'smooth',block:'nearest'});return;
+  render();
+  document.querySelector('.stage-card[aria-expanded="true"]')?.focus({preventScroll:true});
+  return;
  }
  if(event.type==='click'&&el.closest('[data-close-bubble]')){stageBubble=null;render();return;}
  const closeButton=el.closest('[data-close-criterion]');
@@ -871,7 +874,7 @@ export function handleAnalysisEvent(event,state,{save,render,toast,startEditing=
   const previousCriterion=selectedCriteria[groupId];
   selectedCriteria[groupId]=null;
   render();
-  document.querySelector(`[data-group-id="${groupId}"][data-criterion-id="${previousCriterion}"]`)?.focus();
+  document.querySelector(`[data-group-id="${groupId}"][data-criterion-id="${previousCriterion}"]`)?.focus({preventScroll:true});
   return;
  }
  const chartChoice=el.closest('[data-criterion-id]');
@@ -1012,29 +1015,6 @@ export function handleAnalysisEvent(event,state,{save,render,toast,startEditing=
   state.ideas=state.ideas.filter(d=>d.id!==id);
  }
  if(action==='remove-candidate'&&state.actions.length>1)state.actions=state.actions.filter(a=>a.id!==id||!a.originId);
- if(action==='benchmark-measure'){
-  const group=state.model.find(item=>item.id===id);
-  const [gap]=group?modelGaps([group]):[];
-  if(!gap)return;
-  const originId='benchmark-'+group.id+'-'+gap.id;
-  if(state.actions.some(item=>item.originId===originId)){toast('Diese Maßnahme ist bereits in Zielmodell & Maßnahmen vorhanden.');return;}
-  if(state.actions.length>=40){toast('Höchstens 40 Maßnahmen möglich.');return;}
-  state.actions.push({
-   id:originId,originId,name:'Pilot: '+gap.name,owner:'Fachbereich / Digital Commerce',phase:'0–3 Monate',status:'Geplant',
-   impact:3,effort:3,risk:3,
-   deliverable:gap.targetEvidence||gap.levels[gap.target-1],
-   gate:'Zielstufe im Pilot anhand eines dokumentierten Praxisbeispiels prüfen.',
-   depends:'Pilotfreigabe und Ausgangsmessung',
-   situation:`${group.name} · Ist ${n(gap.current)} → Soll ${n(gap.target)}`,
-   rationale:'Aus der größten dokumentierten Entwicklungslücke abgeleitet. Die vorläufige Wettbewerbssicht dient der Einordnung.',
-   reference:MODEL_SOURCE,
-   effect:'Zielstufe erreichen und Kundennutzen im Pilot messen.',
-   risks:'Datenverfügbarkeit, Aufwand und Akzeptanz vor Pilotstart prüfen.'
-  });
-  toast('Maßnahme in Zielmodell & Maßnahmen übernommen.');
- }
- if(state.actions.length>=40&&action==='candidate'&&!state.actions.some(a=>a.originId===id)){toast('Höchstens 40 Maßnahmen möglich.');return;}
- if(action==='candidate'){const d=state.ideas.find(d=>d.id===id),candidate=candidateFromIdea(d),old=state.actions.find(a=>a.originId===id);if(old){const status=old.status;Object.assign(old,candidate,{status});}else state.actions.push(candidate);toast('Maßnahmenkandidat in Maßnahmen & Roadmap übernommen.');}
  save();render();
  if(action==='add-idea')document.querySelector(`[data-x-text="ideas.${state.ideas.length-1}.name"]`)?.focus();
 }

@@ -2,7 +2,6 @@
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=v=>v===null?'Offen':new Intl.NumberFormat('de-DE',{maximumFractionDigits:1}).format(v);
 const date='18.11.2026';
-const acquisition='https://www.hornbach-holding.de/nachrichten/innovatives-start-up-wird-teil-der-hornbach-gruppe-hornbach-baumarkt-ag-erwirbt-seniovo-den-marktfuehrer-fuer/5178e839-a284-4fc0-bdcb-eb9526b17f81';
 const personaSegments={
  diy:'Private Heimwerker (DIY)',
  professional:'Gewerbliche Profikunden',
@@ -109,21 +108,30 @@ export const CUSTOMER_ANALYSIS={
   {id:'implement',name:'Umsetzen',online:'Projektanleitungen, Statusinformation und Servicekontakt',offline:'Baustelle, Lieferung, regionale Vertragsbetriebe',action:'Der Handwerker-Service ergänzt den Warenbezug durch regionale Betriebe.',pain:'Wenn Liefertermin und Arbeitsbeginn nicht zusammenpassen oder Material fehlt, kann der nächste Arbeitsschritt ins Stocken geraten. Ob sich alle Informationen in einer digitalen Projektakte verfolgen lassen, ist offen.',emotion:'Anspannung bei Terminabhängigkeiten.',moment:'Material ist rechtzeitig vollständig verfügbar.',opportunity:'Gemeinsamer Status für freigegebene Materialien, Lieferungen und Serviceübergaben.',risk:'Partnerabhängigkeit, zusätzliche Koordination und sensible Projektinformationen.',future:'Nachvollziehbare Statusmeldungen mit klarer Kontaktperson bei Abweichungen.',measure:'Projektstatus',metric:'Anteil termingerechter vollständiger Lieferungen',currentEmotion:2,targetEmotion:4,currentSatisfaction:2,targetSatisfaction:4,severity:4,source:'gb26',pages:'37, 72–73'},
   {id:'after',name:'Danach',online:'Kundenservice, Reklamation, Onlinebewertung',offline:'Markt, Rückgabe und Servicegespräch',action:'Das Kundenservice-Center bearbeitet Rückmeldungen und gibt Erkenntnisse an Fachbereiche weiter.',pain:'Nach Projektabschluss können Kunden Rückmeldungen über Bewertungen geben. Ob sie nachvollziehen können, was mit ihrem konkreten Hinweis passiert und ob er in Verbesserungen einfließt, ist offen.',emotion:'Erleichterung bei Erfolg, Frustration bei ungelösten Restproblemen.',moment:'Eine Reklamation wird verständlich und verbindlich gelöst.',opportunity:'Projektbezogene Nachbefragung und Einladung zu freiwilligen Konzepttests.',risk:'Selektionsverzerrung und unerwünschte Kontaktaufnahme; Zweck und Einwilligung klären.',future:'Feedback führt zu sichtbarer Rückmeldung und geeigneten Verbesserungsaufgaben.',measure:'Feedbackschleife',metric:'Lösungsquote und Zufriedenheit nach Servicekontakt',currentEmotion:3,targetEmotion:4,currentSatisfaction:3,targetSatisfaction:4,severity:3,source:'gb26',pages:'195–196'}
  ],
- innovationConclusion:'Die Quellen sprechen für eine selektive Öffnung, besonders durch externes Wissen und Zukäufe (Outside-in). Befragungen und Beschwerden beeinflussen Sortiment und Services. Ein unternehmensweit offener Innovationsprozess oder dauerhaftes Co-Design mit Kunden ist damit nicht bewiesen. Partnerschaften im Tagesgeschäft sind ohne gemeinsamen Entwicklungsnachweis noch keine Coupled Innovation.',
+ innovationConclusion:'HORNBACH nutzt Kundenfeedback und externes Fachwissen, um Sortiment und Services intern weiterzuentwickeln. Damit ist vor allem Outside-in belegt. Ob Kunden regelmäßig mitentwickeln, bleibt offen.',
  examples:[
-  {id:'seniovo',name:'Zukauf von Seniovo',type:'Outside-in',status:'Belegt',description:'HORNBACH kündigte 2023 die Übernahme des auf barrierefreie Bäder spezialisierten Start-ups an. Externes Prozess- und Digitalisierungswissen wird integriert.',limit:'Einordnung als Outside-in nach der Vorlesungsmethode; ein Zukauf allein belegt noch keinen Innovationserfolg.',sourceUrl:acquisition,sourceDate:'27.11.2023',pages:'37, 72'},
-  {id:'feedback',name:'Kundenwissen aus Service und Befragungen',type:'Outside-in',status:'Belegt',description:'Rückmeldungen, Beschwerden und Kundenbefragungen fließen laut Bericht in die Weiterentwicklung von Sortiment und Services ein.',limit:'Dies ist ein Wissenszufluss. Aktives Co-Design oder ein offener Ideenwettbewerb ist daraus nicht ableitbar.',sourceUrl:'https://www.hornbach-holding.de/media/document/53a06c3f-6dfe-485b-b39a-a3ca941e7ea7/assets/20260519_HH_GB_DE.pdf',sourceDate:'19.05.2026',pages:'190, 195–196'},
+  {id:'seniovo',name:'Zukauf von Seniovo',type:'Outside-in',status:'Belegt',description:'HORNBACH erwarb das auf barrierefreie Badumbauten spezialisierte Start-up und integrierte dessen Angebot in sein Serviceportfolio.',limit:'Der Zukauf zeigt, wie externes Fachwissen und ein bestehendes Serviceangebot ins Unternehmen gelangen.',sourceUrl:'',sourceDate:'',pages:'46, 72'},
+  {id:'feedback',name:'Kundenwissen aus Service und Befragungen',type:'Outside-in',status:'Belegt',description:'HORNBACH wertet Kundenbefragungen und Beschwerden aus, um Auffälligkeiten bei Produkten, Sortiment und Services zu erkennen.',limit:'Kunden liefern Hinweise für die interne Weiterentwicklung. Ob sie auch an Konzepten oder Prototypen mitarbeiten, bleibt anhand dieser Belege offen.',sourceUrl:'',sourceDate:'',pages:'190, 193, 195–196'},
   {id:'cocreation',name:'Projektlabor mit Kunden und Handwerksbetrieben',type:'Coupled',status:'Vorschlag',description:'Kunden, Fachberatung und Partner entwickeln und testen gemeinsam die digitale Projektliste; Erkenntnisse werden in beide Richtungen geteilt.',limit:'Konzeptioneller Vorschlag dieser Analyse, kein belegtes HORNBACH-Programm. Gemeinsame Entwicklung und Regeln zur Verwertung wären Voraussetzung.',sourceUrl:'',sourceDate:date,pages:''},
   {id:'standard',name:'Freigabe eines Projektlisten-Datenformats',type:'Inside-out',status:'Vorschlag',description:'Ein dokumentiertes Format für Materiallisten könnte Partnern ermöglichen, eigene kompatible Hilfen zu entwickeln.',limit:'Keine belegte offene HORNBACH-Schnittstelle. Ein reiner Datenexport ist noch keine Verwertung geistigen Eigentums; Lizenz, Nutzen und Rückfluss wären zu prüfen.',sourceUrl:'',sourceDate:date,pages:''}
  ],
  involvement:[
-  {id:'ideas',name:'Ideenfindung',current:2,target:3,evidence:'Kundenbefragungen und Servicefeedback liefern Input. Die Zuordnung zu systematischem Feedback ist eine vorläufige Interpretation; eine repräsentative Innovationscommunity ist nicht belegt.',measure:'Ein freiwilliges Projektkunden-Panel ergänzt Befragungen um priorisierte Verbesserungsideen.'},
-  {id:'concept',name:'Konzeptentwicklung',current:1,target:2,evidence:'Ein Einfluss auf die Weiterentwicklung ist beschrieben; gemeinsames digitales Konzeptdesign ist nicht nachgewiesen. Stufe 1 ist eine vorsichtige Arbeitshypothese, kein Nachweis fehlender Beteiligung.',measure:'Kunden und Fachberatung testen zwei Projektlisten-Prototypen in moderierten Sitzungen.'},
-  {id:'prototype',name:'Prototypentest',current:null,target:2,evidence:'Keine belastbaren Angaben zu strukturierten Kundentests für die hier vorgeschlagene digitale Projektlösung. Offen bleibt offen und wird nicht als Null gewertet.',measure:'Einen klickbaren Prototyp mit freiwilligen Kunden prüfen und Entscheidungen dokumentieren.'},
-  {id:'launch',name:'Markteinführung',current:null,target:2,evidence:'Ein formaler Kundeneinfluss auf Freigaben neuer digitaler Projektleistungen ist aus den geprüften Quellen nicht ersichtlich.',measure:'Vor Ausweitung eines Tests die Verständlichkeit und Aufgabenerfüllung durch Kunden bewerten lassen.'},
-  {id:'improve',name:'Weiterentwicklung',current:2,target:3,evidence:'Kundeninteraktionen und Reklamationen werden systematisch ausgewertet. Gemeinsame Priorisierung und Rückmeldung an eine dauerhafte Innovationscommunity sind nicht belegt.',measure:'Die Umsetzung ausgewählter Kundenideen und ihre Wirkung an die Teilnehmenden zurückmelden.'}
+  {id:'ideas',name:'Ideenfindung',current:2,target:3,currentReference:'',targetReason:'Kunden sollen bei der Auswahl und Weiterentwicklung von Ideen mitwirken.',evidence:'Kundenbefragungen und Servicefeedback liefern Input. Die Zuordnung zu systematischem Feedback ist eine vorläufige Interpretation; eine repräsentative Innovationscommunity ist nicht belegt.',measure:'Ein freiwilliges Projektkunden-Panel ergänzt Befragungen um priorisierte Verbesserungsideen.'},
+  {id:'concept',name:'Konzeptentwicklung',current:1,target:2,currentReference:'',targetReason:'Strukturierte Tests sollen zeigen, ob das Konzept die Anforderungen der Kunden erfüllt.',evidence:'Ein Einfluss auf die Weiterentwicklung ist beschrieben; gemeinsames digitales Konzeptdesign ist nicht nachgewiesen. Stufe 1 ist eine vorsichtige Arbeitshypothese, kein Nachweis fehlender Beteiligung.',measure:'Kunden und Fachberatung testen zwei Projektlisten-Prototypen in moderierten Sitzungen.'},
+  {id:'prototype',name:'Prototypentest',current:1,target:2,currentReference:'',targetReason:'Ein geplanter Test soll vor der Einführung konkrete Schwächen im Ablauf aufdecken.',evidence:'HORNBACH nutzt Kundenrückmeldungen zur Weiterentwicklung. Für Prototypen ist punktuelle Rückmeldung plausibel. Strukturierte Kundentests sind in den ausgewerteten Geschäftsberichten nicht belegt.',measure:'Einen klickbaren Prototyp mit freiwilligen Kunden prüfen und Entscheidungen dokumentieren.'},
+  {id:'launch',name:'Markteinführung',current:1,target:2,currentReference:'',targetReason:'Rückmeldungen aus einer begrenzten Einführung sollen Verbesserungen vor dem breiteren Einsatz ermöglichen.',evidence:'Über Kundenservice und Befragungen kann es bei neuen Angeboten punktuelle Rückmeldungen geben. Ob Kunden bei der Einführung gezielt beteiligt werden oder Feedback über die weitere Einführung entscheidet, ist nicht belegt.',measure:'Vor Ausweitung eines Tests die Verständlichkeit und Aufgabenerfüllung durch Kunden bewerten lassen.'},
+  {id:'improve',name:'Weiterentwicklung',current:2,target:3,currentReference:'',targetReason:'Kunden sollen an der Auswahl und Bewertung von Verbesserungen beteiligt werden.',evidence:'Kundeninteraktionen und Reklamationen werden systematisch ausgewertet. Gemeinsame Priorisierung und Rückmeldung an eine dauerhafte Innovationscommunity sind nicht belegt.',measure:'Die Umsetzung ausgewählter Kundenideen und ihre Wirkung an die Teilnehmenden zurückmelden.'}
  ],
- campaign:{goal:'Wie lässt sich eine Materialliste ohne Kontextverlust zwischen Smartphone und Marktberatung weiterverwenden?',audience:'Freiwillige DIY-, Profi- und DIFM-Kunden mit aktuellem Renovierungsprojekt sowie Fachberatung und regionale Partner.',incentive:'Einblick in den Prototyp, transparente Rückmeldung und auf Wunsch Namensnennung; keine Teilnahmeabhängigkeit von positiven Bewertungen.',rules:'Datensparsame Einreichung; keine fremden Baupläne oder vertraulichen Daten. Nutzungsrechte, Vertraulichkeit, Moderation und Löschung vor Beginn vereinbaren.',selection:'Fachjury prüft Sicherheit und Machbarkeit; Kunden priorisieren Nutzbarkeit. Ein öffentliches Voting allein entscheidet nicht.',feedback:'Eingang bestätigen; innerhalb von vier Wochen eine begründete Rückmeldung zum Vorschlag geben.'},
+ campaign:{
+  goal:'Bei welchen Schritten verliert ihr beim Renovieren den Überblick über Material und Mengen? Was müsste eine gemeinsame Projektliste können, damit ihr sie in der Marktberatung und bei der Bestellung weiterverwenden könnt?',
+  audience:'Freiwilliger Aufruf an Projektkunden, besonders private Heimwerker mit einem laufenden oder abgeschlossenen Renovierungsvorhaben.',
+  incentive:'Teilnehmende können ausgewählte Ideen im Prototyp wiederfinden und erhalten eine Rückmeldung zur Auswahl.',
+  rules:'Kurze Beiträge über ein Formular einreichen. Keine persönlichen Daten, fremden Baupläne oder vertraulichen Projektunterlagen teilen. Nutzungsrechte und Moderation vorab erläutern.',
+  selection:'Kunden bewerten den Nutzen der Beiträge. Marktberatung und Digital Commerce prüfen Machbarkeit und wählen Vorschläge für den Prototyp aus.',
+  feedback:'Eingang bestätigen. Innerhalb von vier Wochen zurückmelden, welche Vorschläge weiterverfolgt werden und warum.',
+  risk:'Besonders aktive Kunden können die Rückmeldungen dominieren. Beiträge nach Erfahrung und Projektart auswerten und bei unterrepräsentierten Gruppen gezielt nachfragen.'
+ },
+ involvementPriority:'',
  scenarioJourney:true,scenarioInnovation:true
 };
 const journeyTabs=[
@@ -138,9 +146,14 @@ const journeyLayers=[['current','Ist'],['target','Soll']];
 const journeyMetrics={Emotion:'Emotion',Satisfaction:'Zufriedenheit'};
 let activeJourneyMetric='Emotion';
 const visibleJourneyLayers=new Set(journeyLayers.map(([id])=>id));
-let subview='journey',exampleFilter='Alle';
+let subview='journey';
+const innovationFlows={
+ 'Outside-in':'HORNBACH nimmt Wissen von außen auf, etwa Kundenfeedback oder Fachwissen von Partnern.',
+ 'Inside-out':'HORNBACH stellt eigenes Wissen oder eigene Lösungen anderen zur Weiterverwendung bereit.',
+ 'Coupled':'HORNBACH und externe Partner entwickeln gemeinsam Lösungen und tauschen Wissen in beide Richtungen aus.'
+};
+const visibleInnovationFlows=new Set(Object.keys(innovationFlows));
 const lecture=(which,pdf,printed)=>`<a class="source-ref" href="docs/${which==='journey'?'2026-11-18 Kunde_und_Journey.pdf':'2026-11-18 Open_Innovation.pdf'}#page=${pdf}" target="_blank" rel="noopener">Termin ${which==='journey'?4:5} · Folie ${printed} · PDF-Seite ${pdf}</a>`;
-const sourceUrl=url=>/^https?:\/\//i.test(url)?`<a class="source-ref" href="${esc(url)}" target="_blank" rel="noopener">Originalquelle ↗</a>`:'';
 const section=(title,body)=>`<section class="ca-section">${title?`<h2>${title}</h2>`:''}${body}</section>`;
 let openJourneyPhase=0;
 
@@ -399,12 +412,23 @@ function developmentIdeaLink(idea){
  return `<a href="#muster/entwicklungsvorschlaege/${encodeURIComponent(idea.id)}">${esc(idea.name)} ↗</a>`;
 }
 
+const journeyFieldGuidance={
+ pain:'Eine konkrete Hürde, die Kunden in dieser Phase Zeit, Aufwand oder Sicherheit kostet.',
+ action:'Was HORNBACH an diesem Kontaktpunkt konkret tut, etwa beraten, informieren oder eine Bestellung bereitstellen.',
+ moment:'Ein entscheidender Moment, der beeinflusst, ob und wie Kunden weitermachen.',
+ future:'Wie Kunden die Phase nach einer Verbesserung erleben sollen.',
+ opportunity:'Welche konkrete Änderung die Hürde für Kunden verringern könnte.',
+ risk:'Was die Umsetzung erschweren oder die Wirkung der Maßnahme begrenzen könnte.',
+ metric:'Woran sich erkennen und messen lässt, ob die Maßnahme wirkt.'
+};
 function journeyPhase(data,phase,index,{editing}){
  const path=`journey.${index}`;
  const segment=journeySegments[activeJourneySegment]?.[index];
  const [online,offline,pain,moment,future]=segment??[phase.online,phase.offline,phase.pain,phase.moment,phase.future];
- const canEdit=editing&&!segment;
- const field=(key,label,value=phase[key])=>text(`${path}.${key}`,label,value,canEdit);
+ const segmentSelected=activeJourneySegment!==null;
+ const field=(key,label,value=phase[key])=>text(
+  `${path}.${key}`,label,segmentSelected?value:journeyFieldGuidance[key],segmentSelected&&editing&&!segment
+ );
  const showCurrent=visibleJourneyLayers.has('current'),showTarget=visibleJourneyLayers.has('target');
  const expanded=openJourneyPhase===index;
 
@@ -419,14 +443,14 @@ function journeyPhase(data,phase,index,{editing}){
   ${showCurrent?`<div class="ca-layer ca-layer-current ca-phase-grid" role="group" aria-label="Ist">
    <div class="ca-phase-card">
     <h4>Touchpoints</h4>
-    <div class="ca-touchpoints">
+    ${segmentSelected?`<div class="ca-touchpoints">
      ${field('online','Online',online)}
      ${field('offline','Offline',offline)}
-    </div>
+    </div>`:'<div class="ca-field"><p>Touchpoints sind Kontaktpunkte, an denen Kunden mit HORNBACH oder dem Angebot in Berührung kommen, etwa in der App, im Markt oder bei einer Beratung.</p></div>'}
    </div>
    <div class="ca-phase-card">
     ${field('pain','Pain Point',pain)}
-    ${scale(segment?`segmentExperience.${activeJourneySegment}.${index}.severity`:`${path}.severity`,'Bewertung (1 gering bis 5 hoch)',journeyPainPoint(data,index,activeJourneySegment).severity,1,5)}
+    ${segmentSelected?scale(segment?`segmentExperience.${activeJourneySegment}.${index}.severity`:`${path}.severity`,'Bewertung (1 gering bis 5 hoch)',journeyPainPoint(data,index,activeJourneySegment).severity,1,5):''}
    </div>
    <div class="ca-phase-card">${field('action','Actions von HORNBACH')}</div>
    <div class="ca-phase-card">${field('moment','Moment of Truth',moment)}</div>
@@ -473,27 +497,300 @@ function journeyView(state,context,tab){
   map:()=>section('',`${journeyBoard(data.journey)}
   ${data.journey.map((phase,index)=>journeyPhase(data,phase,index,context)).join('')}`),
   optimization:()=>journeyOptimization(data,context.developmentProposals??[]),
-  scenario:()=>journeyScenarioView(state,context.developmentProposals??[])
+  scenario:()=>journeyScenarioView(state,context.developmentProposals)
  };
  return tab?views[tab]():journeyTabs.slice(0,-1).map(([id])=>views[id]()).join('');
 }
-function innovationRecommendation(p){
- return `<dl class="ca-recommendation-fields"><dt>Ausgangslage</dt><dd>${esc(p.evidence)} Offene Phasen sind keine nachgewiesenen Schwächen und werden separat als Beleglücken geführt.</dd><dt>Maßnahme · wer · bis wann</dt><dd>${esc(p.measure)} Zuständigkeit im Vorschlag: Digital Commerce und Marktberatung, bei Co-Creation zusätzlich ein freiwilliges Kundenpanel. Zeithorizont: drei Monate für einen begrenzten Test. Dies ist ein konzeptioneller Vorschlag, kein gestartetes Projekt.</dd><dt>Herleitung & Alternative</dt><dd>Gemeinsame Konzepttests schließen die Lücke zwischen passivem Feedback und Mitentwicklung. Ein reines öffentliches Voting wäre leichter skalierbar, liefert aber weniger Kontext und ist anfällig für Verzerrungen.</dd><dt>Wissenschaftliche Grundlage</dt><dd>Chesbrough (2003), Open Innovation; Vorlesung Termin 5, Folien 15, 21–23, 48–49. Eigene Übertragung auf HORNBACH.</dd><dt>Wirkung & Messung</dt><dd>Zielvorschläge: mindestens zehn verwertbare Verbesserungsideen in acht Wochen; mindestens zwei davon fachlich geprüft in einen Prototyp überführen. Einreichungslog, Juryentscheidung und Prototypnachweis dokumentieren; keine bestehenden Ist-Kennzahlen.</dd><dt>Aufwand & Risiken</dt><dd>Rekrutierung und Moderation, Nutzungsrechte, Vertraulichkeit, Integrationsaufwand und enttäuschte Erwartungen bei nicht umgesetzten Ideen.</dd></dl>`;
+const involvementLevels=[
+ 'Es ist belegt, dass Kunden in dieser Phase nicht einbezogen werden.',
+ 'Kunden geben punktuell Rückmeldung oder bringen einzelne Ideen ein.',
+ 'HORNBACH holt systematisch Kundenfeedback ein oder führt strukturierte Tests mit Kunden durch.',
+ 'Kunden entwickeln Ideen, Konzepte oder Lösungen gemeinsam mit HORNBACH weiter.'
+];
+let pendingInvolvementRating=null;
+let pinnedInvolvementStage=null;
+let involvementAssignment=null;
+
+function involvementRatingForm(pending,phase,label){
+ const target=pending.key==='target';
+ const value=pending.value===null?'Keine Einstufung':'Stufe '+pending.value;
+ return `<form class="rating-change-reason" data-ca-involvement-rating>
+  <p><strong>${label} · ${value}</strong></p>
+  <label><span>Begründung</span><textarea name="reason" id="ca-involvement-reason" rows="3" maxlength="10000" required>${pending.value===phase[pending.key]?esc(target?phase.targetReason:phase.evidence):''}</textarea></label>
+  ${target?`<label><span>Maßnahme</span><textarea name="measure" rows="3" maxlength="10000" required>${pending.value===phase.target?esc(phase.measure):''}</textarea></label>`:
+   `<label><span>Quelle (optional)</span><input name="source" maxlength="10000" value="${pending.value===phase.current?esc(phase.currentReference):''}"></label>`}
+  <div class="rating-change-actions"><button type="submit" class="button small">Übernehmen</button><button type="button" class="button small secondary" data-ca-involvement-cancel>Abbrechen</button></div>
+ </form>`;
 }
-function distribution(examples){
- const types=['Outside-in','Inside-out','Coupled'],belegt=examples.filter(d=>d.status==='Belegt'),counts=types.map(t=>belegt.filter(d=>d.type===t).length),total=counts.reduce((a,b)=>a+b,0),colors=['#f79e1c','#ca0088','#53616a'];let end=0;
- const stops=counts.map((count,i)=>{const start=end;end+=total?count/total*100:0;return `${colors[i]} ${start}% ${end}%`;});
- return `<figure class="ca-distribution"><div class="ca-pie" role="img" aria-label="Verteilung der belegten Beispiele: ${types.map((t,i)=>t+' '+counts[i]).join(', ')}" style="background:${total?'conic-gradient('+stops.join(',')+')':'#eee'}"></div><figcaption><h3>Verteilung der belegten Beispiele</h3><ul>${types.map((t,i)=>`<li>${t}: ${counts[i]} von ${total} (${total?fmt(counts[i]/total*100):0} %)</li>`).join('')}</ul><p>Eigene Auswahl, keine vollständige Erhebung von HORNBACHs Innovationsportfolio. Vorschläge werden nicht mitgezählt. Kein belegtes Beispiel bedeutet keinen Nachweis der Abwesenheit.</p></figcaption></figure>`;
+
+let selectedInvolvementPhase=null;
+function involvementStageBubble(phase,index,value,stageId,sides,cite){
+ const pinned=pinnedInvolvementStage===stageId;
+ return `<div id="${stageId}-reason" class="stage-bubble stage-preview${pinned?' is-open':''}" tabindex="-1">
+  <button type="button" class="icon-button" data-ca-involvement-unpin="${stageId}" aria-label="Begründung schließen">×</button>
+  ${sides.map(([key,label])=>key==='target'?
+   `<h4 class="ca-involvement-target-reason">${label}-Begründung</h4><p>${esc(phase.targetReason)}</p><h4>Maßnahme</h4><p>${esc(phase.measure)}</p>`:
+   `<h4 class="ca-involvement-current-reason">${label}-Begründung</h4>
+    ${phase.current!==null&&['prototype','launch'].includes(phase.id)?'<span class="status-tag">Schätzung</span>':''}
+    <p>${esc(phase.evidence)}</p>
+    ${phase.currentReference?`<p><strong>Quelle:</strong> ${esc(phase.currentReference)}</p>`:
+      phase.evidence===CUSTOMER_ANALYSIS.involvement[index].evidence?cite('gb26','190, 195–196'):''}`).join('')}
+  <div class="rating-change-actions">
+   ${journeyLayers.map(([key,label])=>`<button type="button" class="button small ca-involvement-set-${key}" data-ca-involvement-level="${value??''}" data-ca-involvement-side="${key}">${phase[key]===value?label+' bearbeiten':'Als '+label+' setzen'}</button>`).join('')}
+  </div>
+ </div>`;
 }
-export function innovationView(state,{editing,cite},view){
- const data=state.customerAnalysis,weak=weakestInvolvement(data),filtered=data.examples.filter(x=>exampleFilter==='Alle'||x.type===exampleFilter);
+function involvementStages(phases,{cite}){
+ const selectedIndex=phases.findIndex(phase=>phase.id===selectedInvolvementPhase);
+ const selected=phases[selectedIndex];
+ const cards=phases.map(phase=>`<button type="button" class="ca-involvement-card" id="ca-involvement-${esc(phase.id)}"
+  data-ca-involvement-phase="${esc(phase.id)}" aria-expanded="${phase===selected}" aria-controls="ca-involvement-editor">
+  <strong>${esc(phase.name)}</strong>
+  <span class="ca-involvement-scores">${journeyLayers.map(([key,label])=>`<span class="ca-involvement-score ca-${key}-score">
+   <span>${label}</span><b${phase[key]===null?' class="ca-involvement-unknown"':''}>${phase[key]===null?'Nicht belegt':phase[key]}</b>
+  </span>`).join('')}</span>
+ </button>`).join('');
+ return `<div class="ca-involvement-overview">${cards}</div>
+  <div id="ca-involvement-editor"${selected?'':' hidden'}>${selected?`
+   <section class="panel ca-involvement-editor">
+    <header class="ca-involvement-editor-heading">
+     <h3>${esc(selected.name)}</h3>
+     <button type="button" class="icon-button" data-ca-involvement-phase="${esc(selected.id)}" aria-label="Stufenansicht schließen">×</button>
+    </header>
+    <div class="ca-involvement-stage-bar">
+     ${[...involvementLevels.entries(),[null,'Für diese Bewertung ist keine Stufe festgelegt.']].map(([value,description])=>{
+      const sides=journeyLayers.filter(([key])=>selected[key]===value);
+      const current=sides.some(([key])=>key==='current'),target=sides.some(([key])=>key==='target');
+      const id=`ca-rate-${selected.id}-${value??'open'}`;
+      const label=value===null?(current&&!target?'Nicht belegt':target&&!current?'Noch offen':'Nicht belegt / offen'):'Stufe '+value;
+      const style=current&&target?'both':current?'current':target?'target':'';
+      return `<div class="ca-involvement-stage-item">
+       <button type="button" id="${id}" class="stage-card${style?' stage-active ca-stage-'+style:''}" data-ca-involvement-stage="${value??''}"
+        ${style?`aria-expanded="${pinnedInvolvementStage===id}" aria-controls="${id}-reason"`:`aria-expanded="${involvementAssignment?.id===id}" aria-controls="ca-involvement-assignment"`}>
+        <strong>${label}</strong>
+        <span class="ca-involvement-stage-role">${sides.map(([key,side])=>`<span class="ca-involvement-role-${key}">${side}</span>`).join(' und ')}</span>
+        <span>${description}</span>
+       </button>
+       ${style?involvementStageBubble(selected,selectedIndex,value,id,sides,cite):''}
+      </div>`;
+     }).join('')}
+    </div>
+    <div id="ca-involvement-assignment" tabindex="-1"${involvementAssignment?'':' hidden'}>${involvementAssignment?`
+     <p>${involvementAssignment.value===''?'Keine Einstufung':'Stufe '+involvementAssignment.value} zuordnen</p>
+     <div class="rating-change-actions">${journeyLayers.map(([key,label])=>`<button type="button" class="button small ca-involvement-set-${key}" data-ca-involvement-level="${involvementAssignment.value}" data-ca-involvement-side="${key}">Als ${label} setzen</button>`).join('')}</div>
+    `:''}</div>
+    ${pendingInvolvementRating?involvementRatingForm(pendingInvolvementRating,selected,pendingInvolvementRating.key==='current'?'Ist':'Soll'):''}
+   </section>`:''}</div>`;
+}
+function innovationExamples(examples,cite){
+ return `<div class="ca-cards">${examples.map(example=>{
+  const documented=example.status==='Belegt';
+  const type=example.type==='Coupled'?'Outside-in + Inside-out':example.type;
+  return `<article class="panel ca-innovation-example">
+   <span class="status-tag ${documented?'orange':'pink'}">${esc(type)}</span>
+   <h4>${esc(example.name)}</h4><p>${esc(example.description)}</p>
+   <p class="ca-example-interpretation"><strong>${documented?'Was der Fall zeigt':'Was sich damit erproben ließe'}:</strong>${esc(example.limit)}</p>
+   ${documented?(example.id==='seniovo'?cite('gb25','46, 72'):cite('gb26','190, 193, 195–196')):''}
+  </article>`;
+ }).join('')}</div>`;
+}
+function innovationDistribution(examples){
+ const documented=examples.filter(example=>example.status==='Belegt');
+ const types=[['Outside-in','var(--orange)'],['Inside-out','var(--magenta)'],['Coupled','#59656b']];
+ const counts=types.map(([type,color])=>({type,color,value:documented.filter(example=>example.type===type).length}));
+ let end=0;
+ const stops=counts.filter(entry=>entry.value>0).map(entry=>{
+  const start=end;
+  end+=entry.value/documented.length*100;
+  return `${entry.color} ${start}% ${end}%`;
+ });
+ return `<figure class="ca-innovation-distribution">
+  ${documented.length?`<div class="ca-innovation-pie" aria-hidden="true" style="background:conic-gradient(${stops.join(', ')})"></div>`:''}
+  <figcaption>
+   <h3>Anteile der belegten Beispiele</h3>
+   <ul>${counts.map(({type,color,value})=>`<li><span class="ca-innovation-dot" style="background:${color}" aria-hidden="true"></span>${type} <strong>${value}${documented.length?' · '+fmt(value/documented.length*100)+' %':''}</strong></li>`).join('')}</ul>
+   <p>${documented.length} belegte Fälle aus der Recherche. Ausbauideen zählen hier nicht mit.</p>
+  </figcaption>
+ </figure>`;
+}
+function innovationOverview(data,{editing,cite}){
+ const evidence=data.examples.filter(example=>example.status==='Belegt'&&
+  visibleInnovationFlows.has(example.type));
+ const proposals=innovationExpertise(data,visibleInnovationFlows);
+ return section('',`
+  <div class="ca-innovation-position">
+   <h2>Wo steht HORNBACH heute?</h2>
+   ${text('innovationConclusion','Einordnung',data.innovationConclusion,editing)}
+   ${cite('gb26','190, 193, 195–196')} ${cite('gb25','46, 72')}
+  </div>`)
+  +section('',`<div class="ca-cards ca-innovation-models">
+   <article class="panel"><header class="ca-innovation-model-heading"><h3>Closed Innovation</h3></header><p>Ideen, Entwicklung und Tests bleiben im Unternehmen. Die eigenen Teams entscheiden, welche Ansätze sie weiterverfolgen und wie sie die Ergebnisse nutzen.</p></article>
+   <article class="panel ca-innovation-open"><header class="ca-innovation-model-heading"><h3>Open Innovation</h3><span class="status-tag">Bei HORNBACH belegt</span></header><p>Das Unternehmen öffnet gezielt einzelne Schritte der Entwicklung. Externe können Ideen einbringen, Lösungen mitentwickeln oder Ergebnisse für eigene Anwendungen nutzen.</p></article>
+  </div>`)
+  +section('Beispiele und Vorschläge',`
+   <div class="ca-innovation-flows">
+    ${Object.entries(innovationFlows).map(([type,description])=>`<div>
+     <h3 class="${type==='Outside-in'?'ca-flow-outside':type==='Inside-out'?'ca-flow-inside':'ca-flow-coupled'}"><label for="ca-flow-${type}">
+      <input type="checkbox" id="ca-flow-${type}" data-ca-filter="${type}"${visibleInnovationFlows.has(type)?' checked':''}> ${type}
+     </label></h3>
+     <p>${description}</p>
+    </div>`).join('')}
+   </div>
+   ${evidence.length?innovationExamples(evidence,cite):''}
+   ${!visibleInnovationFlows.size?'<p>Wähle mindestens eine Richtung, um Beispiele zu sehen.</p>':''}
+   ${visibleInnovationFlows.size&&!evidence.length&&!proposals?'<p>Für diese Auswahl ist kein Fall hinterlegt.</p>':''}
+   ${proposals}
+   ${innovationDistribution(data.examples)}`);
+}
+const innovationIdeaDrafts={
+ project:{
+  phase:'Konzeptentwicklung und Prototypentest',
+  customer:'Private Heimwerker erstellen eine digitale Materialliste, lassen sie im Markt prüfen und übernehmen sie in eine Testbestellung. Sie zeigen, an welchen Stellen Angaben fehlen oder sie Eingaben wiederholen müssen.',
+  expert:'Externe Handwerksbetriebe prüfen, welche Angaben zu Mengen, Material und Ausführung für eine brauchbare Projektliste nötig sind. Im Projektlabor überarbeiten sie die Liste gemeinsam mit Kunden und Marktberatung.',
+  measure:'Abgebrochene Übergaben und Fehlpositionen je geprüfter Liste erfassen. Dokumentieren, welche Rückmeldungen zu Änderungen am Prototyp führen.'
+ },
+ advisor:{
+  phase:'Konzeptentwicklung und Prototypentest',
+  customer:'Projektkunden testen den KI-Assistenten mit eigenen Material- und Planungsfragen. Sie zeigen, welche Antworten unverständlich sind und wann sie eine persönliche Beratung brauchen.',
+  expert:'Externe Fachleute prüfen die Antworten an typischen Projektfällen. Gemeinsam mit der Marktberatung legen sie fest, welche Fragen eine fachliche Prüfung oder eine Übergabe an einen Menschen brauchen.',
+  measure:'Suchzeit, fachlich korrekte Antworten und sinnvolle Weiterleitungen prüfen. Die Fehler und daraus abgeleiteten Änderungen am Assistenten dokumentieren.'
+ },
+ availability:{
+  phase:'Prototypentest',
+  customer:'Projektkunden testen Material- und Lieferterminvorschläge für einen typischen Projektablauf und melden, welche Angaben für ihre Planung fehlen.',
+  expert:'Lieferanten und Logistikpartner prüfen, welche Bestandsdaten und Lieferzusagen belastbar sind.',
+  measure:'Abweichungen zwischen vorgeschlagenem und tatsächlichem Liefertermin sowie fehlende Positionen erfassen.'
+ },
+ service:{
+  phase:'Konzeptentwicklung',
+  customer:'Kunden vergleichen zwei Varianten für Leistungsumfang, Terminstatus und Rückfragen an den ausführenden Betrieb.',
+  expert:'Handwerksbetriebe arbeiten mit HORNBACH aus, welche Leistungen, Termine und Zuständigkeiten digital festgehalten werden können.',
+  measure:'Prüfen, wie viele Kunden Zuständigkeit und Leistungsumfang richtig verstehen und welche Rückfragen offenbleiben.'
+ },
+ pro:{
+  phase:'Konzeptentwicklung',
+  customer:'Gewerbliche Projektkunden testen ein Musterpaket und markieren, welche Leistungen ihren Arbeitsalltag erleichtern und wofür sie zahlen würden.',
+  expert:'Externe Gewerke prüfen gemeinsam mit der Marktberatung, welche Zusagen zur Koordination im Arbeitsalltag eingehalten werden können.',
+  measure:'Nutzungsabsicht, Zahlungsbereitschaft und die am häufigsten nachgefragten Leistungen erfassen.'
+ },
+ tools:{
+  phase:'Prototypentest',
+  customer:'Heimwerker testen die Reservierung für ein konkretes Vorhaben und melden, welche Angaben zu Verfügbarkeit, Preis oder Rückgabe fehlen.',
+  expert:'Mietpartner und Werkstattfachleute prüfen Abläufe für Auslastung, Wartung und Übergabe.',
+  measure:'Erfolgreiche Reservierungen, ungeklärte Rückfragen und Unterbrechungen durch fehlendes Werkzeug erfassen.'
+ }
+};
+const involvementMeasureIdeas={
+ ideas:[
+  ['project','Das Kundenpanel sammelt Probleme beim Übertragen der Materialliste und priorisiert gemeinsam, welche Verbesserung zuerst entwickelt wird.'],
+  ['advisor','Das Kundenpanel sammelt typische Beratungsfragen und priorisiert, welche der Assistent zuerst abdecken soll.']
+ ],
+ concept:[
+  ['project','Der Projektbegleiter liefert den konkreten Anwendungsfall. Kunden und Fachberatung vergleichen zwei Varianten der Liste und entscheiden, welche Übergabe verständlicher ist.']
+ ],
+ prototype:[
+  ['project','Ein klickbarer Projektbegleiter macht die Übergabe vom Smartphone über die Marktberatung bis zur Bestellung testbar. Die beobachteten Hürden fließen in die nächste Version ein.'],
+  ['advisor','Ein Prototyp der KI-Beratung lässt Kunden typische Materialfragen ausprobieren. Unklare Antworten und fehlende Übergaben werden für die Überarbeitung festgehalten.']
+ ],
+ launch:[
+  ['advisor','Vor einem breiteren Start testen Kunden typische Beratungsaufgaben und zeigen, ob sie die Antwort verstehen und bei Bedarf den Weg zur Fachberatung finden.'],
+  ['project','Ein begrenzter Test des Projektbegleiters zeigt, ob Kunden ihre Liste im vorgesehenen Ablauf bis zur Bestellung nutzen können.']
+ ],
+ improve:[
+  ['project','Bei der Projektliste kann HORNBACH Teilnehmenden zeigen, welche ihrer Vorschläge umgesetzt wurden und ob dadurch weniger Übergaben abbrechen.'],
+  ['advisor','HORNBACH kann Kunden zeigen, welche Rückmeldungen zu verbesserten Antworten oder Weiterleitungen geführt haben, und die Änderungen erneut mit ihnen prüfen.']
+ ]
+};
+function projectCrowdsourcing(campaign,proposal,editing){
+ const fields=[
+  ['goal','Fragestellung'],['audience','Zielgruppe'],['incentive','Anreiz'],
+  ['rules','Regeln'],['selection','Bewertung'],['feedback','Rückmeldung'],['risk','Risiko']
+ ];
+ return `<details class="ca-involvement-pilot">
+  <summary>Crowdsourcing für die Projektliste</summary>
+  <div class="ca-involvement-pilot-body">
+   <p>Kampagnenentwurf für den ${proposal?developmentIdeaLink(proposal):'digitalen Projektbegleiter'}.</p>
+   ${fields.map(([key,label])=>text('campaign.'+key,label,campaign[key],editing)).join('')}
+  </div>
+ </details>`;
+}
+function involvementMeasures(data,proposals,editing){
+ const project=proposals.find(idea=>idea.id==='project');
+ const available=data.involvement.filter(phase=>phase.target!==null&&phase.measure.trim());
+ const priority=available.find(phase=>phase.id===data.involvementPriority)
+  ??available.filter(phase=>phase.current!==null&&phase.current<phase.target)
+   .reduce((lowest,phase)=>!lowest||phase.current<lowest.current?phase:lowest,null);
+ const ordered=[...available].sort((a,b)=>Number(b===priority)-Number(a===priority));
+ const cards=ordered.map(phase=>{
+  const original=CUSTOMER_ANALYSIS.involvement.find(item=>item.id===phase.id);
+  const conceptPilot=phase===priority&&phase.id==='concept'&&phase.measure===original?.measure;
+  const tied=phase.current!==null&&available.some(other=>other!==phase&&other.current===phase.current&&other.target>other.current);
+  const links=phase.measure===original?.measure?involvementMeasureIdeas[phase.id]??[]:[];
+  let match;
+  for(const [id,contribution] of links){
+   const idea=proposals.find(item=>item.id===id);
+   if(idea){match={idea,contribution};break;}
+  }
+  return `<article class="ca-phase-card ca-involvement-measure${phase===priority?' ca-involvement-prioritized':''}">
+   <header><h3>${esc(phase.name)}</h3><span class="status-tag pink">Soll · Stufe ${phase.target}</span>${phase===priority?'<span class="status-tag orange">Priorität</span>':''}</header>
+   ${text('', 'Maßnahme', phase.measure, false)}
+   <div class="ca-field"><h4>Passende Idee</h4><p>${match?developmentIdeaLink(match.idea):'Offen'}</p></div>
+   ${match?text('', 'So hilft die Idee', match.contribution, false):''}
+   ${phase.id==='ideas'?projectCrowdsourcing(data.campaign,project,editing):''}
+   ${conceptPilot?`<p class="scope-note ca-involvement-priority-reason"><strong>Warum zuerst?</strong> ${tied?`Mehrere Phasen liegen bei Ist-Stufe ${phase.current}. `:''}In der Konzeptentwicklung können Kunden die Projektliste mitgestalten, bevor HORNBACH sich auf eine Variante festlegt.</p>
+   <details class="ca-involvement-pilot">
+    <summary>Priorisierter Pilotversuch</summary>
+    <div class="ca-involvement-pilot-body">
+     ${text('', 'Umsetzung', 'Digital Commerce und Marktberatung vergleichen innerhalb von drei Monaten zwei Varianten der Projektliste mit zehn freiwilligen Projektkunden.', false)}
+     ${text('', 'Begründung', 'Moderierte Tests zeigen, wo Kunden bei der Übergabe hängen bleiben. Ein reines Online-Voting kann eine bevorzugte Variante zeigen, liefert aber weniger Einblick in die Ursachen.', false)}
+     ${text('', 'Zielwerte', 'Mindestens acht von zehn Testpersonen übertragen eine Liste ohne Hilfe. Mindestens zwei wiederkehrende Hürden werden vor dem nächsten Test behoben und dokumentiert.', false)}
+     ${text('', 'Erhebung', 'Je Variante im Testprotokoll zählen, wie viele Personen die Liste ohne Hilfe übertragen. Wiederkehrende Hürden mit einer eindeutigen Kennung erfassen und in der nächsten Version mit derselben Aufgabe erneut prüfen.', false)}
+     <div class="ca-field"><h4>Wissenschaftliche Grundlage</h4>
+      <p>Dickinson und Wilby vergleichen in einer Studie frühe Konzepttests mit und ohne Produktprobe. Für die Projektliste übertragen wir den Ansatz auf einen Prototypentest, bei dem die Teilnehmenden die Übergabe selbst ausprobieren.</p>
+      <a class="source-ref" href="https://doi.org/10.1111/1540-5885.1420117" target="_blank" rel="noopener">Dickinson &amp; Wilby (1997), Concept Testing With and Without Product Trial</a>
+     </div>
+     ${text('', 'Risiko', 'Die kleine freiwillige Stichprobe bildet nicht alle Kundensegmente ab. Deshalb unterschiedliche Projekterfahrung einbeziehen und Ergebnisse als Pilotbefund kennzeichnen.', false)}
+    </div>
+   </details>`:''}
+   <button type="button" class="button small secondary ca-involvement-priority-button" id="ca-priority-${esc(phase.id)}" data-ca-involvement-priority="${esc(phase.id)}" aria-pressed="${phase===priority}">${phase===priority?'Priorisiert':'Priorisieren'}</button>
+  </article>`;
+ }).join('');
+ return section('Abgeleitete Maßnahmen',cards?`<div class="ca-phase-grid ca-involvement-measures">${cards}</div>`:'<p>Für die Soll-Stufen sind noch keine Maßnahmen hinterlegt.</p>');
+}
+const expertiseExpansion={
+ cocreation:{
+  label:'Coupled',
+  action:'HORNBACH lädt Fachleute zu einem gemeinsamen Test ein. Sie prüfen reale Projektfälle, benennen fachliche Lücken und arbeiten an der nächsten Version mit.',
+  result:'Fachliche Änderungen und die Gründe dafür im Testprotokoll festhalten. Vorab klären, wie gemeinsam erarbeitete Ergebnisse genutzt werden dürfen.'
+ },
+ standard:{
+  label:'Inside-Out',
+  action:'HORNBACH dokumentiert, wie Artikel, Mengen, Einheiten und Freigaben in einer Projektliste beschrieben werden. Ausgewählte Partner könnten kompatible Hilfen entwickeln und mit Beispieldaten testen.',
+  result:'Mit einem Partner prüfen, ob eine Liste ohne erneute Eingabe übernommen werden kann. Nutzungsrechte, Datenzugriff und Freigaben für Projektinformationen vorher klären.'
+ }
+};
+function innovationExpertise(data,flows){
+ const cards=data.examples.filter(example=>example.status==='Vorschlag'&&
+  Object.hasOwn(expertiseExpansion,example.id)&&
+  flows.has(example.type)).map(example=>{
+  const expansion=expertiseExpansion[example.id];
+  const coupled=example.type==='Coupled';
+  return `<article class="panel ca-innovation-example ca-expertise-card">
+   <span class="status-tag${coupled?'':' pink'}">${expansion.label} · Vorschlag</span>
+   <h4>${esc(example.name)}</h4>
+   <p class="ca-example-interpretation"><strong>Umsetzung:</strong>${esc(expansion.action)}</p>
+   <p class="ca-example-interpretation"><strong>Woran wir den Nutzen prüfen:</strong>${esc(expansion.result)}</p>
+  </article>`;
+ }).join('');
+ return cards?`<div class="ca-cards ca-expertise-grid">${cards}</div>`: '';
+}
+export function innovationView(state,{editing,cite,developmentProposals},view){
+ const data=state.customerAnalysis;
  const views={
-  overview:()=>section('Closed oder Open Innovation?',`${text('innovationConclusion','Begründete Einordnung',data.innovationConclusion,editing)}${cite('gb26','37, 72, 190, 195–196')} ${lecture('innovation',17,17)}<p class="scope-note">Die Existenz eines Marktplatzes oder einer Lieferbeziehung allein beweist keine gemeinsame Innovation. Wissenszufluss, Wissensabgabe und gemeinsame Entwicklung werden getrennt betrachtet. Quellenstand: ${date}.</p>`)+
-   section('Beispiele & Prozesszuordnung',`<div class="ca-view-switch" role="group" aria-label="Open-Innovation-Beispiele filtern">${['Alle','Outside-in','Inside-out','Coupled'].map(t=>`<button class="button small secondary" data-ca-filter="${t}" aria-pressed="${exampleFilter===t}">${t}</button>`).join('')}</div><div class="ca-cards">${filtered.map(x=>`<article class="panel"><div class="tag-row"><span class="status-tag ${x.status==='Belegt'?'orange':'pink'}">${x.status}</span><span class="status-tag">${x.type}</span></div><h3>${esc(x.name)}</h3><p>${esc(x.description)}</p><p class="scope-note">${esc(x.limit)}</p>${x.pages?cite('gb26',x.pages):lecture('innovation',19,19)}${sourceUrl(x.sourceUrl)}<p class="ca-date">${x.sourceUrl?'Veröffentlichung':'Eigener Vorschlag'}: ${x.sourceDate} · geprüft ${date}</p></article>`).join('')}</div>${distribution(data.examples)}`),
-  involvement:()=>section('Kundeneinbindung im Innovationsprozess',`<p>Eigene Arbeitsskala: 0 = nachweislich kein Einbezug, 1 = punktueller Input, 2 = systematisches Feedback oder Tests, 3 = gemeinsame Entwicklung. „Offen“ bedeutet fehlende Evidenz und wird nicht als 0 gewertet. Diese Skala ist keine zusätzliche Appelfeller/Feldmann-Bewertung.</p><div class="ca-involvement">${data.involvement.map((p,i)=>`<article class="panel"><h3>${esc(p.name)}</h3><div class="ca-score-grid">${scale(`involvement.${i}.current`,'Ist · Einschätzung',p.current,0,3)}${scale(`involvement.${i}.target`,'Soll · Vorschlag',p.target,0,3)}</div>${text(`involvement.${i}.evidence`,'Begründung / Beleglücke',p.evidence,editing)}${text(`involvement.${i}.measure`,'Entwicklungsschritt',p.measure,editing)}${cite('gb26','190, 195–196')}</article>`).join('')}</div>${lecture('innovation',15,15)} ${lecture('innovation',48,48)}`),
-  proposal:()=>section('Schwächste belegbare Einbindung & Empfehlung',weak?`<p>Unter den bewerteten Phasen ist <strong>${esc(weak.name)} (${weak.current}/3)</strong> am schwächsten eingeordnet. ${data.involvement.filter(p=>p.current===null).length} Phasen bleiben offen und sind zunächst zu untersuchen.</p>${innovationRecommendation(weak)}<button class="button" data-ca-candidate="innovation">${state.actions.some(a=>a.originId==='course-innovation')?'Maßnahmenvorschlag aktualisieren':'Als Maßnahmenvorschlag übernehmen'}</button>`:'<p>Keine bewertete Phase. Zunächst Belege ergänzen; aus offenen Werten wird keine schwächste Stelle berechnet.</p>'),
-  campaign:()=>section('Entwurf einer Crowdsourcing-Kampagne',`${Object.entries({goal:'Ziel',audience:'Zielgruppe',incentive:'Anreiz',rules:'Regeln & Rechte',selection:'Bewertung',feedback:'Rückmeldung'}).map(([key,title])=>text('campaign.'+key,title,data.campaign[key],editing)).join('')}<p class="scope-note">Vorgeschlagenes Format: Customer Advisory Panel mit Co-Creation, keine bereits durchgeführte Kampagne. Risiko: selbstselektierte Teilnehmende; verschiedene Projektkundensegmente gezielt berücksichtigen.</p>${lecture('innovation',30,30)} ${lecture('innovation',45,45)}`),
-  scenario:()=>innovationScenarioView(state)
+  overview:()=>innovationOverview(data,{editing,cite}),
+  involvement:()=>section('Kundeneinbindung in den verschiedenen Innovationsphasen',involvementStages(data.involvement,{cite}))
+   +involvementMeasures(data,developmentProposals??[],editing),
+  scenario:()=>innovationScenarioView(state,cite)
  };
  return view?views[view]():Object.entries(views).filter(([id])=>id!=='scenario').map(([,render])=>render()).join('');
 }
@@ -519,62 +816,63 @@ export function customerScenario(state){
  const {scenarioJourney,scenarioInnovation}=state.customerAnalysis;
  return applyScenario(state,[
   ...(scenarioJourney?projectListEffects:[]),
-  ...(scenarioInnovation?innovationEffects:[])
+  ...(scenarioInnovation&&state.customerAnalysis.involvement.some(supportsInnovationScenario)?innovationEffects:[])
  ]);
 }
-function scenarioChart(state,scenario){
- const before=state.model.map(group=>({name:group.name,value:mean(group.criteria,'current')}));
- const after=scenario.groups.map(group=>mean(group.criteria,'current'));
- const xy=(index,value)=>[160+Math.cos(-Math.PI/2+index*2*Math.PI/before.length)*90*value/4,137+Math.sin(-Math.PI/2+index*2*Math.PI/before.length)*90*value/4];
+function scenarioValues(state,scenario){
+ return {
+  before:state.model.map(group=>({name:group.name,value:mean(group.criteria,'current')})),
+  after:scenario.groups.map(group=>mean(group.criteria,'current'))
+ };
+}
+const scenarioMeanFormat=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const formatScenarioMean=value=>value===null?'Offen':scenarioMeanFormat.format(value);
+function scenarioRadar({before,after},showTarget,originalTarget){
+ const centerY=147;
+ const radius=112;
+ const xy=(index,value)=>{
+  const angle=-Math.PI/2+index*2*Math.PI/before.length;
+  return [160+Math.cos(angle)*radius*value/4,centerY+Math.sin(angle)*radius*value/4];
+ };
  const points=values=>values.map((value,index)=>xy(index,value).join(',')).join(' ');
  const series=(values,kind,label)=>{
-  const polygon=values.every(value=>value!==null)?`<polygon points="${points(values)}" class="ca-${kind}"/>`:'';
+  const polygon=values.every(value=>value!==null)?`<polygon points="${points(values)}" class="radar-${kind}"/>`:'';
   return polygon+values.map((value,index)=>{
    if(value===null)return '';
    const [x,y]=xy(index,value);
-   return `<circle class="ca-${kind}" cx="${x}" cy="${y}" r="4"><title>${esc(before[index].name)} · ${label} ${fmt(value)}</title></circle>`;
+   return `<circle class="radar-${kind}" cx="${x}" cy="${y}" r="${kind==='target'?6:4}"><title>${esc(before[index].name)} · ${label} ${kind!=='original-target'?formatScenarioMean(value):fmt(value)}</title></circle>`;
   }).join('');
  };
- return `<div class="ca-scenario-layout">
-  <svg viewBox="0 0 320 260" role="img" aria-label="Netzdiagramm zur Reifegradwirkung. Werte stehen in der Tabelle daneben.">
-   ${[1,2,3,4].map(level=>`<polygon points="${points(before.map(()=>level))}" class="ca-grid"/><text x="169" y="${xy(0,level)[1]+5}">${level}</text>`).join('')}
+ return `<svg viewBox="0 0 320 260" role="img" aria-label="Netzdiagramm zur Reifegradwirkung, Skala 1 bis 4">
+   ${[1,2,3,4].map(level=>`<polygon points="${points(before.map(()=>level))}" class="radar-grid"/><text x="169" y="${xy(0,level)[1]+4}" class="radar-tick">${level}</text>`).join('')}
    ${before.map((group,index)=>{
     const [x,y]=xy(index,4);
-    const [labelX,labelY]=xy(index,4.75);
-    return `<line x1="160" y1="137" x2="${x}" y2="${y}" class="ca-grid"/><text x="${labelX}" y="${labelY}" text-anchor="middle">${esc(group.name)}</text>`;
+    const [labelX,labelY]=[x,index===0?19:y+22];
+    return `<line x1="160" y1="${centerY}" x2="${x}" y2="${y}" class="radar-axis"/><text x="${labelX}" y="${labelY}" text-anchor="middle" class="model-chart-label">${esc(group.name)}</text>`;
    }).join('')}
+   ${originalTarget?series(originalTarget,'original-target','Soll aus dem digitalen Reifegrad'):''}
    ${series(before.map(group=>group.value),'current','Ist')}
-   ${scenario.changes.length?series(after,'target','Szenario'):''}
-  </svg>
-  <div>
-   <div class="chart-legend"><span class="status-tag orange">Ist</span>${scenario.changes.length?'<span class="status-tag pink">Szenario</span>':''}</div>
-   <table class="matrix ca-scenario-table"><thead><tr><th scope="col">Bereich</th><th scope="col">Ist</th>${scenario.changes.length?'<th scope="col">Szenario</th>':''}</tr></thead>
-    <tbody>${before.map((group,index)=>`<tr><th scope="row">${esc(group.name)}</th><td>${fmt(group.value)}</td>${scenario.changes.length?`<td>${fmt(after[index])}</td>`:''}</tr>`).join('')}</tbody>
-   </table>
-   <p>Mittelwerte der bewerteten Kriterien, Skala 1 bis 4. Die Ist-Bewertung im digitalen Reifegrad bleibt unverändert.</p>
-  </div>
- </div>`;
-}
-function scenarioChanges(scenario,empty){
- return section('Voraussetzungen für höhere Stufen',scenario.changes.length?`<dl class="ca-recommendation-fields">
-  ${scenario.changes.map(change=>`<dt>${esc(change.name)} · ${fmt(change.before)} → ${change.value}</dt><dd>${esc(change.why)}</dd>`).join('')}
- </dl>`:`<p>${empty}</p>`);
+   ${showTarget?series(after,'target','Szenario'):''}
+  </svg>`;
 }
 function journeyScenarioView(state,proposals){
+ const idea=proposals?.find(proposal=>proposal.id==='project');
+ const criterion=state.model.find(group=>group.id==='customer').criteria.find(item=>item.id==='journey');
  const data=state.customerAnalysis;
  const segmentId=activeJourneySegment??'all';
  const highest=rankedJourneyPainPoints(data,segmentId)[0];
  const segmentLabel=personaSegments[segmentId]??'Alle Segmente';
- const idea=proposals.find(proposal=>proposal.id==='project');
- const scenario=applyScenario(state,data.scenarioJourney?projectListEffects:[]);
+ const scenario=applyScenario(state,projectListEffects);
+ const goal=scenario.groups.find(group=>group.id==='customer').criteria.find(item=>item.id==='journey').current;
  const candidateExists=state.actions.some(action=>action.originId==='course-journey');
- return section('Projektübergabe zwischen App, Markt und Bestellung',`
-  <p>Beim Planen und Kaufen kann der Projektkontext zwischen den Kanälen verloren gehen. Eine gemeinsame Projektliste kann Artikel, Mengen und Änderungen aus der Beratung für die Bestellung verfügbar halten.</p>
-  ${idea?`<p class="ca-scenario-idea">Entwicklungsvorschlag: ${developmentIdeaLink(idea)}</p>`:''}
-  <p>Eine gemeinsame Liste verbessert die Übergabe. Für Stufe 4 muss zusätzlich der gesamte digitale Projektablauf durchgängig verbunden sein und Übergaben und nächste Schritte automatisch steuern. Das Netzdiagramm zeigt dieses Zielbild als Szenario.</p>
-  <div class="ca-scenario-options"><label><input id="ca-scenario-journey-toggle" type="checkbox" data-ca-scenario="scenarioJourney"${data.scenarioJourney?' checked':''}> Durchgängigen Projektablauf als Szenario einblenden</label></div>
-  ${scenarioChart(state,scenario)}`)
-  +scenarioChanges(scenario,data.scenarioJourney?'Die aktuelle Bewertung erreicht die hinterlegte Szenariostufe bereits.':'Das Netzdiagramm zeigt den Ist-Stand. Blende das Szenario für den Vergleich ein.')
+ return maturityComparison(state,scenario,criterion,goal,'Journey')
+  +section('',`<div class="ca-maturity-explanation">
+   ${text('', 'Warum diese Ist-Einstufung?', criterion.evidence, false)}
+   ${text('', 'Projektübergabe zwischen App, Markt und Bestellung', 'Beim Planen und Kaufen kann der Projektkontext zwischen den Kanälen verloren gehen. Eine gemeinsame Projektliste kann Artikel, Mengen und Änderungen aus der Beratung für die Bestellung verfügbar halten.', false)}
+${idea?`   <p>Entwicklungsvorschlag: ${developmentIdeaLink(idea)}</p>`:''}
+   ${text('', 'Was muss für Stufe 4 belegt sein?', projectListEffects[0][3], false)}
+   ${!scenario.changes.length?'<p class="scope-note">Die Ist-Bewertung erreicht die hinterlegte Szenariostufe bereits.</p>':''}
+  </div>`)
   +section('Priorisierter Maßnahmenkandidat',`<article class="ca-phase-card ca-scenario-focus">
    <div class="tag-row"><span class="status-tag">${esc(segmentLabel)}</span><span class="status-tag">Phase ${esc(highest.phase.name)}</span><span class="status-tag orange">${highest.severity}/5</span></div>
    <p>${esc(highest.measure)}</p>
@@ -585,20 +883,69 @@ function journeyScenarioView(state,proposals){
   </article>`)
   +`<p class="method-caption">${lecture('journey',81,84)} ${lecture('journey',82,85)}</p>`;
 }
-function innovationScenarioView(state){
- const enabled=state.customerAnalysis.scenarioInnovation;
- const scenario=applyScenario(state,enabled?innovationEffects:[]);
- return section('Mögliche Wirkung auf den Reifegrad',`<p>Das Szenario betrachtet die aktive Kundenbeteiligung an digitalen Konzept- und Produkttests.</p>
- <div class="ca-scenario-options"><label><input id="ca-scenario-innovation-toggle" type="checkbox" data-ca-scenario="scenarioInnovation"${enabled?' checked':''}> Digitale Konzept- und Produkttests</label></div>
- ${scenarioChart(state,scenario)}`)+scenarioChanges(scenario,enabled?'Der Ist-Wert liegt bereits auf oder über der hinterlegten Szenariostufe.':'Aktiviere die Produkttests, um die Voraussetzung zu sehen.');
+function maturityComparison(state,scenario,criterion,goal,type){
+ const toggleKey='scenario'+type;
+ const comparable=scenario.changes.length>0;
+ const showTarget=comparable&&state.customerAnalysis[toggleKey];
+ const values=scenarioValues(state,scenario);
+ const originalTarget=state.model.map(group=>mean(group.criteria,'target'));
+ const scope=state.model.findIndex(group=>group.id==='customer');
+ const currentMean=values.before[scope].value;
+ const targetMean=values.after[scope];
+ return section('',`
+  <div class="ca-maturity-layout">
+   <figure class="model-chart panel ca-maturity-radar">
+    <figcaption class="chart-legend"><span class="status-tag orange">Ist</span>${showTarget?'<span class="status-tag pink">Szenario</span>':''}<span class="status-tag ca-original-target-tag">Soll</span></figcaption>
+    ${scenarioRadar(values,showTarget,originalTarget)}
+   </figure>
+   <div class="ca-maturity-comparison">
+    <h3>${esc(criterion.name)}</h3>
+    <div class="stage-columns">
+     <article class="stage-column stage-current stage-card stage-active ca-maturity-score">
+      <span class="status-tag orange">Ist</span>
+      <h4>${criterion.current===null?'Offen':'Stufe '+criterion.current}</h4>
+      <p>${esc(criterion.current===null?'Für dieses Kriterium ist im digitalen Reifegrad kein Ist-Wert hinterlegt.':criterion.levels[criterion.current-1])}</p>
+     </article>
+     <article class="stage-column stage-target stage-card stage-active ca-maturity-score">
+      <span class="status-tag pink">Szenario</span>
+      <h4>${goal===null?'Offen':'Stufe '+goal}</h4>
+      <p>${esc(goal===null?'Für die hinterlegten Maßnahmen ist die Reifegradwirkung noch zu prüfen.':criterion.levels[goal-1])}</p>
+     </article>
+    </div>
+    <p class="ca-maturity-average"><strong>Kundenanbindung im Netzdiagramm</strong><span>Ist ${formatScenarioMean(currentMean)} → Szenario ${formatScenarioMean(goal===null?null:targetMean)} → Soll ${fmt(originalTarget[scope])}</span></p>
+    ${comparable?`<label class="ca-maturity-toggle"><input id="ca-scenario-${type.toLowerCase()}-toggle" type="checkbox" data-ca-scenario="${toggleKey}"${showTarget?' checked':''}> Szenario im Netzdiagramm anzeigen</label>`:''}
+   </div>
+  </div>`);
+}
+function supportsInnovationScenario(phase){
+ const original=CUSTOMER_ANALYSIS.involvement.find(item=>item.id===phase.id);
+ return phase.target>=2&&phase.measure===original?.measure&&['concept','prototype'].includes(phase.id);
+}
+function innovationScenarioView(state,cite){
+ const data=state.customerAnalysis;
+ const supports=data.involvement.filter(supportsInnovationScenario);
+ const eligible=supports.length>0;
+ const model=state.model.find(group=>group.id==='customer');
+ const criterion=model.criteria.find(item=>item.id==='development');
+ const possible=applyScenario(state,eligible?innovationEffects:[]);
+ const goal=eligible?possible.groups.find(group=>group.id==='customer').criteria.find(item=>item.id==='development').current:null;
+ return maturityComparison(state,possible,criterion,goal,'Innovation')
+  +section('',`<div class="ca-maturity-explanation">
+   ${text('', 'Warum diese Ist-Einstufung?', criterion.evidence, false)}
+   ${criterion.source?cite(criterion.source,criterion.pages):''}
+   ${eligible?`
+    ${text('', 'Welche Maßnahmen tragen dazu bei?', supports.map(phase=>phase.measure).join(' '), false)}
+    ${text('', 'Was muss für Stufe 2 belegt sein?', 'Teilnehmende bringen eigene Ideen ein oder arbeiten an einer Variante mit und testen sie digital. HORNBACH dokumentiert, wo sie den Ablauf abbrechen oder wiederholen, wertet diese Nutzungsspuren aus und hält fest, welche Änderungen daraus folgen.', false)}
+    ${!possible.changes.length?'<p class="scope-note">Die Ist-Bewertung erreicht die für diese Maßnahmen angesetzte Stufe bereits.</p>':''}`:''}
+  </div>`);
 }
 export function renderCustomerAnalysis(state,context,view){
  if(view==='journey')return `<section class="maturity-folder journey-folder">
   <div class="folder-tabs" role="tablist" aria-label="Customer-Journey-Ansichten">${journeyTabs.map(([id,label])=>`<button type="button" role="tab" id="journey-tab-${id}" data-journey-tab="${id}" aria-selected="${activeJourneyTab===id}" tabindex="${activeJourneyTab===id?0:-1}" aria-controls="journey-folder-content">${label}</button>`).join('')}</div>
   <div class="folder-content" id="journey-folder-content" role="tabpanel" aria-labelledby="journey-tab-${activeJourneyTab}" tabindex="0">${journeyView(state,context,activeJourneyTab)}</div>
  </section>`;
- if(view)return `<div class="ca-content">${innovationView(state,context)}${innovationScenarioView(state)}</div>`;
- return `<div class="ca-tabs" role="tablist" aria-label="Kundenanalyse"><button class="button secondary" role="tab" id="ca-tab-journey" aria-controls="ca-content" aria-selected="${subview==='journey'}" data-ca-view="journey">Customer Journey</button><button class="button secondary" role="tab" id="ca-tab-innovation" aria-controls="ca-content" aria-selected="${subview==='innovation'}" data-ca-view="innovation">Open Innovation</button></div><div id="ca-content" role="tabpanel" aria-labelledby="ca-tab-${subview}">${subview==='journey'?journeyView(state,context)+journeyScenarioView(state,context.developmentProposals??[]):innovationView(state,context)+innovationScenarioView(state)}</div>`;}
+ if(view)return `<div class="ca-content">${innovationView(state,context)}${innovationView(state,context,'scenario')}</div>`;
+ return `<div class="ca-tabs" role="tablist" aria-label="Kundenanalyse"><button class="button secondary" role="tab" id="ca-tab-journey" aria-controls="ca-content" aria-selected="${subview==='journey'}" data-ca-view="journey">Customer Journey</button><button class="button secondary" role="tab" id="ca-tab-innovation" aria-controls="ca-content" aria-selected="${subview==='innovation'}" data-ca-view="innovation">Open Innovation</button></div><div id="ca-content" role="tabpanel" aria-labelledby="ca-tab-${subview}">${subview==='journey'?journeyView(state,context)+journeyScenarioView(state,context.developmentProposals):innovationView(state,context)+innovationView(state,context,'scenario')}</div>`;}
 async function personaImage(file){
  const image=await createImageBitmap(file);
  try{
@@ -627,6 +974,35 @@ export async function handleCustomerAnalysisEvent(event,state,{save,render,toast
   globalThis.document?.querySelector('#panel-kunden .ca-segment-filter[open]')?.removeAttribute('open');
  }
  if(!el.closest('#panel-kunden')&&!el.closest('#panel-innovation'))return;
+ if(event.type==='submit'&&el.matches('[data-ca-involvement-rating]')){
+  event.preventDefault();
+  const pending=pendingInvolvementRating;
+  const phase=state.customerAnalysis.involvement.find(item=>item.id===selectedInvolvementPhase);
+  if(!pending||!phase)return;
+  const reason=el.elements.namedItem('reason');
+  const measure=el.elements.namedItem('measure');
+  for(const field of [reason,measure].filter(Boolean)){
+   if(field.value.trim())continue;
+   field.setCustomValidity('Bitte fülle dieses Feld aus.');
+   field.reportValidity();
+   return;
+  }
+  phase[pending.key]=pending.value;
+  if(pending.key==='current'){
+   phase.evidence=reason.value.trim();
+   phase.currentReference=el.elements.namedItem('source').value.trim();
+  }else{
+   phase.targetReason=reason.value.trim();
+   phase.measure=measure.value.trim();
+  }
+  pinnedInvolvementStage=`ca-rate-${phase.id}-${pending.value??'open'}`;
+  involvementAssignment=null;
+  pendingInvolvementRating=null;
+  save();render();
+  globalThis.document?.getElementById(pinnedInvolvementStage)?.focus({preventScroll:true});
+  return;
+ }
+ if(event.type==='input'&&el.matches('[data-ca-involvement-rating] textarea'))el.setCustomValidity('');
  if(event.type==='submit'&&el.matches('[data-ca-persona-form]')){
   if(event.submitter?.formMethod==='dialog')return;
   event.preventDefault();
@@ -737,11 +1113,83 @@ export async function handleCustomerAnalysisEvent(event,state,{save,render,toast
    globalThis.document?.getElementById(layerButton.id)?.focus({preventScroll:true});
    return;
   }
-  for(const [attr,set] of [['data-ca-view',v=>subview=v],['data-ca-filter',v=>exampleFilter=v]]){const button=el.closest('['+attr+']');if(button){set(button.getAttribute(attr));render();return;}}
+  const priorityButton=el.closest('[data-ca-involvement-priority]');
+  if(priorityButton){
+   const data=state.customerAnalysis;
+   const phase=data.involvement.find(item=>item.id===priorityButton.dataset.caInvolvementPriority);
+   if(!phase||phase.target===null||!phase.measure.trim())return;
+   data.involvementPriority=data.involvementPriority===phase.id?'':phase.id;
+   save();render();
+   globalThis.document?.getElementById(priorityButton.id)?.focus();
+   return;
+  }
+  const phaseButton=el.closest('[data-ca-involvement-phase]');
+  if(phaseButton){
+   const phase=phaseButton.dataset.caInvolvementPhase;
+   selectedInvolvementPhase=selectedInvolvementPhase===phase?null:phase;
+   pendingInvolvementRating=null;
+   pinnedInvolvementStage=null;
+   involvementAssignment=null;
+   render();
+   globalThis.document?.getElementById('ca-involvement-'+phase)?.focus({preventScroll:true});
+   return;
+  }
+  const stageButton=el.closest('[data-ca-involvement-stage]');
+  if(stageButton){
+   pendingInvolvementRating=null;
+   if(stageButton.classList.contains('stage-active')){
+    pinnedInvolvementStage=pinnedInvolvementStage===stageButton.id?null:stageButton.id;
+    involvementAssignment=null;
+   }else{
+    pinnedInvolvementStage=null;
+    involvementAssignment=involvementAssignment?.id===stageButton.id?null:{id:stageButton.id,value:stageButton.dataset.caInvolvementStage};
+   }
+   render();
+   const openedId=involvementAssignment?'ca-involvement-assignment':pinnedInvolvementStage?pinnedInvolvementStage+'-reason':'';
+   if(openedId){
+    const opened=globalThis.document?.getElementById(openedId);
+    opened?.focus({preventScroll:true});
+    opened?.scrollIntoView({block:'nearest'});
+   }else globalThis.document?.getElementById(stageButton.id)?.focus({preventScroll:true});
+   return;
+  }
+  const levelButton=el.closest('[data-ca-involvement-level]');
+  if(levelButton){
+   const key=levelButton.dataset.caInvolvementSide;
+   const raw=levelButton.dataset.caInvolvementLevel;
+   pendingInvolvementRating={key,value:raw===''?null:Number(raw)};
+   pinnedInvolvementStage=null;
+   involvementAssignment=null;
+   render();
+   globalThis.document?.getElementById('ca-involvement-reason')?.focus();
+   return;
+  }
+  const unpin=el.closest('[data-ca-involvement-unpin]');
+  if(unpin){
+   pinnedInvolvementStage=null;
+   render();
+   globalThis.document?.getElementById(unpin.dataset.caInvolvementUnpin)?.focus({preventScroll:true});
+   return;
+  }
+  if(el.closest('[data-ca-involvement-cancel]')){
+   const pending=pendingInvolvementRating;
+   pendingInvolvementRating=null;
+   render();
+   globalThis.document?.getElementById(`ca-rate-${selectedInvolvementPhase}-${pending.value??'open'}`)?.focus({preventScroll:true});
+   return;
+  }
+  const viewButton=el.closest('[data-ca-view]');
+  if(viewButton){
+   subview=viewButton.getAttribute('data-ca-view');
+   render();
+   return;
+  }
   const candidate=el.closest('[data-ca-candidate]');
   if(candidate){
    const kind=candidate.dataset.caCandidate;
-   const id='course-'+kind;
+   const linkedIdea=kind==='innovation'&&state.ideas.find(idea=>idea.id===candidate.dataset.caCandidateIdea);
+   const draft=linkedIdea&&innovationIdeaDrafts[linkedIdea.id];
+   const id='course-'+kind+(draft?'-'+linkedIdea.id:'');
    const existing=state.actions.find(action=>action.originId===id);
    if(!existing&&state.actions.length>=40){toast('Höchstens 40 Maßnahmen möglich.');return;}
    const data=state.customerAnalysis;
@@ -750,20 +1198,20 @@ export async function handleCustomerAnalysisEvent(event,state,{save,render,toast
    const segmentLabel=personaSegments[segmentId]??'Alle Segmente';
    const pain=journey?rankedJourneyPainPoints(data,segmentId)[0]:null;
    const involvement=journey?null:weakestInvolvement(data);
-   if(!pain&&!involvement)return;
+   if(!pain&&!involvement&&!draft)return;
    const action={
     id,originId:id,
-    name:journey?`Journey: ${pain.phase.name} (${segmentLabel})`:`Open Innovation: ${involvement.name} – Kundenpanel`,
+    name:journey?`Journey: ${pain.phase.name} (${segmentLabel})`:draft?`Open Innovation: ${linkedIdea.name}`:`Open Innovation: ${involvement.name} – Kundenpanel`,
     owner:'Digital Commerce / Marktberatung · vorgeschlagen',
     phase:'0–3 Monate',
     status:existing?.status||'Geplant',
     impact:4,effort:3,risk:3,
-    deliverable:journey?pain.measure:involvement.measure,
-    gate:journey?pain.metric:'Zehn verwertbare Ideen in acht Wochen, zwei fachlich geprüfte Prototypverbesserungen.',
+    deliverable:journey?pain.measure:draft?draft.customer:involvement.measure,
+    gate:journey?pain.metric:draft?draft.measure:'Zehn verwertbare Ideen in acht Wochen, zwei fachlich geprüfte Prototypverbesserungen.',
     depends:'Konzeptioneller Vorschlag. Freigabe, Datenzugang und Teilnehmende erforderlich.',
-    situation:journey?pain.pain:involvement.evidence,
-    rationale:journey?`Höchstbewerteter Schmerzpunkt (${pain.severity}/5) im ausgewählten Kundensegment. Die Maßnahme wird im Pilot geprüft.`:'Schwächste bewertete Phase der Kundeneinbindung. Offene Phasen zunächst belegen.',
-    reference:journey?`Lemon & Verhoef (2016), Termin 4, Folien 84–86, GB 2025/26, S. ${pain.phase.pages}`:'Chesbrough (2003), Termin 5, Folien 47–49, GB 2025/26, S. 190, 195–196.',
+    situation:journey?pain.pain:involvement?.evidence??'Kundeneinbindung für die gewählte Idee im Pilot prüfen.',
+    rationale:journey?`Höchstbewerteter Schmerzpunkt (${pain.severity}/5) im ausgewählten Kundensegment. Die Maßnahme wird im Pilot geprüft.`:draft?`Vorgeschlagene Kundenbeteiligung in ${draft.phase}.`:'Schwächste bewertete Phase der Kundeneinbindung. Offene Phasen zunächst belegen.',
+    reference:journey?`Lemon & Verhoef (2016), Termin 4, Folien 84–86, GB 2025/26, S. ${pain.phase.pages}`:'HORNBACH Holding, Geschäftsbericht 2025/26, S. 190, 193, 195–196.',
     effect:journey?'Kundennutzen im Pilot messen und den Nachweis für das betroffene Reifegradkriterium getrennt führen.':'Wirkung der Kundeneinbindung nach den Konzept- und Produkttests prüfen.',
     risks:journey?pain.phase.risk:'Rekrutierung, Datenqualität, Nutzungsrechte, Kosten und Integrationsaufwand.'
    };
@@ -780,9 +1228,17 @@ export async function handleCustomerAnalysisEvent(event,state,{save,render,toast
   if(el.dataset.caText.endsWith('.age')&&!validPersonaAge(el.value))return;
   set(el.dataset.caText,el.value);save();return;
  }
+ if(event.type==='change'&&el.dataset.caFilter){
+  const type=el.dataset.caFilter;
+  if(el.checked)visibleInnovationFlows.add(type);
+  else visibleInnovationFlows.delete(type);
+  render();
+  globalThis.document?.getElementById(el.id)?.focus({preventScroll:true});
+  return;
+ }
  if(event.type==='change'&&el.dataset.caScore){const value=el.value===''?null:Number(el.value),min=Number(el.dataset.min),max=Number(el.dataset.max);if(value!==null&&(!Number.isInteger(value)||value<min||value>max)){toast('Ungültiger Skalenwert.');render();return;}if(el.dataset.caScore.endsWith('.severity')&&value===null){toast('Die Schmerzpunktpriorisierung benötigt einen Wert von 1 bis 5.');render();return;}const path=el.dataset.caScore;
   set(path,value);save();render();
-  const control=globalThis.document?.querySelector(`[data-ca-score="${path}"]`);
+  const control=el.id?globalThis.document?.getElementById(el.id):globalThis.document?.querySelector(`[data-ca-score="${path}"]`);
   const editor=control?.closest('.ca-experience-edit');
   if(editor)editor.open=true;
   control?.focus({preventScroll:true});
@@ -798,6 +1254,7 @@ function validPersonaAge(age){
  return /^\d+$/.test(age)&&Number.isSafeInteger(Number(age));
 }
 export function validateCustomerAnalysis(data){
+ if(data.involvementPriority&&!data.involvement.some(phase=>phase.id===data.involvementPriority))throw new Error('Ungültige Priorität der Kundeneinbindung.');
  for(const persona of data.additionalPersonas){
   if(persona.segment&&!Object.hasOwn(personaSegments,persona.segment))throw new Error('Ungültiges Kundensegment.');
   if(persona.age&&!validPersonaAge(persona.age))throw new Error('Ungültiges Alter für die Persona.');

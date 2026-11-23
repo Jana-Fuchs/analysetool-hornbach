@@ -1,3 +1,4 @@
+import {platformView,selectPlatformActor,updatePlatformSimulation} from './platform.js';
 import {PATTERN_SOURCE} from './analysis-data.js';
 import {applyDescriptionTypography} from './description-typography.js';
 import {renderCustomerAnalysis,innovationView,handleCustomerAnalysisEvent,animateJourneyBoard} from './customer-analysis.js';
@@ -16,8 +17,8 @@ const icons={download:'<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',edit:'<pa
 function icon(name){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]||icons.overview}</svg>`;}
 function cite(id,pages=''){
  const source=Object.hasOwn(SOURCES,id)?SOURCES[id]:null;if(!source)return '<span class="source-ref">Eigene Angabe</span>';
- const page=parseInt(pages,10),pdfPage=id==='methods'?page-1:id==='patterns'?page-4:page;
- return `<a class="source-ref" href="${source.file}${Number.isFinite(pdfPage)&&pdfPage>0?'#page='+pdfPage:''}" target="_blank" rel="noopener" title="${escape(source.title)}">${icon('file')} ${id==='gb26'?'GB 2025/26':id==='gb25'?'GB 2024/25':id==='h127'?'H1 2026/27':id==='methods'?'Methoden':id==='patterns'?'Muster':'Aufgabe'}${pages?(id==='methods'||id==='patterns'?' · Folie ':' · S. ')+escape(pages):''}</a>`;
+ const page=parseInt(pages,10),pdfPage=id==='methods'?page-1:id==='patterns'?page-4:id==='platformLecture'?page-(page>=79?4:page>=40?3:0):page;
+ return `<a class="source-ref" href="${source.file}${Number.isFinite(pdfPage)&&pdfPage>0?'#page='+pdfPage:''}" target="_blank" rel="noopener" title="${escape(source.title)}">${icon('file')} ${id==='gb26'?'GB 2025/26':id==='gb25'?'GB 2024/25':id==='h127'?'H1 2026/27':id==='methods'?'Methoden':id==='patterns'?'Muster':id==='platformLecture'?'Termin 6':'Aufgabe'}${pages?(['methods','patterns','platformLecture'].includes(id)?' · Folie ':' · S. ')+escape(pages):''}</a>`;
 }
 function editable(path,value,{multiline=true,label='Text bearbeiten'}={}){
  const keys=path.split('.');
@@ -154,9 +155,6 @@ function refreshPriorities(){
  });
 }
 function customerView(view='journey'){return renderCustomerAnalysis(state,{editing,cite,developmentProposals:developmentIdeas(state)},view);}
-function platformConcept(){return `<section class="panel ecosystem-panel">${sectionHead('ZIELKONZEPT','Plattformkonzept')}<div class="ecosystem-map"><div class="eco-node eco-top">${icon('users')}<strong>Projektkunden</strong><span>DIY · Profi · DIFM</span></div><div class="eco-node eco-left">${icon('overview')}<strong>Hersteller & Händler</strong><span>Sortiment · Produktdaten</span></div><div class="eco-center"><span>HORNBACH</span><strong>Projektplattform</strong><small>Markt · App · Onlineshop</small></div><div class="eco-node eco-right">${icon('network')}<strong>Handwerksbetriebe</strong><span>Ausführung · Expertise</span></div><div class="eco-node eco-bottom">${icon('roadmap')}<strong>Logistik & Service</strong><span>Lieferung · Terminstatus</span></div></div><div class="flow-legend"><span>↔ Waren, Leistungen & Zahlungen</span><span>↔ Bedarf, Status & Feedback</span></div></section>`;}
-function platformComparison(){return `<section class="ecosystem-layout">${panel('Was heute schon besteht',`<ul class="simple-list"><li>Deutscher Online-Marktplatz für ausgewählte Drittanbieter</li><li>Regionale Vertragsbetriebe im Handwerker-Service</li><li>ICR als Verbindung zwischen Markt und Onlinekanälen</li></ul>${cite('gb26','37, 72')}`)}${panel('Was wir ergänzen würden',`<ul class="simple-list"><li>Gemeinsame Projektübersicht und Statusdaten</li><li>Standardisierte Partnerprofile und Serviceprozesse</li><li>Feedback zum abgeschlossenen Projekt</li></ul>`)}</section>`;}
-function platformRules(){return `<details class="additional-details" open><summary>Rolle, Nutzen & Spielregeln ${icon('chevron')}</summary>${editable('platformNote',state.platformNote,{label:'Plattformrolle bearbeiten'})}<div class="three-col">${panel('Nutzen & Netzwerkeffekt',`<p>Mehr qualifizierte Partner können Auswahl und Verfügbarkeit verbessern. Mehr abgeschlossene Kundenprojekte machen die Plattform für Partner attraktiver. Dieser Netzwerkeffekt muss im Pilot belegt werden.</p>`)}${panel('Governance & Vertrauen',`<p>Partnerprüfung, klare Verkäufer- und Vertragspartnerrollen, Produktqualität und einheitliche Reklamationswege. Datenfreigaben und Zugriffsrechte gehören vor dem Pilot in ein verbindliches Regelwerk.</p>`)}${panel('Pilotumfang',`<p>Eine Region, eine Projektkategorie und vorhandene Partner. Verfügbarkeit und Servicequalität zuerst stabilisieren; Sortiment und regionale Abdeckung danach ausweiten.</p>`)}</div><p class="method-caption">Nutzenlogik, Governance und Pilotumfang: konzeptionelle Empfehlungen. Grundlage: ${cite('gb26','37–38, 72')}</p></details>`;}
 function revenueScenario(){const a=state.revenueAssumptions,e=economics(a);return ` <section class="panel economics-panel">${sectionHead('SZENARIO · KEINE PROGNOSE','Erlösszenario')}<p class="section-description">Zusätzliche Abschlüsse gegenüber einer Vergleichsgruppe; alle Beträge netto.</p><div class="economics-inputs">${[['projects','Zusätzliche Projektkontakte','',1e7],['conversion','Abschlussquote','%',100],['basket','Warenkorb netto','€',1e7],['margin','Waren-Rohertragsmarge','%',100],['fee','Servicegebühr netto','€',1e7],['cost','Zusätzliche Pilotkosten / Monat','€',1e8]].map(([key,label,unit,max])=>`<label>${label}<div><input type="number" min="0" max="${max}" step="1" value="${a[key]}" data-economics="${key}" aria-label="${label}"><span>${unit}</span></div></label>`).join('')}</div><div class="economics-results"><div><span>Zusätzliche Abschlüsse</span><strong id="eco-orders">${number(e.orders,0)}</strong></div><div><span>Zusätzlicher Warenumsatz</span><strong id="eco-revenue">${euro(e.revenue)}</strong></div><div><span>Serviceumsatz</span><strong id="eco-services">${euro(e.serviceRevenue)}</strong></div><div class="eco-contribution"><span>Beitrag nach Pilotkosten</span><strong id="eco-contribution">${euro(e.contribution)}</strong></div></div><p class="method-caption">Beitrag = Abschlüsse × (Warenkorb × Rohertragsmarge + Servicegebühr) − Pilotkosten. Pilotkosten müssen variable Abwicklung, Personal, Betrieb und Marketing enthalten. Einmalkosten separat bewerten; das Ergebnis ist kein Konzerngewinn.</p></section>`;}
 function revenueStreams(){return `<details class="additional-details" open><summary>Erlösbausteine ${icon('chevron')}</summary><div class="three-col revenue-cards">${panel('Warenmarge',`<p>Materialverkauf über Markt und digitale Kanäle. Die Handelsspanne und die operative Kostenbasis bestimmen die Ergebniswirkung.</p>${cite('gb26','48–54')}`)}${panel('Projekt- & Servicegebühren',`<p>Eine transparente Gebühr für zusätzliche, konkret erbrachte Planung oder Koordination. Keine Gebühr für bereits kostenfreie Standardleistungen ohne zusätzlichen Nutzen.</p>`)}${panel('Optionales Profi-Paket',`<p>Wiederkehrende Erlöse nur bei wiederkehrendem Nutzen: etwa erweiterte Projektverwaltung und abgestimmte Serviceleistungen für Profis.</p>`)}</div>
 </details>`;}
@@ -170,13 +168,12 @@ function actionRoadmap(){return `${sectionHead('ROADMAP','Roadmap',``)}<div clas
 const context=()=>({editing,icon,cite});
 const sectionTabs={
  innovation:[
-  ['overview','Einordnung & Beispiele'],['involvement','Kundeneinbindung'],
-  ['proposal','Entwicklungsvorschlag'],['campaign','Crowdsourcing'],['scenario','Reifegrad-Wirkung']
- ].map(([id,label])=>[id,label,()=>innovationView(state,context(),id)]),
+  ['overview','Einordnung & Beispiele'],['involvement','Kundeneinbindung & Maßnahmen'],
+  ['scenario','Reifegrad-Wirkung']
+ ].map(([id,label])=>[id,label,()=>innovationView(state,{...context(),developmentProposals:developmentIdeas(state)},id)]),
  plattform:[
-  ['concept','Plattformkonzept',platformConcept],['comparison','Ist & Zielbild',platformComparison],
-  ['rules','Rolle & Spielregeln',platformRules]
- ],
+  ['roles','Ausgangslage'],['concept','Plattformkonzept'],['pilot','Pilot & Markteintritt']
+ ].map(([id,label])=>[id,label,()=>platformView(id,{icon,cite,panel,escape,developmentProposals:developmentIdeas(state),platformNote:editable('platformNote',state.platformNote,{label:'Plattformrolle bearbeiten'})})]),
  erloese:[
   ['scenario','Erlösszenario',revenueScenario],['streams','Erlösbausteine',revenueStreams],
   ['portfolio','KI-Anwendungen',aiPortfolio],['readiness','KI-Reife',()=>readiness(state,context())]
@@ -222,6 +219,13 @@ for(const type of ['click','keydown'])$('#main').addEventListener(type,event=>{
  render();
  document.getElementById(active+'-tab-'+id)?.focus({preventScroll:true});
 });
+$('#main').addEventListener('click',event=>{
+ const actor=event.target.closest('[data-platform-actor]');
+ if(actor)selectPlatformActor(actor);
+});
+$('#main').addEventListener('input',event=>{
+ if(event.target.matches('[data-platform-simulation]'))updatePlatformSimulation(event.target.closest('.platform-simulation'));
+});
 function render(){
  const disclosures=new Map((document.querySelector('#panel-'+active)?$$('#main details'):[]).map(d=>[d.querySelector(':scope > summary')?.textContent.trim(),d.open]));
  const tab=TABS.find(t=>t.id===active),i=TABS.indexOf(tab);
@@ -242,7 +246,9 @@ function render(){
 function navigate(){
  const hash=location.hash.slice(1);
  const [,proposalId]=hash.match(/^muster\/entwicklungsvorschlaege\/([\w-]+)$/)??[];
- const id=proposalId?'muster':hash;
+ const platformOverview=hash==='plattform/ausgangslage';
+ const id=proposalId?'muster':platformOverview?'plattform':hash;
+ if(platformOverview)selectedSections.plattform='roles';
  active=TABS.some(tab=>tab.id===id)?id:'steckbrief';
  editing=false;
  if(proposalId)openIdeaProposal(proposalId);

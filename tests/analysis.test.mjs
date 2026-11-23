@@ -386,7 +386,7 @@ test('folder tabs show a selected model and stage bubbles separate Ist and Soll'
  const state=clone(DEFAULT_STATE),context={editing:false,icon:()=>'',cite:()=>''};
  const previous=globalThis.document,previousWindow=globalThis.window;
  globalThis.window={innerWidth:1400};
- globalThis.document={querySelector:()=>({focus(){},scrollIntoView(){},getBoundingClientRect(){return {height:80,top:200};}})};
+ globalThis.document={querySelector:()=>({focus(){},scrollIntoView(){assert.fail('Opening a stage must not scroll the page');},getBoundingClientRect(){return {height:80,top:200};}})};
  let html='';const options={save(){},render(){html=maturityAnalysis(state,context);},toast(){}};
  const click=(selector,dataset)=>handleAnalysisEvent({type:'click',target:{closest:s=>s===selector?{dataset}:null}},state,options);
  try{
@@ -484,7 +484,7 @@ test('benchmark sources and manual ratings follow the visible development gaps',
   assert.equal(state.benchmarkManual.business.concept.obi.estimated,false);
   reason='Vergleichbares Angebot in einem Teilbereich.';
   submit();
-  assert.match(benchmark(),/>2 \*<\/button>/);
+  assert.doesNotMatch(benchmark(),/>2 \*<\/button>/);
   assert.match(benchmark(),/Stufe 2 \(Schätzung\)/);
   assert.deepEqual(validateState(state).benchmarkManual.business.concept.obi,{
    value:2,sourceUrl:'',estimated:true,reason

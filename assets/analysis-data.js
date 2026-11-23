@@ -418,9 +418,20 @@ const projectPilotTasks={
  test:'Die Liste am Smartphone erstellen, im Markt prüfen und zur Bestellung übernehmen. Fehlpositionen und abgebrochene Übergaben erfassen.',
  review:'Abschlussquote und Fehlpositionen mit dem bisherigen Ablauf vergleichen. Aufwand und Kosten für den Pilotbetrieb schätzen.'
 };
+export const ADVISOR_PILOT_MEASURE='Digital Commerce und Fachberatung entwickeln in 0–3 Monaten einen Prototyp für die KI-gestützte Produktauskunft. Die Antworten verweisen auf gepflegte Quellen. Bei komplexen oder sicherheitsrelevanten Fragen bietet der Assistent einen Termin mit der Fachberatung an. Zehn Zielkunden testen typische Projektanfragen. Das Team misst Antwortqualität und Suchzeit. Das Controlling schätzt die Kosten für Betrieb und fachliche Prüfung.';
+export const ADVISOR_PILOT=PROJECT_PILOT.map((phase,index)=>({
+ ...phase,
+ owner:['Digital Commerce & Fachberatung','Fachberatung & zehn Zielkunden','Digital Commerce & Controlling'][index]
+}));
+const advisorPilotTasks={
+ prototype:'Eine KI-gestützte Produktauskunft mit gepflegten Quellen bauen. Bei komplexen oder sicherheitsrelevanten Fragen einen Termin mit der Fachberatung anbieten.',
+ test:'Zehn Zielkunden stellen typische Projektanfragen. Das Team prüft die Antworten fachlich und misst die Suchzeit.',
+ review:'Antwortqualität und Suchzeit mit dem bisherigen Ablauf vergleichen. Controlling schätzt die Kosten für Betrieb und fachliche Prüfung.'
+};
 export const PROJECT_PILOT_EFFECT='Projektkunden sollen mit weniger Fehlkäufen und Rückfragen von der Planung zur Bestellung gelangen. Dadurch sollen mehr begonnene Projektbestellungen abgeschlossen werden. Im Pilot prüfen wir, ob Fehlpositionen sinken und die Abschlussquote steigt.';
 export function ideaTemplate(id='new',name='Neue Idee') {return {
  ...(id==='project'?{pilotTasks:{...projectPilotTasks}}:{}),
+ ...(id==='advisor'?{pilotTasks:{...advisorPilotTasks}}:{}),
  id,name,pattern:'',description:'Eigene Idee – Nutzen, Zielgruppe und Angebot konkretisieren.',impact:3,effort:3,risk:0,previousRisk:0,feasibility:3,cost:3,criterionReasons:{impact:"",feasibility:"",cost:""},source:'',pages:'',kpi:'Messbares Pilotziel festlegen.',aiId:'',method:'Ähnlichkeitsprinzip',origin:'Projektorientierte Dienstleistungsunternehmen',transfer:'Ein bekanntes Muster auf die digitale Projektbegleitung übertragen.',patternSource:PATTERN_SOURCE,
  after:FOUR.map(d=>({id:d.id,name:d.name,text:'Veränderung für diese Idee beschreiben.'})),
  canvasChanges:[{id:'value',text:'Den zusätzlichen Kundennutzen konkretisieren.'},{id:'revenue',text:'Erlös- und Kostenannahmen validieren.'}],
@@ -431,7 +442,7 @@ export function ideaTemplate(id='new',name='Neue Idee') {return {
 export function enrichIdeas(ideas){
  const pilotPlans={
   project:'Digital Commerce und Marktberatung entwickeln in 0–3 Monaten einen Prototyp für eine gemeinsame Projektliste. Zehn Projektkunden testen, ob sie am Smartphone Mengen planen, die Liste in der Marktberatung prüfen lassen und anschließend passende Materialien bestellen sowie bei Bedarf einen Service buchen können. Das Team erfasst Fehlpositionen und abgebrochene Übergaben. Das Controlling schätzt Aufwand und Kosten für einen Pilotbetrieb.',
-  advisor:'Digital Commerce und Fachberatung entwickeln in 0–3 Monaten einen Prototyp für die KI-gestützte Produktauskunft. Die Antworten verweisen auf gepflegte Quellen. Bei komplexen oder sicherheitsrelevanten Fragen bietet der Assistent einen Termin mit der Fachberatung an. Zehn Zielkunden testen typische Projektanfragen. Das Team misst Antwortqualität und Suchzeit. Das Controlling schätzt die Kosten für Betrieb und fachliche Prüfung.'
+  advisor:ADVISOR_PILOT_MEASURE
  };
  const added=[
  {id:'advisor',name:'KI-Beratung als Projektservice',pattern:'Add-on',description:'Quellengebundene Produktauskunft mit optionalem fachlich geprüftem Planungstermin verbinden.',impact:4,effort:2,risk:2,feasibility:4,cost:2,aiId:'knowledge',origin:'Beratungsangebote im Fachhandel',kpi:'Suchzeit −20 % und mindestens 95 % korrekte Testantworten.'},
