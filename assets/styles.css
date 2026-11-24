@@ -816,6 +816,7 @@ html:has(#panel-reifegrad) { scrollbar-gutter: stable; }
 @media(max-width:650px) { .maturity-folder .folder-tabs { gap: 4px; } .maturity-folder .folder-tabs button { font-size: 11px; padding: 9px 7px; } .folder-overview .metrics { grid-template-columns: 1fr; } }
 
 .folder-overview .model-chart { max-width: 540px; margin: 0 auto; }
+#panel-reifegrad .folder-overview .model-chart > figcaption { padding-top: 11px; }
 .folder-overview .model-chart svg { display: block; max-width: 375px; width: 85%; margin: 0 auto; }
 .folder-overview .model-chart-label { font-size: 16px; text-underline-offset: 3px; }
 .maturity-folder .folder-tabs button { font-size: 14px; text-align: center; display: flex; align-items: center; justify-content: center; }
