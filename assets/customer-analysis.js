@@ -453,8 +453,10 @@ function journeyPhase(data,phase,index,{editing}){
     ${field('pain','Pain Point',pain)}
     ${segmentSelected?scale(segment?`segmentExperience.${activeJourneySegment}.${index}.severity`:`${path}.severity`,'Bewertung (1 gering bis 5 hoch)',journeyPainPoint(data,index,activeJourneySegment).severity,1,5):''}
    </div>
-   <div class="ca-phase-card">${field('action','Actions von HORNBACH')}</div>
-   <div class="ca-phase-card">${field('moment','Moment of Truth',moment)}</div>
+   <div class="ca-phase-card-stack">
+    <div class="ca-phase-card">${field('action','Actions von HORNBACH')}</div>
+    <div class="ca-phase-card">${field('moment','Moment of Truth',moment)}</div>
+   </div>
   </div>`:''}
   ${showTarget?`<div class="ca-layer ca-layer-target ca-phase-grid" role="group" aria-label="Soll">
    <div class="ca-phase-card">${field('future',segment?'Segmentbezogene Chance / Soll-Erlebnis':'Soll-Erlebnis',future)}</div>

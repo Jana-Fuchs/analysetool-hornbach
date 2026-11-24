@@ -352,7 +352,13 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
 }
 #panel-kunden .ca-touchpoints {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 95px), 1fr));
+  grid-template-columns: minmax(0, 1fr);
+}
+#panel-kunden .ca-phase-card-stack {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  min-width: 0;
 }
 #panel-kunden .ca-phase-card {
   min-width: 0;
