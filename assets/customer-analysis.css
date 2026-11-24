@@ -3,6 +3,7 @@
 :is(#panel-kunden,#panel-innovation) .ca-tabs [aria-selected="true"], :is(#panel-kunden,#panel-innovation) .ca-view-switch [aria-pressed="true"] { background: var(--magenta); border-color: var(--magenta); color: white; }
 :is(#panel-kunden,#panel-innovation) .ca-section { margin: 0 0 36px; }
 :is(#panel-kunden,#panel-innovation) .ca-section > h2 { font-size: 22px; margin: 0 0 20px; }
+#panel-innovation :is(.ca-innovation-examples-section,.ca-involvement-measures-section) > h2 { font-size: clamp(1.05rem, 2vw, 1.22rem); }
 :is(#panel-kunden,#panel-innovation) .ca-field { display: block; margin: 16px 0; }
 :is(#panel-kunden,#panel-innovation) .ca-field h4, :is(#panel-kunden,#panel-innovation) .ca-field > span { display: block; margin: 0 0 7px; font-size: 14px; font-weight: 700; color: var(--ink); }
 :is(#panel-kunden,#panel-innovation) .ca-field p { margin: 0; font-size: 14px; line-height: 1.7; }
@@ -30,8 +31,9 @@
 }
 #panel-kunden .ca-phase h3 { font-size: 18px; margin: 0; color: var(--magenta); }
 :is(#panel-kunden,#panel-innovation) .ca-score { display: flex; flex-direction: column; gap: 7px; margin: 14px 0; font-size: 12px; min-width: 0; }
-:is(#panel-kunden,#panel-innovation) .ca-score select { width: 100%; padding: 9px; background: white; border: 1px solid var(--line); font: inherit; font-weight: 700; }
-#panel-kunden .ca-experience { margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 6px; background: white; }
+:is(#panel-kunden,#panel-innovation) .ca-score select { width: 100%; padding: 9px; border: 1px solid var(--line); font: inherit; font-weight: 700; }
+:is(#panel-kunden,#panel-innovation) .ca-score select:not([data-ca-score$=".severity"]) { background: white; }
+#panel-kunden .ca-experience { margin-top: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 6px; background: white; }
 #panel-kunden .ca-experience > h4 { margin: 0; font-size: 18px; }
 #panel-kunden .ca-experience .ca-field { margin: 10px 0; }
 #panel-kunden .ca-experience-controls,
@@ -43,9 +45,10 @@
 #panel-kunden .ca-experience-edit .ca-score select { width: auto; padding: 4px; }
 #panel-kunden .ca-experience-note { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
 #panel-kunden .ca-experience-chart { margin-top: 20px; overflow-x: auto; }
-#panel-kunden .ca-experience-edit { margin-top: 14px; }
-#panel-kunden .ca-experience-edit > summary { cursor: pointer; font-size: 13px; }
-#panel-kunden .ca-experience-edit .ca-experience-values { margin-top: 8px; }
+#panel-kunden .ca-experience-chart svg text.ca-experience-phase-active { fill: var(--magenta); }
+#panel-kunden .ca-experience-edit { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr)); gap: 8px; margin-top: 14px; }
+#panel-kunden .ca-experience-rating { border: 1px solid var(--line); padding: 8px; }
+#panel-kunden .ca-experience-rating h5 { margin: 0 0 6px; font-size: 13px; }
 #panel-kunden .ca-curves svg { width: 100%; max-width: 600px; min-width: 450px; height: auto; display: block; }
 :is(#panel-kunden,#panel-innovation) svg text { font: 13px Arial,sans-serif; fill: var(--ink); }
 :is(#panel-kunden,#panel-innovation) .ca-grid { stroke: #d7dcdf; fill: none; }
@@ -341,6 +344,7 @@
 #panel-kunden .ca-layer { margin: 12px 0; }
 #panel-kunden .ca-layer-current .ca-phase-card { border-color: var(--orange); background: #fff8eb; }
 #panel-kunden .ca-layer-target .ca-phase-card { border-color: var(--magenta); background: #fff2fa; }
+#panel-kunden .ca-layer-target + .ca-experience { margin-top: 32px; }
 #panel-kunden .ca-phase-grid,
 #panel-kunden .ca-touchpoints {
   display: grid;
@@ -370,6 +374,20 @@
   margin: 8px 0 0;
 }
 #panel-kunden .ca-phase-card .ca-score select { width: auto; padding: 4px 8px; }
+#panel-kunden .ca-phase-card select[data-ca-score$=".severity"] {
+  min-width: 3rem;
+  min-height: 30px;
+  padding: 3px 24px 3px 6px;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  background-color: var(--orange);
+  background-position: right 4px center;
+  color: var(--ink);
+  font-size: .8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+#panel-kunden .ca-phase-card select[data-ca-score$=".severity"]:hover { background-color: #ffb442; }
 @media (max-width: 650px) {
   #panel-kunden .ca-persona { grid-template-columns: minmax(0, 1fr); }
   #panel-kunden .ca-persona-photo { width: min(100%, 225px); aspect-ratio: 1; }
@@ -383,6 +401,9 @@
 }
 #panel-kunden .ca-optimization-filter .ca-segment-options { left: 0; right: auto; }
 #panel-kunden .ca-optimization-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+#panel-kunden .ca-optimization-more { margin-top: 16px; }
+#panel-kunden .ca-optimization-more > summary { cursor: pointer; font-size: 14px; font-weight: 600; }
+#panel-kunden .ca-optimization-more > .ca-optimization-grid { margin-top: 10px; }
 #panel-kunden .ca-optimization-card-header {
   display: flex;
   align-items: baseline;
@@ -406,10 +427,6 @@
 #panel-kunden .ca-ranked-pain { margin: 10px 0 0; font-size: 14px; line-height: 1.45; }
 #panel-kunden .ca-optimization-card > .ca-field { margin-top: 10px; }
 
-#panel-kunden .ca-scenario-focus { margin-top: 12px; }
-#panel-kunden .ca-scenario-focus p { font-size: 14px; line-height: 1.5; }
-#panel-kunden .ca-scenario-focus .tag-row { margin: 0; }
-#panel-kunden .ca-scenario-focus p { margin: 10px 0; }
 
 #panel-innovation .ca-innovation-position {
   padding: clamp(14px, 3vw, 22px);
@@ -603,6 +620,7 @@
 :is(#panel-kunden,#panel-innovation) .ca-maturity-toggle { display: flex; align-items: baseline; gap: 6px; font-size: 13px; cursor: pointer; }
 :is(#panel-kunden,#panel-innovation) .ca-maturity-toggle input { accent-color: var(--magenta); }
 :is(#panel-kunden,#panel-innovation) .ca-maturity-explanation .ca-field:first-child { margin-top: 0; }
+:is(#panel-kunden,#panel-innovation) .ca-maturity-explanation .ca-field > h4 { color: #000; }
 @media (max-width: 950px) {
   :is(#panel-kunden,#panel-innovation) .ca-maturity-layout { grid-template-columns: 1fr; }
 }

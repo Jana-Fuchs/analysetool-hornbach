@@ -8,7 +8,6 @@ const actors=[
 const owner=['center','network','HORNBACH','Orchestrator','HORNBACH betreibt das Projektkonto, setzt Zugangs- und Qualitätsregeln und bündelt Planung, Warenkauf und Servicebuchung. Als Eigenanbieter trägt HORNBACH zusätzlich Material und Beratung bei.'];
 const ecosystemActors=[...actors,owner];
 let selectedActor='center';
-const projectIdeaLink='<a href="#muster/entwicklungsvorschlaege/project">Digitaler Projektbegleiter</a>';
 
 const platformIdeaRoles=new Map([
  ['project',['Grundlage des Konzepts','Eine gemeinsame Projektliste könnte Bestellung, Lieferung und Handwerksleistung für dasselbe Vorhaben sichtbar machen.']],
@@ -51,7 +50,7 @@ function platformOpportunity({panel,cite,developmentProposals,escape}){
 
 function roles(context){
  const {cite,panel}=context;
- return `<div class="ecosystem-layout">
+ return `<div class="ecosystem-layout platform-roles">
   <h2 class="platform-role-heading">Welche Rollen übernimmt HORNBACH?</h2>
   <div class="platform-role-grid">
    ${panel('Eigener Warenhandel',`<p>HORNBACH kauft Waren ein und verkauft sie aus dem eigenen Sortiment direkt an Kunden. Markt, Onlineshop und App greifen dabei für Beratung und Verkauf ineinander.</p>${cite('gb26','37, 72')}`)}
@@ -63,74 +62,74 @@ function roles(context){
  </div>`;
 }
 
-function ecosystemMap({icon,cite}){
- return `<section class="panel ecosystem-panel">
-  <h2>Wer wirkt auf der Projektplattform mit?</h2>
-  <p class="section-description">Wähle einen Knoten, um zu sehen, welche Leistungen und Daten die Beteiligten austauschen und wer wofür bezahlt.</p>
+const actorAnalysis={
+ top:[
+  'Kunden kaufen Material bei HORNBACH oder bei ausgewählten Händlern. Handwerksleistungen laufen über den Handwerker-Service.',
+  'Private und gewerbliche Kunden koordinieren Material, Lieferungen, Termine und optionale Handwerksleistungen über ein Projektkonto. Die Basisplanung bleibt im Pilot kostenlos.',
+  'Solution Provider',
+  'Kunden können Material und Leistungen für ein ganzes Vorhaben zusammen planen. Der digitale Projektbegleiter liefert dafür die gemeinsame Liste.'
+ ],
+ left:[
+  'Ausgewählte Drittanbieter erweitern das Sortiment im Online-Marktplatz.',
+  'Händler und Hersteller liefern zusätzlich Produktdaten und Kompatibilitätshinweise, damit Angebote zur Projektliste passen.',
+  'Two-sided Market',
+  'Der Marktplatz bringt Händler und Käufer bereits zusammen. Die Projektliste soll Angebote für das konkrete Vorhaben auffindbar machen.'
+ ],
+ right:[
+  'Regionale Vertragsbetriebe führen Aufträge aus. HORNBACH organisiert den Handwerker-Service.',
+  'Betriebe bieten passende Leistungen an, melden freie Termine und geben den Auftragsstatus an die Projektübersicht zurück.',
+  'Orchestrator',
+  'HORNBACH legt gemeinsame Leistungs- und Buchungsstandards fest. Die Betriebe führen die Arbeit eigenständig aus.'
+ ],
+ bottom:[
+  'Markt, Shop und App dienen als Vertriebskanäle. Die ausgewerteten Berichte weisen technische Marktplatzpartner nicht eigenständig aus.',
+  'Logistik- und IT-Partner binden Lieferstatus und Produktdaten über gemeinsame Schnittstellen an.',
+  'Orchestrator',
+  'Einheitliche Schnittstellen helfen HORNBACH, die Beiträge verschiedener Partner in einer Projektübersicht zusammenzuführen.'
+ ],
+ center:[
+  'HORNBACH betreibt den kuratierten Online-Marktplatz, verkauft eigene Waren und verdient im Eigenhandel an der Marge. Die Vertragskonditionen des Marktplatzes sind öffentlich nicht ausgewiesen.',
+  'HORNBACH verwaltet das Projektkonto und verantwortet Zugang, Qualität und Reklamationswege. Eine Gebühr für zusätzliche Koordination wäre erst nach dem Pilot zu prüfen.',
+  'Two-sided Market → Orchestrator und Solution Provider',
+  'Der bestehende Marktplatz vermittelt zwischen Händlern und Kunden. Im Zielbild koordiniert HORNBACH zusätzlich die Partnerleistungen und bündelt sie mit Material und Beratung zu einer Projektlösung.'
+ ]
+};
+
+function ecosystemMap({icon,cite,platformNote}){
+ return `<section class="ecosystem-panel" aria-label="Plattformkonzept für den digitalen Projektbegleiter">
   <div class="ecosystem-map">
-   ${ecosystemActors.map(([position,symbol,name,role])=>`<button type="button" class="${position==='center'?'eco-center':`eco-node eco-${position}`}" data-platform-actor="${position}" aria-controls="platform-actor-detail" aria-pressed="${position===selectedActor}">
+   ${ecosystemActors.map(([position,symbol,name,role])=>`<button type="button" class="${position==='center'?'eco-center':`eco-node eco-${position}`}" data-platform-actor="${position}" aria-controls="platform-actor-${position}" aria-pressed="${position===selectedActor}">
     ${icon(symbol)}<strong>${name}</strong><span>${role}</span>
    </button>`).join('')}
   </div>
-  <div id="platform-actor-detail" class="platform-actor-detail" aria-live="polite">${actorDetail()}</div>
-  <p class="method-caption">Rollenkarte im Zielbild. ${cite('platformLecture','54')}</p>
+  <div class="platform-actor-detail" aria-live="polite"${selectedActor?'':' hidden'}>
+   ${ecosystemActors.map(([position,,name,,flow])=>{
+    const [current,target,pattern,reason]=actorAnalysis[position];
+    return `<section id="platform-actor-${position}" data-platform-detail="${position}"${position===selectedActor?'':' hidden'}>
+     <h3>${name}</h3>
+     <div class="platform-actor-states">
+      <div><h4 class="status-tag orange">Ist</h4><p>${current}</p>${cite('gb26','37, 72')}</div>
+      <div><h4 class="status-tag pink">Zielbild</h4><p>${target}</p></div>
+     </div>
+     <h4>Austausch im Zielbild</h4><p>${flow}</p>
+     <h4>Geschäftsmodellmuster</h4><p><strong>${pattern}</strong></p><p>${reason}</p>
+     ${position==='center'?`<h4>Plattformrolle</h4>${platformNote}`:''}
+    </section>`;
+   }).join('')}
+  </div>
  </section>`;
 }
 
-function actorDetail(){
- const [,,name,role,flow]=ecosystemActors.find(([position])=>position===selectedActor);
- return `<h3>${name} <small>· ${role}</small></h3><p>${flow}</p>`;
-}
-
 export function selectPlatformActor(button){
- selectedActor=button.dataset.platformActor;
+ selectedActor=selectedActor===button.dataset.platformActor?null:button.dataset.platformActor;
  const panel=button.closest('.ecosystem-panel');
  for(const actor of panel.querySelectorAll('[data-platform-actor]')){
-  actor.setAttribute('aria-pressed',String(actor===button));
+  actor.setAttribute('aria-pressed',String(actor.dataset.platformActor===selectedActor));
  }
- panel.querySelector('#platform-actor-detail').innerHTML=actorDetail();
-}
-
-const canvas=[
- ['Eigentümer','HORNBACH betreibt den kuratierten Marktplatz in Shop und App.','HORNBACH betreibt das Projektkonto und verantwortet Zugang, Qualitätsstandards und Reklamationswege.'],
- ['Konsumenten','DIY- und Profikunden finden ergänzende Produkte im Marktplatz.','DIY-, Profi- und DIFM-Kunden koordinieren Material, Termine und optionale Handwerksleistungen über ein Projektkonto.'],
- ['Produzenten','Ausgewählte Drittanbieter erweitern das Sortiment.','Händler und Hersteller liefern Angebote und Produktdaten. Vertragsbetriebe ergänzen buchbare Leistungen und geben ihren Status zurück.'],
- ['Partner','Markt, Shop und App sind die Vertriebskanäle. Der Bericht weist keine eigenständige Gruppe technischer Marktplatzpartner aus.','Logistik- und IT-Partner binden Lieferstatus und Produktdaten über definierte Schnittstellen an.'],
- ['Interaktion & Erlös','Kunden kaufen Waren. HORNBACH erzielt Margen im Eigenhandel. Vertragskonditionen des Marktplatzes sind im Bericht nicht ausgewiesen.','Eine Projektliste führt zur Warenbestellung und bei Bedarf zum Serviceauftrag. Die Basisplanung bleibt im Pilot kostenlos. Eine Gebühr für zusätzliche Koordination wird erst nach dem Pilot getestet.']
-];
-
-function concept({icon,cite,panel,platformNote}){
- return `<div class="ecosystem-layout">
-  ${panel('Plattformkonzept für den digitalen Projektbegleiter', `
-   <p>Die gemeinsame Projektliste verbindet Planung, Beratung und Materialkauf. Die vorgeschlagene Erweiterung ergänzt Angebote, Buchung und Statusmeldungen der Partner.</p>
-   <p>Die <a href="#kunden">Customer Journey</a> zeigt, in welchen Segmenten die Projektübergabe hakt. In <a href="#innovation">Open Innovation</a> geht es darum, die Projektliste mit Kunden und Fachleuten zu verbessern.</p>
-   <p><strong>Wann lohnt sich die Erweiterung?</strong> Wenn Kunden zusätzlich externe Leistungen buchen möchten und regionale Betriebe freie Kapazitäten haben, kommt ein Plattformpilot infrage. Löst die Projektliste das Problem bereits, kann sie eigenständig bleiben.</p>`,'platform-highlight')}
-  <section class="panel">
-   <h2>Platform Value Canvas</h2>
-   <div class="table-wrap">
-    <table class="matrix platform-canvas">
-     <thead><tr><th scope="col">Rolle / Interaktion</th><th scope="col"><span class="status-tag orange">Ist</span> Online-Marktplatz</th><th scope="col"><span class="status-tag pink">Zielbild</span> Projektplattform</th></tr></thead>
-     <tbody>${canvas.map(([role,today,target])=>`<tr><th scope="row">${role}</th><td>${today}</td><td>${target}</td></tr>`).join('')}</tbody>
-    </table>
-   </div>
-   <p class="method-caption">Beschreibung des Ist und Zuordnung der Rollen durch das Projektteam. ${cite('gb26','37, 72')} ${cite('platformLecture','76')} ${cite('platformLecture','82')}</p>
-  </section>
-  <details class="additional-details platform-method">
-   <summary>Wie wurden Rolle und Muster gewählt?</summary>
-   <ol class="simple-list">
-    <li><strong>Kompetenzen:</strong> Sortiment, Fachberatung, vorhandene digitale Kanäle und Vertragsbetriebe bilden die Basis. Gemeinsame Projekt- und Statusdaten ergänzen diese Fähigkeiten.</li>
-    <li><strong>Rolle:</strong> Für das Zielbild übernimmt HORNBACH die Rolle des Orchestrators und bleibt Warenanbieter. Ein externer KI-Assistent könnte künftig den Erstkontakt übernehmen. Ein solcher Kanal wäre als Zubringer zu prüfen, während Buchung und Projektstatus bei HORNBACH bleiben.</li>
-    <li><strong>Vorhandenes Muster:</strong> Two-sided Market verbindet Drittanbieter mit Käufern. Die Auswahl der Anbieter begrenzt Komplexität und unterstützt die Qualität.</li>
-    <li><strong>Erweiterungsmuster:</strong> Solution Provider bündelt Material, Beratung und Handwerksleistung. Orchestrator verbindet die Partnerbeiträge über gemeinsame Leistungsstandards, Schnittstellen und Auftragsstatus.</li>
-    <li><strong>Bewertung:</strong> Wenn sich Bedarf und Partnerkapazität bestätigen, kann HORNBACH die Kombination in einem regionalen Mikromarkt erproben. Buchungsquote, Termintreue und Deckungsbeitrag zeigen, ob sie den Aufwand rechtfertigt.</li>
-   </ol>
-   ${cite('platformLecture','81–82')} ${cite('platformLecture','60')}
-   <p class="method-caption">Geschäftsmodellmuster nach Gassmann, Frankenberger & Csik (2013). Methodik nach dem <a href="https://websites.fraunhofer.de/entourage-epn/home-2/" target="_blank" rel="noopener">Fraunhofer Ecosystem Participation Navigator</a>. Auswahl und Kombination der Muster durch das Projektteam.</p>
-  </details>
-  ${ecosystemMap({icon,cite})}
-  ${panel('HORNBACH als Orchestrator im Zielbild',platformNote,'platform-highlight')}
-  <div class="platform-next"><button type="button" class="button secondary" data-section-tab="pilot">Weiter zur Pilotprüfung</button></div>
- </div>`;
+ panel.querySelector('.platform-actor-detail').hidden=!selectedActor;
+ for(const detail of panel.querySelectorAll('[data-platform-detail]')){
+  detail.hidden=detail.dataset.platformDetail!==selectedActor;
+ }
 }
 
 const controls=[
@@ -177,10 +176,10 @@ function networkResults(values){
  }).join('')}</div>`;
 }
 
-function simulation({cite}){
+function simulation(){
  return `<section class="panel platform-simulation">
   <h2>Wie könnten Kunden und Servicepartner gemeinsam wachsen?</h2>
-  <p class="section-description">Vergleiche über 24 Monate, wie sich beide Seiten mit und ohne Netzwerkeffekt entwickeln könnten. Passe die Startwerte und Wachstumsannahmen an den regionalen Pilot an.</p>
+  <p class="section-description">Vergleiche über 24 Monate, wie sich beide Seiten mit und ohne Netzwerkeffekt entwickeln könnten. Die Regler zeigen, wie stark das Ergebnis von den Annahmen abhängt. Ob die gemeinsame Übersicht im Alltag hilft, misst der regionale Pilot.</p>
   <div class="economics-inputs">
    ${controls.map(([id,label,min,max,step,,suffix])=>`<label class="platform-slider" for="platform-${id}"><span>${label}</span>
     <input id="platform-${id}" data-platform-simulation="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${simulationValues[id]}">
@@ -189,12 +188,11 @@ function simulation({cite}){
   </div>
   <div class="flow-legend platform-chart-legend"><span>Mit Netzwerkeffekt</span><span>Ohne Netzwerkeffekt</span><span>X-Achse: Monate · Y-Achsen je Marktseite</span></div>
   <div data-platform-results>${networkResults(simulationValues)}</div>
-  <details class="additional-details">
+  <details class="platform-simulation-method">
    <summary>Annahmen & Rechenweg</summary>
    <p>Jede Seite wächst monatlich um ihre Basisrate plus einen Aufschlag durch die jeweils andere Seite. Aufschlag = maximaler Effekt × Gegenseite ÷ (Gegenseite + Halbwert). Bei 20 Servicepartnern bzw. 500 Projektkunden erreicht der Aufschlag die Hälfte seines Maximums. Beide Seiten nutzen die Werte des Vormonats. Ein Startwert von null bleibt im Modell bei null.</p>
    <p>Die Startwerte stehen für einen kleinen Bestand im regionalen Pilot. Wachstumsraten und Halbwerte sind Modellannahmen und dienen dem Vergleich. Das Modell betrachtet positive indirekte Effekte. In der Praxis können zu viele Anfragen Betriebe überlasten, und ein wachsendes Angebot braucht gute Kuration.</p>
    <p>Handrechnung mit den voreingestellten Werten: 120 × [1 + (3 + 4 × 8 ÷ 28) ÷ 100] ≈ 125 Kunden. Gleichzeitig ergeben 8 × [1 + (2 + 4 × 120 ÷ 620) ÷ 100] ≈ 8,22 Partner. Die Anzeige rundet auf ganze Teilnehmer.</p>
-   ${cite('platformLecture','55–56')} ${cite('platformLecture','83')}
   </details>
  </section>`;
 }
@@ -211,32 +209,47 @@ export function updatePlatformSimulation(section){
 
 function pilot({cite,panel}){
  const stages=[
-  ['0–3 Monate','Serviceangebot sichern','Digital Commerce und Partnermanagement wählen eine Projektkategorie mit erkennbarem Buchungsbedarf und ausreichend regionaler Handwerkskapazität. Die Betriebe vereinbaren Leistungsumfang und Statusmeldungen.'],
-  ['3–6 Monate','Kunden im Mikromarkt gewinnen','Digital Commerce und Pilotmärkte sprechen bestehende Projektkunden in Beratung, Shop und App an. Die Projektliste bleibt kostenlos. Der Pilot vergleicht Buchungsquote und Aufwand mit der bisherigen Abwicklung.'],
-  ['6–12 Monate','Wirkung prüfen und Gebühren testen','Controlling prüft termingerechte Aufträge und inkrementellen Deckungsbeitrag. Bei mindestens 90 % termingerechten Aufträgen und positivem Beitrag kann HORNBACH in weiteren Märkten testen, ob Kunden für zusätzliche Koordination zahlen.']
+  ['0–3 Monate','Serviceangebot sichern','Digital Commerce und Partnermanagement wählen eine Projektkategorie mit erkennbarem Buchungsbedarf und ausreichend regionaler Handwerkskapazität. HORNBACH und die Betriebe vereinbaren, welche Leistungen buchbar sind und wann Liefer- und Auftragsstatus aktualisiert werden.'],
+  ['3–6 Monate','Kunden im Mikromarkt gewinnen','Digital Commerce und Pilotmärkte sprechen bestehende Projektkunden in Beratung, Shop und App an. Die Projektliste bleibt kostenlos. Das Team beobachtet, ob Kunden alle drei Statusangaben finden, und erfasst Rückfragen, abgebrochene Übergaben und den Aufwand der Betriebe.'],
+  ['6–12 Monate','Ausbau prüfen','Controlling vergleicht Rückfragen, Abbrüche und den Aufwand für die Statuspflege mit dem bisherigen Ablauf. Ausbau bei mindestens 90 % termingerechten Aufträgen und positivem zusätzlichem Deckungsbeitrag.']
  ];
- return `<div class="ecosystem-layout">
-  ${panel('Partnerbuchung regional erproben',`<p>Der Pilot baut auf der Projektliste aus der Top-Idee ${projectIdeaLink} auf. Er prüft, ob Kunden daraus eine Handwerksleistung buchen können und ob Betriebe Kapazitäten und Auftragsstatus verlässlich melden. Die Projektkategorie wird anhand von Kundenbedarf und regionaler Partnerkapazität ausgewählt.</p>${cite('platformLecture','51')} ${cite('platformLecture','66–67')}`,'platform-highlight')}
-  ${simulation({cite})}
-  <h2>Vom Partnerangebot zur Entscheidung</h2>
+ return `<div class="ecosystem-layout platform-pilot">
+  <h2>Pilotablauf</h2>
   <div class="roadmap-grid">
    ${stages.map(([time,title,body])=>`<section class="roadmap-column"><div class="roadmap-heading"><h3>${time}</h3></div><article class="roadmap-card"><h4>${title}</h4><p>${body}</p></article></section>`).join('')}
   </div>
-  ${panel('Empfehlung für den Markteintritt',`
-   <dl class="platform-recommendation">
-    <dt>Ausgangslage</dt><dd>Ein Marktplatz und ein Netz regionaler Handwerksbetriebe bestehen. Der Pilot setzt an der gemeinsamen Sicht auf Bestellungen, Lieferungen und Serviceaufträge an. ${cite('gb26','37, 72')}</dd>
-    <dt>Maßnahme</dt><dd>Services und Partnermanagement vereinbaren mit Digital Commerce bis Monat 6 einen einheitlichen Leistungsumfang, freie Kapazitäten und Statusmeldungen für einen regionalen Piloten.</dd>
-    <dt>Herleitung</dt><dd>In der vorgesehenen Orchestrator-Rolle würde HORNBACH Zugang und Abwicklung gestalten. Der regionale Start bündelt Nachfrage und Kapazität und adressiert das Henne-Ei-Problem.</dd>
-    <dt>Wissenschaftliche Quelle</dt><dd>Parker, Van Alstyne & Choudary (2016), <em>Platform Revolution</em>, zur wechselseitigen Verstärkung von Angebot und Nachfrage. ${cite('platformLecture','85')}</dd>
-    <dt>Erwartete Wirkung</dt><dd>Die gemeinsame Abwicklung könnte mehr Anfragen in bestätigte Buchungen überführen. Der Pilot misst Buchungsquote, termingerechte Ausführung und inkrementellen Deckungsbeitrag gegenüber der bisherigen Abwicklung.</dd>
-    <dt>Aufwand & Risiken</dt><dd>IT-Anbindung, Schulung und Reklamationsbearbeitung verursachen Anlaufkosten. Abhängigkeit von einzelnen Betrieben, unübersichtliche Angebote und Bevorzugung im Ranking können die Akzeptanz schwächen. Partnerprüfung, transparente Rankingkriterien und definierte Datenzugriffe gehören zum Pilot.</dd>
-   </dl>
-   <p class="method-caption">Zeiträume, Verantwortlichkeiten und Entscheidungskriterien sind Pilotvorschläge des Projektteams.</p>
-   <a class="button secondary" href="#massnahmen">Zu Zielmodell & Maßnahmen</a>`)}
+  <section class="platform-decision" aria-labelledby="platform-decision-heading">
+   <h2 id="platform-decision-heading">Entscheidung zum Markteintritt</h2>
+   <div class="table-wrap">
+    <table class="matrix platform-decision-table" aria-labelledby="platform-decision-heading">
+     <thead><tr><th scope="col">Prüffrage</th><th scope="col">Was im Pilot zählt</th></tr></thead>
+     <tbody>
+      <tr><th scope="row">Hilft die Übersicht den Kunden?</th><td>Kunden finden Bestellung, Lieferung und Handwerkertermin ohne Hilfe. Rückfragen und abgebrochene Übergaben gehen gegenüber dem bisherigen Ablauf zurück.</td></tr>
+      <tr><th scope="row">Klappt die Zusammenarbeit?</th><td>Betriebe melden freie Termine und Auftragsstatus wie vereinbart. Sie erfassen den Zeitaufwand je Auftrag, damit HORNBACH beurteilen kann, ob die Pflege vertretbar ist.</td></tr>
+      <tr><th scope="row">Trägt sich das Angebot?</th><td>Mindestens 90 % der Aufträge werden termingerecht erledigt. Der zusätzliche Deckungsbeitrag ist positiv. Die Buchungsquote zeigt, wie häufig Kunden das Angebot nutzen.</td></tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="platform-decision-note">
+    <p><strong>Empfehlung</strong> Wenn der Pilot diese Kriterien erfüllt, die Partnerbuchung in weiteren Regionen erproben.</p>
+    <details>
+     <summary>Begründung und Risiken</summary>
+     <dl class="platform-recommendation">
+     <dt>Ausgangslage</dt><dd>Ein Marktplatz und ein Netz regionaler Handwerksbetriebe bestehen. Der Pilot setzt an der gemeinsamen Sicht auf Bestellungen, Lieferungen und Serviceaufträge an. ${cite('gb26','37, 72')}</dd>
+     <dt>Herleitung</dt><dd>In der vorgesehenen Orchestrator-Rolle würde HORNBACH Zugang und Abwicklung gestalten. Der regionale Start bündelt Nachfrage und Kapazität und adressiert das Henne-Ei-Problem.</dd>
+     <dt>Wissenschaftliche Quelle</dt><dd>Parker, Van Alstyne & Choudary (2016), <em>Platform Revolution</em>, zur wechselseitigen Verstärkung von Angebot und Nachfrage.</dd>
+     <dt>Erwartete Wirkung</dt><dd>Die gemeinsame Übersicht soll Rückfragen und abgebrochene Übergaben verringern. Die Buchung soll mehr Anfragen in bestätigte Aufträge überführen.</dd>
+     <dt>Aufwand & Risiken</dt><dd>IT-Anbindung, Schulung und Reklamationsbearbeitung verursachen Anlaufkosten. Abhängigkeit von einzelnen Betrieben, unübersichtliche Angebote und Bevorzugung im Ranking können die Akzeptanz schwächen. Partnerprüfung, transparente Rankingkriterien und definierte Datenzugriffe gehören zum Pilot.</dd>
+    </dl>
+    <p class="method-caption">Zeiträume, Verantwortlichkeiten und Entscheidungskriterien sind Pilotvorschläge des Projektteams.</p>
+    </details>
+   </div>
+  </section>
+  ${simulation()}
  </div>`;
 }
 
-const views={roles,concept,pilot};
+const views={roles,concept:ecosystemMap,pilot};
 
 export function platformView(id,context){
  return views[id](context);

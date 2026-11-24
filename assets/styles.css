@@ -828,7 +828,7 @@ html:has(#panel-reifegrad) { scrollbar-gutter: stable; }
 .folder-chart > .product-chart > svg { margin-top: 20px; }
 
 .folder-with-scores { container-type: inline-size; }
-.folder-with-scores .folder-content { min-height: 0; padding-block: 16px; gap: 12px; }
+.folder-with-scores .folder-content { min-height: 0; padding-block: 5px 16px; gap: 12px; }
 .folder-open .folder-content { padding-top: 16px; }
 @container (min-width: 500px) {
   .folder-with-scores .folder-content { grid-template-columns: minmax(0, 1fr) minmax(230px, 45%); align-items: start; gap: 16px; }
@@ -916,6 +916,8 @@ html:has(#panel-reifegrad) { scrollbar-gutter: stable; }
 .profile-folder .profile-tab-panel { display: block; min-height: 0; padding-block: 16px; }
 .profile-folder .profile-tab-panel[hidden] { display: none; }
 .profile-tab-panel > .dimension-list { margin: 0; border: 0; }
+#panel-steckbrief .dimension-list .profile-dimension > summary { padding-block: 10px 6px; }
+#panel-steckbrief .dimension-list .profile-dimension > .dimension-detail { padding-block: 4px 12px; --source-spacing: 8px; }
 #panel-steckbrief > .metrics + .profile-folder { margin-top: 28px; }
 .profile-triangle { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 20px; }
 .profile-triangle-diagram { width: 100%; max-width: 420px; }
@@ -1256,9 +1258,21 @@ html:has(#panel-reifegrad) { scrollbar-gutter: stable; }
 #panel-plattform .ecosystem-layout .panel > h2 { margin: 0 0 8px; font-size: 22px; }
 #panel-plattform .ecosystem-layout .panel { padding: clamp(14px, 2.5vw, 22px); }
 #panel-plattform .ecosystem-layout .panel > h3 { margin: 0 0 8px; font-size: 17px; }
-#panel-plattform .ecosystem-layout .panel p { font-size: 14px; line-height: 1.65; }
+#panel-plattform .ecosystem-layout .panel p,
+#panel-plattform .platform-actor-detail section p { font-size: 14px; line-height: 1.65; }
 #panel-plattform .description-copy { text-align: left; }
 #panel-plattform .ecosystem-layout > h2 { margin-bottom: 0; }
+#panel-plattform .platform-roles > h2,
+#panel-plattform .platform-pilot > h2,
+#panel-plattform .platform-pilot .panel > h2 { font-size: clamp(1.05rem, 2vw, 1.22rem); }
+#panel-plattform .platform-pilot :is(.roadmap-heading h3, .platform-chart h3) { font-size: 17px; }
+#panel-plattform .platform-pilot .roadmap-heading { padding: 8px 12px; border-top: 0; background: var(--orange); }
+#panel-plattform .platform-pilot .roadmap-column:nth-child(2) .roadmap-heading { background: var(--magenta); color: #fff; }
+#panel-plattform .platform-pilot .roadmap-heading h3 { margin: 0; color: inherit; }
+#panel-plattform .platform-pilot .roadmap-column { display: flex; flex-direction: column; }
+#panel-plattform .platform-pilot .roadmap-card { flex: 1; margin-bottom: 0; }
+#panel-plattform .platform-pilot :is(.roadmap-card h4, .roadmap-card p, .platform-recommendation, .platform-slider, .additional-details > summary) { font-size: 14px; line-height: 1.65; }
+#panel-plattform .platform-role-grid + h2 { margin-top: 8px; }
 .platform-role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 14px; }
 #panel-plattform .platform-role-grid .panel { display: flex; flex-direction: column; align-items: flex-start; border-top: 3px solid var(--orange); }
 #panel-plattform .platform-role-heading { color: #000; }
@@ -1268,7 +1282,6 @@ html:has(#panel-reifegrad) { scrollbar-gutter: stable; }
 #panel-plattform .platform-highlight { border-left: 4px solid var(--magenta); }
 #panel-plattform .platform-highlight > h3 { color: var(--magenta); }
 #panel-plattform .platform-highlight p { margin-block: 0 8px; }
-#panel-plattform .platform-method { margin: 0; }
 .platform-opportunity { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 #panel-plattform .platform-gap { background: var(--orange-light); border: 0; border-top: 3px solid var(--orange); }
 #panel-plattform .platform-gap p { margin: 0 0 10px; }
@@ -1285,27 +1298,33 @@ html:has(#panel-reifegrad) { scrollbar-gutter: stable; }
   .platform-opportunity { grid-template-columns: 1fr; }
 }
 
-.platform-next { display: flex; justify-content: flex-end; }
-.platform-next .button { white-space: normal; }
 
 #panel-plattform .ecosystem-map {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(82px, auto));
-  margin-bottom: 16px;
+  grid-template-rows: repeat(3, minmax(66px, auto));
+  gap: 8px;
+  max-width: 650px;
+  margin: 4px auto;
 }
-[data-platform-actor] { min-width: 0; min-height: 82px; overflow-wrap: anywhere; cursor: pointer; color: var(--ink); }
+[data-platform-actor] { min-width: 0; min-height: 66px; padding: 6px 8px; overflow-wrap: anywhere; cursor: pointer; color: var(--ink); }
 [data-platform-actor] strong { margin: 0; }
-[data-platform-actor].eco-center { position: relative; padding: 8px; border: 1px solid var(--magenta); background: var(--magenta-light); color: var(--magenta); }
-[data-platform-actor].eco-center svg { width: 23px; height: 23px; margin-bottom: 7px; }
-[data-platform-actor].eco-center span { font-size: 12px; margin-top: 5px; }
-[data-platform-actor][aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--magenta); }
+[data-platform-actor].eco-center { position: relative; padding: 6px 8px; border: 1px solid var(--line); background: #fff; }
+[data-platform-actor] svg, [data-platform-actor].eco-center svg { width: 23px; height: 23px; margin-bottom: 4px; color: var(--magenta); }
+[data-platform-actor] span { margin-top: 3px; }
+[data-platform-actor].eco-center span { font-size: 12px; }
+[data-platform-actor][aria-pressed="true"] { background: var(--orange); border-color: var(--orange); }
+[data-platform-actor][aria-pressed="true"] span { color: var(--ink); }
 .platform-actor-detail, .platform-chart { margin-top: 16px; padding: 16px; border: 1px solid var(--line); background: var(--paper, #fff); }
-.platform-actor-detail { border-left: 4px solid var(--magenta); }
-.platform-actor-detail h3, .platform-chart h3 { margin: 0 0 6px; color: var(--magenta); }
+.platform-actor-detail { border-left: 4px solid var(--orange); }
+.platform-actor-states { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin-top: 10px; }
+.platform-actor-states > div { padding: 10px; border: 1px solid var(--line); }
+.platform-actor-states h4 { margin: 0 0 6px; }
+.platform-actor-detail section > h4 { margin: 14px 0 4px; font-size: 14px; }
+.platform-actor-detail h3 { margin: 0 0 6px; font-size: 17px; color: var(--orange); }
+.platform-actor-detail h4 { color: var(--magenta); }
+.platform-actor-states .source-ref { margin-top: 6px; }
+.platform-chart h3 { margin: 0 0 6px; color: var(--magenta); }
 .platform-actor-detail p, .platform-chart p { margin: 0; }
-.platform-canvas { min-width: 510px; }
-.platform-canvas tbody th { text-align: left; }
-.platform-canvas td { width: 41%; }
 .economics-inputs .platform-slider { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 12px; }
 .platform-slider > span { grid-column: 1 / -1; }
 .economics-inputs .platform-slider input { margin: 0; width: 100%; padding: 0; accent-color: var(--magenta); }
@@ -1314,12 +1333,27 @@ html:has(#panel-reifegrad) { scrollbar-gutter: stable; }
 .platform-chart-legend span:nth-child(-n+2)::before { content: ''; display: inline-block; vertical-align: middle; width: 18px; margin-right: 7px; border-top: 2px solid var(--magenta); }
 .platform-chart-legend span:nth-child(2)::before { border-top: 2px dashed var(--orange); }
 .platform-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; margin-bottom: 20px; }
-.platform-chart svg { display: block; width: 100%; margin-top: 8px; }
+.platform-chart svg { display: block; width: 100%; height: auto; margin-top: 8px; }
 .platform-chart svg text { fill: var(--muted); font-size: 11px; }
+#panel-plattform .platform-pilot > .platform-simulation { margin-top: 8px; }
+#panel-plattform .platform-simulation-method summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+#panel-plattform .platform-simulation-method[open] { padding-bottom: 4px; }
+#panel-plattform .platform-simulation-method p { margin: 8px 0 0; }
 .platform-chart-grid { fill: none; stroke: var(--line); }
 .platform-network-line, .platform-baseline-line { fill: none; stroke-width: 2.5; }
 .platform-network-line { stroke: var(--magenta); }
 .platform-baseline-line { stroke: var(--orange); stroke-dasharray: 6 4; }
+#panel-plattform .platform-decision > h2 { margin: 0 0 20px; font-size: clamp(1.05rem, 2vw, 1.22rem); }
+#panel-plattform .platform-decision-table { min-width: 0; }
+#panel-plattform .platform-decision-table :is(th, td) { padding: 5px 8px; white-space: normal; font-size: 14px; line-height: 1.4; vertical-align: top; }
+#panel-plattform .platform-decision-table th:first-child { width: 23%; padding-right: 4px; text-align: left; }
+#panel-plattform .platform-decision-table thead th { padding-bottom: 9px; color: var(--magenta); }
+#panel-plattform .platform-decision-table :is(th, td):last-child { padding-left: 6px; padding-right: 6px; }
+.platform-decision-note { margin-top: 12px; padding: 10px 14px; border-left: 4px solid var(--magenta); background: var(--magenta-light); font-size: 14px; }
+.platform-decision-note strong { margin-right: 6px; color: var(--magenta); }
+.platform-decision-note > p { margin: 0; }
+.platform-decision-note > details { margin-top: 8px; }
+.platform-decision-note summary { cursor: pointer; color: #000; font-size: 13px; font-weight: 600; }
 .platform-recommendation dt { font-weight: 700; color: var(--magenta); }
 #panel-plattform .roadmap-column { border-top-color: var(--orange); }
 .platform-recommendation dd { margin: 4px 0 16px; }
@@ -1328,14 +1362,11 @@ html:has(#panel-reifegrad) { scrollbar-gutter: stable; }
   [data-platform-actor].eco-center span { font-size: 10px; }
   #panel-plattform .ecosystem-map strong { font-size: 13px; }
 }
-.platform-canvas.matrix th:first-child { width: 18%; }
-.platform-canvas.matrix th { white-space: normal; }
-.platform-canvas.matrix tbody th { border-bottom: 1px solid var(--line); }
 #panel-plattform .panel > .button { max-width: 100%; white-space: normal; }
 
 @media (max-width: 430px) {
   #panel-plattform .ecosystem-map { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto; }
   #panel-plattform .ecosystem-map::before, #panel-plattform .ecosystem-map::after { display: none; }
-  #panel-plattform .ecosystem-map > button { grid-area: auto; padding: 8px; }
+  #panel-plattform .ecosystem-map > button { grid-area: auto; }
   #panel-plattform .ecosystem-map > .eco-center { grid-column: 1 / -1; grid-row: 1; }
 }

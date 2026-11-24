@@ -153,8 +153,7 @@ const innovationFlows={
  'Coupled':'HORNBACH und externe Partner entwickeln gemeinsam Lösungen und tauschen Wissen in beide Richtungen aus.'
 };
 const visibleInnovationFlows=new Set(Object.keys(innovationFlows));
-const lecture=(which,pdf,printed)=>`<a class="source-ref" href="docs/${which==='journey'?'2026-11-18 Kunde_und_Journey.pdf':'2026-11-18 Open_Innovation.pdf'}#page=${pdf}" target="_blank" rel="noopener">Termin ${which==='journey'?4:5} · Folie ${printed} · PDF-Seite ${pdf}</a>`;
-const section=(title,body)=>`<section class="ca-section">${title?`<h2>${title}</h2>`:''}${body}</section>`;
+const section=(title,body,className='')=>`<section class="ca-section${className?' '+className:''}">${title?`<h2>${title}</h2>`:''}${body}</section>`;
 let openJourneyPhase=0;
 
 function journeyBoard(phases){
@@ -277,7 +276,7 @@ function experienceChart(phases,experience,activePhase,visible,metric){
     const markers=points.map((point,index)=>point.value===null?'':`<circle cx="${point.x}" cy="${point.y}" r="5" class="ca-${id}${index===activePhase?' ca-point-active':''}"><title>${esc(point.name)} · ${label} ${point.value}</title></circle>`).join('');
     return lines+markers;
    }).join('')}
-   ${phases.map((phase,index)=>`<text x="${x(index)}" y="215" text-anchor="middle">${esc(phase.name)}</text>`).join('')}
+   ${phases.map((phase,index)=>`<text x="${x(index)}" y="215" text-anchor="middle"${index===activePhase?' class="ca-experience-phase-active"':''}>${esc(phase.name)}</text>`).join('')}
   </svg></div>`;
 }
 
@@ -305,12 +304,14 @@ function journeyExperience(data,index,editing){
   </div>
   ${experienceChart(data.journey,experience,index,visible,metric)}
   <p class="ca-experience-note">Skala von 1 (sehr negativ) bis 5 (sehr positiv)</p>
-  ${editing?`<details class="ca-experience-edit">
-   <summary>${journeyMetrics[metric]} bewerten</summary>
-   <div class="ca-experience-values">
-    ${visible.map(([id,label])=>scale(path+'.'+id+metric,label,phase[id+metric],1,5)).join('')}
-   </div>
-  </details>`:''}
+  ${editing?`<div class="ca-experience-edit" role="group" aria-label="Kundenerlebnis bewerten">
+   ${Object.entries(journeyMetrics).map(([id,label])=>`<div class="ca-experience-rating" role="group" aria-label="${label}">
+    <h5>${label}</h5>
+    <div class="ca-experience-values">
+     ${visible.map(([layer,stage])=>scale(path+'.'+layer+id,stage,phase[layer+id],1,5)).join('')}
+    </div>
+   </div>`).join('')}
+  </div>`:''}
  </section>`;
 }
 
@@ -349,7 +350,7 @@ function personaView(data,editing){
  </article>`;
  }).join('')}
  <hr class="ca-persona-divider">
- <button type="button" class="button small ca-add-persona" data-ca-add-persona>Weitere Personen hinzufügen</button>
+ <button type="button" class="button small ca-add-persona" data-ca-add-persona>Weitere Persona hinzufügen</button>
  <dialog id="ca-persona-dialog" aria-labelledby="ca-persona-dialog-title">
   <h2 id="ca-persona-dialog-title">Weitere Personen hinzufügen</h2>
   <form data-ca-persona-form>
@@ -486,8 +487,13 @@ function journeyOptimization(data,proposals){
    <div class="ca-field"><h4>Passende Idee</h4><p>${idea?developmentIdeaLink(idea):'Offen'}</p></div>
    ${text('', 'Wirkung und Messung', metric, false)}
   </article>`;
- }).join('');
- return section('',`${filter}<div class="ca-phase-grid ca-optimization-grid">${cards}</div>`);
+ });
+ return section('',`${filter}
+  <div class="ca-phase-grid ca-optimization-grid">${cards.slice(0,2).join('')}</div>
+  ${cards.length>2?`<details class="ca-optimization-more">
+   <summary>Weitere Pain Points</summary>
+   <div class="ca-phase-grid ca-optimization-grid">${cards.slice(2).join('')}</div>
+  </details>`:''}`);
 }
 
 function journeyView(state,context,tab){
@@ -497,7 +503,7 @@ function journeyView(state,context,tab){
   map:()=>section('',`${journeyBoard(data.journey)}
   ${data.journey.map((phase,index)=>journeyPhase(data,phase,index,context)).join('')}`),
   optimization:()=>journeyOptimization(data,context.developmentProposals??[]),
-  scenario:()=>journeyScenarioView(state,context.developmentProposals)
+  scenario:()=>journeyScenarioView(state,context.cite)
  };
  return tab?views[tab]():journeyTabs.slice(0,-1).map(([id])=>views[id]()).join('');
 }
@@ -523,7 +529,7 @@ function involvementRatingForm(pending,phase,label){
  </form>`;
 }
 
-let selectedInvolvementPhase=null;
+let selectedInvolvementPhase='ideas';
 function involvementStageBubble(phase,index,value,stageId,sides,cite){
  const pinned=pinnedInvolvementStage===stageId;
  return `<div id="${stageId}-reason" class="stage-bubble stage-preview${pinned?' is-open':''}" tabindex="-1">
@@ -640,7 +646,7 @@ function innovationOverview(data,{editing,cite}){
    ${!visibleInnovationFlows.size?'<p>Wähle mindestens eine Richtung, um Beispiele zu sehen.</p>':''}
    ${visibleInnovationFlows.size&&!evidence.length&&!proposals?'<p>Für diese Auswahl ist kein Fall hinterlegt.</p>':''}
    ${proposals}
-   ${innovationDistribution(data.examples)}`);
+   ${innovationDistribution(data.examples)}`,'ca-innovation-examples-section');
 }
 const innovationIdeaDrafts={
  project:{
@@ -755,7 +761,7 @@ function involvementMeasures(data,proposals,editing){
    <button type="button" class="button small secondary ca-involvement-priority-button" id="ca-priority-${esc(phase.id)}" data-ca-involvement-priority="${esc(phase.id)}" aria-pressed="${phase===priority}">${phase===priority?'Priorisiert':'Priorisieren'}</button>
   </article>`;
  }).join('');
- return section('Abgeleitete Maßnahmen',cards?`<div class="ca-phase-grid ca-involvement-measures">${cards}</div>`:'<p>Für die Soll-Stufen sind noch keine Maßnahmen hinterlegt.</p>');
+ return section('Abgeleitete Maßnahmen',cards?`<div class="ca-phase-grid ca-involvement-measures">${cards}</div>`:'<p>Für die Soll-Stufen sind noch keine Maßnahmen hinterlegt.</p>','ca-involvement-measures-section');
 }
 const expertiseExpansion={
  cocreation:{
@@ -788,7 +794,7 @@ export function innovationView(state,{editing,cite,developmentProposals},view){
  const data=state.customerAnalysis;
  const views={
   overview:()=>innovationOverview(data,{editing,cite}),
-  involvement:()=>section('Kundeneinbindung in den verschiedenen Innovationsphasen',involvementStages(data.involvement,{cite}))
+  involvement:()=>section('',involvementStages(data.involvement,{cite}))
    +involvementMeasures(data,developmentProposals??[],editing),
   scenario:()=>innovationScenarioView(state,cite)
  };
@@ -855,33 +861,18 @@ function scenarioRadar({before,after},showTarget,originalTarget){
    ${showTarget?series(after,'target','Szenario'):''}
   </svg>`;
 }
-function journeyScenarioView(state,proposals){
- const idea=proposals?.find(proposal=>proposal.id==='project');
+function journeyScenarioView(state,cite){
  const criterion=state.model.find(group=>group.id==='customer').criteria.find(item=>item.id==='journey');
- const data=state.customerAnalysis;
- const segmentId=activeJourneySegment??'all';
- const highest=rankedJourneyPainPoints(data,segmentId)[0];
- const segmentLabel=personaSegments[segmentId]??'Alle Segmente';
  const scenario=applyScenario(state,projectListEffects);
  const goal=scenario.groups.find(group=>group.id==='customer').criteria.find(item=>item.id==='journey').current;
- const candidateExists=state.actions.some(action=>action.originId==='course-journey');
  return maturityComparison(state,scenario,criterion,goal,'Journey')
   +section('',`<div class="ca-maturity-explanation">
    ${text('', 'Warum diese Ist-Einstufung?', criterion.evidence, false)}
+   ${criterion.source?cite(criterion.source,criterion.pages):''}
    ${text('', 'Projektübergabe zwischen App, Markt und Bestellung', 'Beim Planen und Kaufen kann der Projektkontext zwischen den Kanälen verloren gehen. Eine gemeinsame Projektliste kann Artikel, Mengen und Änderungen aus der Beratung für die Bestellung verfügbar halten.', false)}
-${idea?`   <p>Entwicklungsvorschlag: ${developmentIdeaLink(idea)}</p>`:''}
    ${text('', 'Was muss für Stufe 4 belegt sein?', projectListEffects[0][3], false)}
    ${!scenario.changes.length?'<p class="scope-note">Die Ist-Bewertung erreicht die hinterlegte Szenariostufe bereits.</p>':''}
-  </div>`)
-  +section('Priorisierter Maßnahmenkandidat',`<article class="ca-phase-card ca-scenario-focus">
-   <div class="tag-row"><span class="status-tag">${esc(segmentLabel)}</span><span class="status-tag">Phase ${esc(highest.phase.name)}</span><span class="status-tag orange">${highest.severity}/5</span></div>
-   <p>${esc(highest.measure)}</p>
-   <div class="tag-row">
-    <button type="button" class="button small secondary" data-journey-tab="optimization">Zu Pain Points &amp; Optimierung</button>
-    <button type="button" class="button small" id="ca-journey-scenario-candidate" data-ca-candidate="journey">${candidateExists?'Maßnahmenkandidat aktualisieren':'Als Maßnahmenkandidat übernehmen'}</button>
-   </div>
-  </article>`)
-  +`<p class="method-caption">${lecture('journey',81,84)} ${lecture('journey',82,85)}</p>`;
+  </div>`);
 }
 function maturityComparison(state,scenario,criterion,goal,type){
  const toggleKey='scenario'+type;
@@ -945,7 +936,7 @@ export function renderCustomerAnalysis(state,context,view){
   <div class="folder-content" id="journey-folder-content" role="tabpanel" aria-labelledby="journey-tab-${activeJourneyTab}" tabindex="0">${journeyView(state,context,activeJourneyTab)}</div>
  </section>`;
  if(view)return `<div class="ca-content">${innovationView(state,context)}${innovationView(state,context,'scenario')}</div>`;
- return `<div class="ca-tabs" role="tablist" aria-label="Kundenanalyse"><button class="button secondary" role="tab" id="ca-tab-journey" aria-controls="ca-content" aria-selected="${subview==='journey'}" data-ca-view="journey">Customer Journey</button><button class="button secondary" role="tab" id="ca-tab-innovation" aria-controls="ca-content" aria-selected="${subview==='innovation'}" data-ca-view="innovation">Open Innovation</button></div><div id="ca-content" role="tabpanel" aria-labelledby="ca-tab-${subview}">${subview==='journey'?journeyView(state,context)+journeyScenarioView(state,context.developmentProposals):innovationView(state,context)+innovationView(state,context,'scenario')}</div>`;}
+ return `<div class="ca-tabs" role="tablist" aria-label="Kundenanalyse"><button class="button secondary" role="tab" id="ca-tab-journey" aria-controls="ca-content" aria-selected="${subview==='journey'}" data-ca-view="journey">Customer Journey</button><button class="button secondary" role="tab" id="ca-tab-innovation" aria-controls="ca-content" aria-selected="${subview==='innovation'}" data-ca-view="innovation">Open Innovation</button></div><div id="ca-content" role="tabpanel" aria-labelledby="ca-tab-${subview}">${subview==='journey'?journeyView(state,context)+journeyScenarioView(state,context.cite):innovationView(state,context)+innovationView(state,context,'scenario')}</div>`;}
 async function personaImage(file){
  const image=await createImageBitmap(file);
  try{
@@ -1239,8 +1230,6 @@ export async function handleCustomerAnalysisEvent(event,state,{save,render,toast
  if(event.type==='change'&&el.dataset.caScore){const value=el.value===''?null:Number(el.value),min=Number(el.dataset.min),max=Number(el.dataset.max);if(value!==null&&(!Number.isInteger(value)||value<min||value>max)){toast('Ungültiger Skalenwert.');render();return;}if(el.dataset.caScore.endsWith('.severity')&&value===null){toast('Die Schmerzpunktpriorisierung benötigt einen Wert von 1 bis 5.');render();return;}const path=el.dataset.caScore;
   set(path,value);save();render();
   const control=el.id?globalThis.document?.getElementById(el.id):globalThis.document?.querySelector(`[data-ca-score="${path}"]`);
-  const editor=control?.closest('.ca-experience-edit');
-  if(editor)editor.open=true;
   control?.focus({preventScroll:true});
   return;
  }

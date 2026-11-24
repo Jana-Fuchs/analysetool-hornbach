@@ -17,8 +17,8 @@ const icons={download:'<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',edit:'<pa
 function icon(name){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]||icons.overview}</svg>`;}
 function cite(id,pages=''){
  const source=Object.hasOwn(SOURCES,id)?SOURCES[id]:null;if(!source)return '<span class="source-ref">Eigene Angabe</span>';
- const page=parseInt(pages,10),pdfPage=id==='methods'?page-1:id==='patterns'?page-4:id==='platformLecture'?page-(page>=79?4:page>=40?3:0):page;
- return `<a class="source-ref" href="${source.file}${Number.isFinite(pdfPage)&&pdfPage>0?'#page='+pdfPage:''}" target="_blank" rel="noopener" title="${escape(source.title)}">${icon('file')} ${id==='gb26'?'GB 2025/26':id==='gb25'?'GB 2024/25':id==='h127'?'H1 2026/27':id==='methods'?'Methoden':id==='patterns'?'Muster':id==='platformLecture'?'Termin 6':'Aufgabe'}${pages?(['methods','patterns','platformLecture'].includes(id)?' · Folie ':' · S. ')+escape(pages):''}</a>`;
+ const page=parseInt(pages,10),pdfPage=id==='methods'?page-1:id==='patterns'?page-4:page;
+ return `<a class="source-ref" href="${source.file}${Number.isFinite(pdfPage)&&pdfPage>0?'#page='+pdfPage:''}" target="_blank" rel="noopener" title="${escape(source.title)}">${icon('file')} ${id==='gb26'?'GB 2025/26':id==='gb25'?'GB 2024/25':id==='h127'?'H1 2026/27':id==='methods'?'Methoden':id==='patterns'?'Muster':'Aufgabe'}${pages?(['methods','patterns'].includes(id)?' · Folie ':' · S. ')+escape(pages):''}</a>`;
 }
 function editable(path,value,{multiline=true,label='Text bearbeiten'}={}){
  const keys=path.split('.');

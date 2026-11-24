@@ -54,8 +54,8 @@ test('journey and innovation views filter proposals and escape editable content'
  assert.doesNotMatch(c.html,/aria-label="Zufriedenheit je Phase"/);
  c.click('data-ca-metric','Satisfaction');
  assert.match(c.html,/aria-label="Zufriedenheit je Phase"/);
- assert.match(c.html,/<details class="ca-experience-edit">[\s\S]*?<summary>Zufriedenheit bewerten<\/summary>[\s\S]*?data-ca-score="journey.0.currentSatisfaction"/);
- assert.doesNotMatch(c.html,/aria-label="Emotion je Phase"|data-ca-score="journey.0.currentEmotion"/);
+ assert.match(c.html,/<div class="ca-experience-edit"[^>]*>[\s\S]*?data-ca-score="journey.0.currentEmotion"[\s\S]*?data-ca-score="journey.0.currentSatisfaction"/);
+ assert.doesNotMatch(c.html,/aria-label="Emotion je Phase"/);
  c.click('data-ca-metric','Emotion');
  const readOnly=renderCustomerAnalysis(s,ctx);
  assert.match(readOnly,/<span class="status-tag orange">Ist<\/span>/);
@@ -114,6 +114,10 @@ test('segment selection switches experience text, scores and curve, with indepen
   view.click('data-ca-segment','difm');
   assert.match(view.html,/segmentExperience.difm.0.emotion[^>]*>Interesse am Projekt/);
   assert.equal((view.html.match(/<article class="ca-phase-card ca-optimization-card">/g)||[]).length,5);
+  const [featured,more]=view.html.split('<details class="ca-optimization-more">');
+  assert.equal((featured.match(/class="ca-phase-card ca-optimization-card"/g)||[]).length,2);
+  assert.match(more,/<summary>Weitere Pain Points<\/summary>/);
+  assert.equal((more.match(/class="ca-phase-card ca-optimization-card"/g)||[]).length,3);
   assert.match(view.html,/<summary id="ca-segment-0">Do-it-for-me-Kunden \(DIFM\)<\/summary>/);
   assert.match(view.html,/<summary id="ca-segment-optimization">Do-it-for-me-Kunden \(DIFM\)<\/summary>/);
   assert.match(view.html,/Phase Entdecken[\s\S]*?welche Arbeiten ein Fachbetrieb übernimmt/);
@@ -130,11 +134,10 @@ test('segment selection switches experience text, scores and curve, with indepen
   view.click('data-ca-segment','diy');
   const scenario=()=>view.html.split('<div class="ca-maturity-layout">')[1];
   assert.match(scenario(),/Customer Journey[\s\S]*?<h4>Stufe 3<\/h4>[\s\S]*?<h4>Stufe 4<\/h4>/);
-  assert.match(scenario(),/Priorisierter Maßnahmenkandidat[\s\S]*?Private Heimwerker \(DIY\)[\s\S]*?Phase Planen/);
+  assert.doesNotMatch(scenario(),/Priorisierter Maßnahmenkandidat|Termin 4 · Folie/);
   assert.doesNotMatch(scenario(),/Produktentwicklung mit Kunden|Steuerung &amp; Personalisierung|Maßnahme nach Phase wählen/);
   view.click('data-ca-segment','difm');
   assert.match(scenario(),/Customer Journey[\s\S]*?<h4>Stufe 3<\/h4>[\s\S]*?<h4>Stufe 4<\/h4>/);
-  assert.match(scenario(),/Priorisierter Maßnahmenkandidat[\s\S]*?Do-it-for-me-Kunden/);
   await handleCustomerAnalysisEvent({type:'change',target:{dataset:{caScenario:'scenarioJourney'},checked:false,closest:selector=>selector==='#panel-kunden'?{}:null,matches:()=>false}},state,view.options);
   assert.doesNotMatch(scenario(),/class="radar-target"/);
   assert.match(scenario(),/class="radar-original-target"/);
@@ -224,7 +227,8 @@ test('Open Innovation connects measures, expertise proposals and model criteria'
  const context={...ctx,developmentProposals:developmentIdeas(state)};
  const view=key=>innovationView(state,context,key);
  assert.doesNotMatch(view('involvement'),/So könnten Kunden mitwirken|data-ca-candidate=/);
- assert.match(view('involvement'),/Kundeneinbindung in den verschiedenen Innovationsphasen[\s\S]*?Abgeleitete Maßnahmen/);
+ assert.doesNotMatch(view('involvement'),/Kundeneinbindung in den verschiedenen Innovationsphasen/);
+ assert.match(view('involvement'),/ca-involvement-overview[\s\S]*?Abgeleitete Maßnahmen/);
  const measures=()=>view('involvement').split('<h2>Abgeleitete Maßnahmen</h2>')[1].split('</section>')[0];
  assert.match(measures(),/Ideenfindung[\s\S]*?<details class="ca-involvement-pilot">[\s\S]*?Crowdsourcing für die Projektliste[\s\S]*?entwicklungsvorschlaege\/project[\s\S]*?<h4>Risiko<\/h4>[\s\S]*?<\/details>[\s\S]*?data-ca-involvement-priority="ideas"[\s\S]*?<\/article>/);
  assert.match(measures(),/Konzeptentwicklung[\s\S]*?zwei Projektlisten-Prototypen[\s\S]*?entwicklungsvorschlaege\/project[\s\S]*?So hilft die Idee/);
@@ -246,7 +250,7 @@ test('Open Innovation connects measures, expertise proposals and model criteria'
  const customView=innovationView(customized,context,'involvement');
  assert.match(customView,/Eine andere Maßnahme testen\.<\/p><\/div>[\s\S]*?<h4>Passende Idee<\/h4><p>Offen/);
  assert.doesNotMatch(view('involvement'),/Wo lohnt sich mehr Beteiligung/);
- assert.match(view('involvement'),/Kundeneinbindung in den verschiedenen Innovationsphasen[\s\S]*?Ist<\/span><b>1[\s\S]*?Abgeleitete Maßnahmen/);
+ assert.match(view('involvement'),/ca-involvement-overview[\s\S]*?Ist<\/span><b>1[\s\S]*?Abgeleitete Maßnahmen/);
  assert.doesNotMatch(view('overview'),/ca-innovation-idea-picker|Bezug zur gewählten Idee/);
  assert.match(view('overview'),/Coupled · Vorschlag[\s\S]*?Projektlabor[\s\S]*?Inside-Out · Vorschlag[\s\S]*?Projektlisten-Datenformats/);
  assert.doesNotMatch(view('overview'),/Ausbauideen für externes Fachwissen|Passende Idee/);

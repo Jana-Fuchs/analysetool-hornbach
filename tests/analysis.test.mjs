@@ -223,7 +223,9 @@ test('criteria, charts and top-two models render with escaped user input',()=>{
   assert.match(rendered,/<ol class="map-key"><li>&lt;script&gt;alert\(1\)&lt;\/script&gt;<\/li><li>KI-Beratung als Projektservice<\/li>/);
   assert.match(rendered,/Entwicklungsvorschläge/);
   activate('proposals');
-  assert.equal((rendered.match(/data-idea-details="[^"]+" aria-expanded="true"/g)||[]).length,2);
+  assert.equal((rendered.match(/data-idea-details="[^"]+" aria-expanded="true"/g)||[]).length,1);
+  assert.match(rendered,/data-idea-details="project" aria-expanded="true"/);
+  assert.match(rendered,/data-idea-details="advisor" aria-expanded="false"/);
   assert.doesNotMatch(rendered,/<table|Gewichteter Mittelwert/);
   assert.equal((rendered.match(/Beiträge zum Score/g)||[]).length,2);
   assert.match(rendered,/<dt>Nutzen<\/dt><dd>\+1,75<\/dd>/);

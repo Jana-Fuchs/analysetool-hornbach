@@ -14,7 +14,7 @@ const link=url=>/^https?:\/\//i.test(url)?`<a class="source-ref" href="${e(url)}
 let activeModel=null;
 const ideaTabs=[['patterns','Musterübersicht'],['board','Ideen-Board'],['map','Opportunity Map'],['proposals','Entwicklungsvorschläge']];
 let activeIdeaTab=ideaTabs[0][0];
-const collapsedIdeaDetails=new Set();
+const ideaDetailOverrides=new Map();
 const activePatternFilters=new Set(['current','target']);
 const patternFilters=[['current','Derzeit genutzt'],['target','Ausbaufähig'],['all','Alle Muster']];
 let activeOverviewGroup='product';
@@ -43,7 +43,7 @@ function radar(title,items,max=4,showSummary=true,showStatus=showSummary,groupId
    return `<circle class="${cls}" cx="${x}" cy="${y}" r="${key==='target'?6:4}"><title>${e(d.name)} · ${key==='current'?'Ist':'Soll'} ${n(d[key])}</title></circle>`;
   }).join('');
  };
- return `<figure class="model-chart ${productChart?'product-chart':'panel'}${productChart&&manyCriteria?' many-criteria-chart':''}"><figcaption>${showSummary&&!productChart?`<h3>${e(title)}</h3>`:''}<div class="chart-legend">${tag('Ist','orange')}${tag('Soll','pink')}${tag('1–'+max)}</div></figcaption><svg viewBox="${showSummary?(showStatus?'0 0 420 420':(manyCriteria?'-100 -10 620 435':'-40 40 500 310')):'0 0 420 350'}" role="group" aria-label="${e(title)}: Ist und Soll.${productChart?' Kriterium auswählen, um die Bewertung zu öffnen.':' Bereich auswählen, um Ist- und Soll-Wert anzuzeigen.'}">${Array.from({length:max},(_,i)=>`<polygon points="${coords(()=>i+1)}" class="radar-grid"/><text x="215" y="${center-r*(i+1)/max-4}" class="radar-tick">${i+1}</text>`).join('')}${items.map((d,i)=>{
+ return `<figure class="model-chart ${productChart?'product-chart':'panel'}${productChart&&manyCriteria?' many-criteria-chart':''}"><figcaption>${showSummary&&!productChart?`<h3>${e(title)}</h3>`:''}<div class="chart-legend">${tag('Ist','orange')}${tag('Soll','pink')}</div></figcaption><svg viewBox="${showSummary?(showStatus?'0 0 420 420':(manyCriteria?'-100 -10 620 435':'-40 40 500 310')):'0 44 420 306'}" role="group" aria-label="${e(title)}: Ist und Soll.${productChart?' Kriterium auswählen, um die Bewertung zu öffnen.':' Bereich auswählen, um Ist- und Soll-Wert anzuzeigen.'}">${Array.from({length:max},(_,i)=>`<polygon points="${coords(()=>i+1)}" class="radar-grid"/><text x="215" y="${center-r*(i+1)/max-4}" class="radar-tick">${i+1}</text>`).join('')}${items.map((d,i)=>{
  const [x,y]=xy(i,max);
  let [lx,ly]=xy(i,max*(showSummary?(productChart?1.4:1.33):(i===0?1.23:1.43)));
  if(!showSummary){lx=i===0?210:i===1?325:95;ly=i===0?64:310;}
@@ -380,7 +380,7 @@ export function developmentIdeas(state){
 }
 export function openIdeaProposal(id){
  activeIdeaTab='proposals';
- collapsedIdeaDetails.delete(id);
+ ideaDetailOverrides.set(id,true);
 }
 function notifyIdeaRanking(state,before,idea,toast){
  const after=scoredIdeas(state);
@@ -448,7 +448,7 @@ function ideaRanking(state,ranked,editing){
 function ideaProposals(state,editing){
  return `<div class="idea-proposals">${developmentIdeas(state).map((idea,rank)=>{
   const index=state.ideas.indexOf(idea);
-  const expanded=!collapsedIdeaDetails.has(idea.id),detailId='idea-proposal-'+index;
+  const expanded=ideaDetailOverrides.get(idea.id)??(rank===0),detailId='idea-proposal-'+index;
   return `<section class="idea-proposal">
    <h3 class="idea-proposal-heading"><button type="button" id="idea-proposal-heading-${e(idea.id)}" data-idea-details="${e(idea.id)}" aria-expanded="${expanded}" aria-controls="${detailId}">
     <span class="row-index">${rank+1}</span><span>${e(idea.name)}</span>${tag(idea.pattern,'pink')}<span class="idea-detail-chevron" aria-hidden="true"></span>
@@ -747,8 +747,8 @@ export function handleAnalysisEvent(event,state,{save,render,toast,startEditing=
   const detailButton=el.closest('[data-idea-details]');
   if(detailButton?.dataset.ideaDetails){
    const id=detailButton.dataset.ideaDetails;
-   const expanded=collapsedIdeaDetails.delete(id);
-   if(!expanded)collapsedIdeaDetails.add(id);
+   const expanded=detailButton.getAttribute('aria-expanded')!=='true';
+   ideaDetailOverrides.set(id,expanded);
    detailButton.setAttribute('aria-expanded',String(expanded));
    const details=document.getElementById(detailButton.getAttribute('aria-controls'));
    if(details)details.hidden=!expanded;
@@ -1011,7 +1011,7 @@ export function handleAnalysisEvent(event,state,{save,render,toast,startEditing=
  if(action==='remove-idea'){
   if(state.ideas.length<=1)return;
   if(id===newIdeaId)newIdeaId=null;
-  collapsedIdeaDetails.delete(id);
+  ideaDetailOverrides.delete(id);
   state.ideas=state.ideas.filter(d=>d.id!==id);
  }
  if(action==='remove-candidate'&&state.actions.length>1)state.actions=state.actions.filter(a=>a.id!==id||!a.originId);
