@@ -1,9 +1,11 @@
+import {cashflowDefaults} from './hybrid.js';
 import {CUSTOMER_ANALYSIS} from './customer-analysis.js';
 import {SUPPLEMENT,enrichIdeas} from './analysis-data.js';
 export const SOURCES = {
   gb26: { title: 'Geschäftsbericht 2025/26', organization: 'HORNBACH Holding AG & Co. KGaA', file: 'docs/HORNBACH_Holding_Geschaeftsbericht_2025-26.pdf', url: 'https://www.hornbach-holding.de/media/document/53a06c3f-6dfe-485b-b39a-a3ca941e7ea7/assets/20260519_HH_GB_DE.pdf', description: 'Grundlage für Geschäftsmodell, Konzernkennzahlen, ICR, Marktplatz und Digitalisierungsstrategie.' },
   gb25: { title: 'Geschäftsbericht 2024/25', organization: 'HORNBACH Holding AG & Co. KGaA', file: 'docs/HORNBACH_Holding_Geschaeftsbericht_2024-25.pdf', url: 'https://www.hornbach-holding.de/media/document/8d05df5c-4533-48a5-8270-f0b90a156f56/assets/20250521_HH_GB_DE_Links.pdf', description: 'Vergleichsbasis für Umsatz, Onlinegeschäft und bereits bestehende Plattformaktivitäten.' },
   h127: { title: 'Halbjahresfinanzbericht 2026/27', organization: 'HORNBACH Holding AG & Co. KGaA', file: 'docs/HORNBACH_Holding_Halbjahresfinanzbericht_2026-27.pdf', url: 'https://www.hornbach-holding.de/media/document/b063e59a-46a8-4b77-8441-052b6dff8ef0/assets/DE0006083405-Q2-2026-EQ-D-00.pdf', description: 'Aktualisierung: Halbjahresumsatz, Ergebnis und Onlineanteil. Halbjahreswerte werden nicht auf ein Gesamtjahr hochgerechnet.' },
+  trends: { title: 'Trends, hybride Modelle, KI und Analyse-Tools · Termin 7', organization: 'DHBW Karlsruhe · Jonas Staib', file: 'docs/2026-11-25%20Trends_Hybride_Modelle_KI_Tools.pdf' },
   task: { title: 'Einstieg und Setup · Aufgabenstellung', organization: 'DHBW Karlsruhe · Jonas Staib', file: 'docs/2026-10-28 Einstieg_und_Setup.pdf', description: 'Teil A, Folien 81, 82 und 84: sieben Bausteine, Bewertung, bearbeitbare Eingaben und Maßnahmen-Roadmap. Fünf Dimensionen nach Vorlesungsfolie 50.' }
 };
 export const TABS = [
@@ -13,7 +15,8 @@ export const TABS = [
  {id:'kunden',short:'Customer Journey',icon:'users'},
  {id:'innovation',short:'Open Innovation',icon:'bulb'},
  {id:'plattform',short:'Plattform & Ökosystem',icon:'network'},
- {id:'erloese',short:'Erlösmodell & KI',subtitle:'Das Erlösszenario zeigt die Wirtschaftlichkeit eines Projektpiloten unter veränderbaren Annahmen. Die anschließende Matrix priorisiert drei KI-Anwendungen anhand ihrer Bewertungen und Gewichte.',icon:'spark'},
+ {id:'erloese',short:'Hybrides Erlösmodell',icon:'overview'},
+ {id:'ki',short:'KI-Strategie',icon:'spark'},
  {id:'massnahmen',short:'Zielmodell & Maßnahmen',subtitle:'Priorisierte Maßnahmen und Roadmap ab Projektfreigabe. Bewertungen und Status sind direkt änderbar; Zuständigkeiten, Ergebnisse und Entscheidungskriterien über „Bearbeiten“.',icon:'roadmap'}
 ];
 export const DEFAULT_STATE = {
@@ -50,11 +53,16 @@ export const DEFAULT_STATE = {
  ],
  customerNote:'Die Pain Points sind Hypothesen, keine Ergebnisse einer Kundenbefragung. Interviews mit DIY-, Profi- und DIFM-Kunden müssen ihre Bedeutung und Häufigkeit prüfen.',
  platformNote:'Ziel ist ein kuratiertes Projekt-Ökosystem auf den vorhandenen Kanälen. HORNBACH steuert Kundenzugang, Sortimentsqualität und Serviceversprechen; Partner liefern spezialisierte Produkte und Ausführungskapazität.',
+ hybridConcept:'Eine AI Context Platform stellt dem digitalen Projektbegleiter den freigegebenen Produktkatalog, lokale Bestände und Planungsregeln bereit. DIY-Kunden können zusätzlich zum Material eine geprüfte Planung buchen. Für den ersten Test eignet sich der Bodenbelag: Kunden erhalten eine Materialliste mit Mengen und Zubehör, die Fachkräfte vor der Übergabe prüfen.',
+ cashflowAssumptions:cashflowDefaults,
  revenueAssumptions:{projects:2000,conversion:15,basket:800,margin:30,fee:39,cost:60000},
  ai:[
-  {id:'knowledge',name:'Wissensassistent für die Beratung',description:'Quellengebundene Antworten aus freigegebenen Produkt- und Serviceinformationen für Mitarbeitende.',impact:4,effort:2,risk:2,kpi:'Suchzeit −20 %; ≥95 % fachlich korrekte Antworten im Testset.',guardrail:'Quellenpflicht, Rechtekonzept, fachliche Freigabe; keine autonome Sicherheitsberatung.'},
-  {id:'forecast',name:'Bestands- und Bedarfsprognose',description:'Saisonale Nachfrage pro Artikel und Markt prognostizieren und Bestellvorschläge verbessern.',impact:5,effort:4,risk:3,kpi:'Fehlbestände −10 % bei höchstens konstantem Lagerbestand.',guardrail:'Datenqualität vor Pilotstart prüfen; Schattenbetrieb, menschliche Bestellfreigabe.'},
-  {id:'planner',name:'KI-gestützte Projektplanung',description:'Aus Kundenanforderungen eine überprüfbare Materialliste und passende Serviceoptionen vorschlagen.',impact:5,effort:4,risk:4,kpi:'Planungszeit −20 %; keine Zunahme fehlerhafter Materiallisten.',guardrail:'Kompatibilitätsregeln, Prüfung durch Fachpersonal; keine Zusagen für Statik oder Installation.'}
+  {id:'knowledge',name:'Wissensassistent für die Beratung',description:'Antworten aus freigegebenen Produkt- und Serviceinformationen für Mitarbeitende.',impact:4,effort:2,feasibility:4,risk:2,integration:5,kpi:'Suchzeit −20 % und mindestens 95 % fachlich korrekte Antworten im Testset.',guardrail:'Quellenpflicht, Rechtekonzept und fachliche Freigabe. Sicherheitsfragen an Fachkräfte weiterleiten.',reason:'Ein interner Start nutzt vorhandenes Produktwissen. Die Integration kann zunächst über eine Suche im Beratungsarbeitsplatz erfolgen.'},
+  {id:'forecast',name:'Bestands- und Bedarfsprognose',description:'Saisonale Nachfrage je Artikel und Markt prognostizieren und Bestellvorschläge verbessern.',impact:5,effort:4,feasibility:2,risk:3,integration:2,kpi:'Fehlbestände −10 % bei höchstens konstantem Lagerbestand.',guardrail:'Datenqualität prüfen, Prognosen im Schattenbetrieb testen und Bestellungen manuell freigeben.',reason:'Der Nutzen ist hoch. Belastbare Bestands- und Absatzhistorien sowie die Anbindung an die Disposition sind Voraussetzungen.'},
+  {id:'planner',name:'KI-gestützte Projektplanung',description:'Aus Kundenanforderungen eine Materialliste und passende Serviceoptionen vorschlagen.',impact:5,effort:4,feasibility:3,risk:4,integration:4,kpi:'Planungszeit −20 % bei höchstens gleicher Fehlerquote der Materiallisten.',guardrail:'Kompatibilitätsregeln und Prüfung durch Fachpersonal. Fragen zu Statik oder Installation an Fachkräfte weiterleiten.',reason:'Die Projektplanung testet direkt den Nutzen des Hybridmodells. Ein enger Start mit Bodenbelägen begrenzt den Aufwand für Regeln und Produktdaten.'},
+  {id:'catalog',name:'Qualitätsprüfung im Produktkatalog',description:'Fehlende Attribute und widersprüchliche Maße erkennen und zur Prüfung vorlegen.',impact:4,effort:2,feasibility:4,risk:2,integration:4,kpi:'Zeit für die Attributprüfung −25 % bei höchstens gleicher Fehlerquote.',guardrail:'Vorschläge im Produktdatenprozess durch Verantwortliche prüfen lassen.',reason:'Ein klar begrenzter Test mit freigegebenen Katalogdaten schafft zugleich die Datengrundlage für konsistente Beratung und Projektplanung.'},
+  {id:'returns',name:'Rückgabegründe auswerten',description:'Bereinigte Rückgabetexte nach häufigen Produkt- oder Informationsproblemen gruppieren.',impact:3,effort:3,feasibility:3,risk:3,integration:3,kpi:'Auswertungszeit −30 % bei mindestens 85 % Übereinstimmung mit manuellen Kategorien.',guardrail:'Texte vorab bereinigen, Muster stichprobenartig prüfen und Ursachen separat bestätigen.',reason:'Die Analyse liefert Hinweise für Sortiment und Produkttexte. Repräsentative und ausreichend bereinigte Rückgabedaten sind dafür entscheidend.'},
+  {id:'handover',name:'Beratungsübergabe vorbereiten',description:'Aus freigegebenen Projektinformationen einen Entwurf für die Übergabe an den Markt erstellen.',impact:3,effort:3,feasibility:3,risk:3,integration:3,kpi:'Zeit für die Übergabe −20 % bei mindestens 95 % vollständigen Pflichtangaben.',guardrail:'Nur erforderliche Angaben verarbeiten. Kunden und Beratende bestätigen den Entwurf vor der Weitergabe.',reason:'Ein strukturierter Projektstatus schafft bereits einen Nutzen. Die KI-Zusammenfassung sollte gegen eine einfache Übergabevorlage getestet werden.'}
  ],
  target:[
   {title:'Kunden',text:'DIY-, Profi- und DIFM-Kunden mit einem durchgängigen Projektkonto begleiten.'},
@@ -72,7 +80,7 @@ export const DEFAULT_STATE = {
   {id:'scale',name:'Skalierung & Erlösmodell validieren',owner:'Geschäftsführung & Controlling',phase:'6–12 Monate',status:'Geplant',impact:4,effort:4,risk:3,deliverable:'Erfolgreiche Piloten auf weitere Märkte ausweiten; Zahlungsbereitschaft für Services prüfen.',gate:'Nur nach bestandenem Pilot-Gate und positivem Business Case skalieren.',depends:'Projekt- und Servicepilot'}
  ],
  recommendation:'Zuerst die Datengrundlage und einen internen Beratungsassistenten freigeben. Den Projektbegleiter parallel mit Kunden validieren. Größere Plattform- und Abo-Investitionen erst nach einem positiven Pilotnachweis entscheiden.',
- notes:{steckbrief:'',reifegrad:'',muster:'',kunden:'',innovation:'',plattform:'',erloese:'',massnahmen:''}
+ notes:{steckbrief:'',reifegrad:'',muster:'',kunden:'',innovation:'',plattform:'',erloese:'',ki:'',massnahmen:''}
 };
 
 Object.assign(DEFAULT_STATE, structuredClone(SUPPLEMENT));

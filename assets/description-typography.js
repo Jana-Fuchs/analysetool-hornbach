@@ -1,5 +1,5 @@
 import {hyphenateSync} from './vendor/hyphen-de.js';
-const supportedTabs=new Set(['steckbrief','reifegrad','muster','kunden','innovation','plattform','erloese','massnahmen']);
+const supportedTabs=new Set(['steckbrief','reifegrad','muster','kunden','innovation','plattform','erloese','ki','massnahmen']);
 const cache=new Map();
 export function hyphenateDescription(text){
  // Preserve URLs, identifiers, existing line breaks and punctuation.

@@ -1,3 +1,4 @@
+import {cashflowInputs} from './hybrid.js';
 import {additionalPersonaDefaults,readPersonaImage,validateCustomerAnalysis} from './customer-analysis.js';
 import {ideaTemplate,PROJECT_PILOT,PROJECT_PILOT_EFFECT,LEGACY_PRODUCT_OPTIONS,LEGACY_CUSTOMER_GROUP,LEGACY_REVIEW_GROUPS} from './analysis-data.js';
 import {DEFAULT_STATE} from './data.js';
@@ -39,6 +40,17 @@ export function validateState(value){
     if(key==='maturity'){
      if(got.length<3||got.length>10)throw new Error('Das freie Netzdiagramm benötigt 3 bis 10 Dimensionen.');
      target[key]=got.map(d=>{const next={id:'',name:'Dimension',current:1,target:1,evidence:'Eigene Annahme',source:'',pages:''};merge(next,d,at);return next;});
+    }else if(key==='ai'){
+     const templates=Object.hasOwn(value,'cashflowAssumptions')||got.length!==3?expected:expected.slice(0,3);
+     if(got.length!==templates.length||got.some((item,i)=>item?.id!==templates[i].id))throw new Error('Ungültige KI-Anwendungen.');
+     target[key]=expected.map((template,i)=>{
+      const next=clone(template);
+      if(got[i]){
+       merge(next,got[i],at);
+       if(!Object.hasOwn(got[i],'feasibility'))next.feasibility=6-next.effort;
+      }
+      return next;
+     });
     }else if(key==='additionalPersonas'){
      target[key]=got.map(persona=>{
       const profile={...additionalPersonaDefaults};
@@ -148,6 +160,13 @@ export function validateState(value){
    if(!Number.isInteger(check.level)||check.level<0||check.level>5)throw new Error('Ungültige Risikostufe je Prüfpunkt.');
   }
   idea.risk=assessedIdeaRisk(idea);
+ }
+ for(const d of result.ai)for(const key of ['feasibility','integration']){
+  if(!Number.isInteger(d[key])||d[key]<1||d[key]>5)throw new Error('KI-Bewertungen müssen zwischen 1 und 5 liegen.');
+ }
+ for(const [key,,min,max,step] of cashflowInputs){
+  const n=result.cashflowAssumptions[key];
+  if(n<min||n>max||(n-min)%step!==0)throw new Error('Ungültige Eingabe für den Cashflow-Vergleich.');
  }
  for(const n of Object.values(result.revenueAssumptions))if(n<0||n>1e9)throw new Error('Ungültige Erlösannahme.');
  if(result.revenueAssumptions.margin>100||result.revenueAssumptions.conversion>100)throw new Error('Prozentwerte dürfen 100 nicht überschreiten.');

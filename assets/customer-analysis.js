@@ -808,7 +808,7 @@ const projectListEffects=[
 const innovationEffects=[
  ['customer','development',2,'Digitale Nutzungsspuren müssen ausgewertet werden und Kunden müssen aktiv an Ideen und Produkttests mitwirken.']
 ];
-function applyScenario(state,effects){
+export function applyScenario(state,effects){
  const groups=structuredClone(state.model);
  const changes=[];
  for(const [group,id,value,why] of effects){
@@ -835,7 +835,7 @@ function scenarioValues(state,scenario){
 }
 const scenarioMeanFormat=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
 const formatScenarioMean=value=>value===null?'Offen':scenarioMeanFormat.format(value);
-function scenarioRadar({before,after},showTarget,originalTarget){
+export function scenarioRadar({before,after},showTarget,originalTarget,targetLabel='Szenario'){
  const centerY=147;
  const radius=112;
  const xy=(index,value)=>{
@@ -860,7 +860,7 @@ function scenarioRadar({before,after},showTarget,originalTarget){
    }).join('')}
    ${originalTarget?series(originalTarget,'original-target','Soll aus dem digitalen Reifegrad'):''}
    ${series(before.map(group=>group.value),'current','Ist')}
-   ${showTarget?series(after,'target','Szenario'):''}
+   ${showTarget?series(after,'target',targetLabel):''}
   </svg>`;
 }
 function journeyScenarioView(state,cite){
